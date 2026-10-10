@@ -20,7 +20,7 @@ Espresso Flavoured is a Fabric mod for Minecraft 26.3 that makes survival kinder
 
 **Room for more.** Shulker boxes can be crafted in the Overworld (a chest, iron, ender pearls and amethyst), bundles also take wool or rabbit hide, and a bundle holds four tools or pieces of armour.
 
-**The block merchant.** The wandering trader also sells building blocks from far-off biomes, like terracotta, mud bricks and calcite.
+**The block merchant.** The wandering trader also sells building blocks and decorations from far-off biomes, like terracotta, calcite, cherry saplings and spore blossoms. It always carries coffee cherries to plant, and pays a fair price for your roasted beans: fair trade, of course.
 
 **A warm welcome.** New players get a bed, a bundle of essentials and a short field guide, and an advancement tab walks through the rest. The title screen gets its own logo and splash texts.
 
