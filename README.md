@@ -16,7 +16,9 @@ Espresso Flavoured is a Fabric mod for Minecraft 26.3 that makes survival kinder
 
 **Coffee.** Coffee bushes grow wild in jungles and savannas. Roast the cherries, then brew Espresso in your own espresso machine: beans on top, mugs below, just like a brewing stand (hoppers work too). Mugs are shaped from clay, fired in a furnace, and dyed any colour; your coffee stays in the mug you chose, from Espresso to Latte (add milk) to Mocha (add cocoa), and you get the mug back when you drink. Crouch to set a mug down on a table or shelf, empty or full. Sweeten things up with Vanilla Syrup (honey and sugar) for the house special, a Vanilla Latte.
 
-**The café.** Craft an espresso machine and you get a loyalty card; it collects a stamp for each café milestone, and a full card swaps with the wandering trader for the Golden Mug (coffee lasts longer from it). Clay canisters, dyeable like mugs, hold four stacks of anything that stacks, show what is inside on a little label, and work with hoppers. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
+**The café.** Craft an espresso machine and you get a loyalty card; it collects a stamp for each café milestone, and a full card swaps with the wandering trader for the Golden Mug (coffee lasts longer from it). Clay canisters, dyeable like mugs, hold four stacks of anything that stacks, show what is inside on a little label, and work with hoppers. Glass jars do the same, and you can see what is inside; fill one with honey bottles for a honey jar.
+
+**The barista.** Villagers can take an espresso machine as their workstation and become baristas. They trade in beans, mugs and drinks, and a master barista sells the Barista's Reserve: rare beans that brew a Ristretto, the only coffee strong enough for Speed II and Haste II. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
 
 **Death.** You keep your hotbar, armour and off-hand. Everything else stays where you fell, so there's still a trip back for your things (into a grave, if you also use a graves mod).
 

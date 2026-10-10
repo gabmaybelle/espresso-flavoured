@@ -168,6 +168,40 @@ const canisterShape = (x, y) => {
 };
 png('item/unfired_canister', grid(canisterShape), { W: [176, 182, 196], B: [160, 166, 179], S: [128, 134, 148] });
 
+// ---------------------------------------------------------------- glass jar, reserve, ristretto, barista
+// Glass jar: clear glass (see-through, so it draws as translucent) with brighter edges.
+png('block/glass_jar', grid((x, y) => (x === 0 || x === 15 || y === 0 || y === 15 ? 'E' : ((x + y) % 7 === 0 && x > 2 && x < 9 ? 'H' : 'g'))),
+	{ g: [214, 232, 240, 70], E: [236, 246, 250, 170], H: [255, 255, 255, 150] });
+png('item/glass_jar', grid((x, y) => {
+	if (y >= 1 && y <= 2 && x >= 5 && x <= 10) return 'w'; // wooden lid
+	if (y === 3 && x >= 4 && x <= 11) return 'W';
+	if (y >= 4 && y <= 14 && x >= 3 && x <= 12) return x === 3 || x === 12 || y === 14 ? 'E' : (x === 5 && y < 12 ? 'H' : 'g');
+	return '.';
+}), { w: [150, 112, 66], W: [112, 82, 46], g: [214, 232, 240, 90], E: [236, 246, 250, 200], H: [255, 255, 255, 170] });
+// The Barista's Reserve: a small burlap sack of beans tied with a gold ribbon.
+png('item/baristas_reserve', grid((x, y) => {
+	if (y >= 2 && y <= 4 && x >= 6 && x <= 9) return y === 2 ? 'k' : (x === 7 || x === 8 ? 'b' : 'k'); // beans peeking out
+	if (y === 5 && x >= 5 && x <= 10) return 'G'; // gold ribbon
+	if (y >= 6 && y <= 14 && x >= 3 + (y < 8 ? 1 : 0) && x <= 12 - (y < 8 ? 1 : 0)) return (x + y * 2) % 5 === 0 ? 'S' : (x === 3 || x === 12 || y === 14 ? 'D' : 'B');
+	return '.';
+}), { k: [44, 24, 12], b: [112, 64, 34], G: [232, 184, 58], B: [176, 146, 102], S: [150, 122, 82], D: [120, 96, 62] });
+drinkLayer('ristretto', [36, 18, 8], [214, 150, 80], [24, 12, 6]);
+
+// The barista's apron, over the villager's robe (front 6..13 x 44..63 on the 64x64 sheet),
+// with ties round the sides and a coffee bean on the pocket.
+{
+	const px = Array.from({ length: 64 }, () => Array(64).fill('.'));
+	for (let y = 46; y <= 63; y++) for (let x = 6; x <= 13; x++) px[y][x] = (x === 6 || x === 13) ? 'd' : 'a';
+	for (const x of [7, 12]) { px[44][x] = 's'; px[45][x] = 's'; } // neck strap
+	for (let x = 0; x <= 27; x++) if (x < 6 || x > 13) px[52][x] = 'd'; // waist ties round the sides and back
+	for (let y = 55; y <= 58; y++) for (let x = 8; x <= 11; x++) px[y][x] = 'p'; // pocket
+	px[56][9] = 'k'; px[56][10] = 'k'; px[57][9] = 'k'; px[57][10] = 'b'; // a coffee bean
+	const APRON = { a: [236, 226, 206], d: [120, 78, 44], s: [120, 78, 44], p: [212, 196, 170], k: [44, 24, 12], b: [164, 104, 58] };
+	const rows = px.map(r => r.join(''));
+	png('entity/villager/profession/barista', rows, APRON);
+	png('entity/zombie_villager/profession/barista', rows, APRON);
+}
+
 // ---------------------------------------------------------------- bush stages
 png('block/coffee_bush_stage0', [
 	'................', '................', '................', '................',
@@ -278,6 +312,22 @@ out('items/canister.json', dyed('espresso:block/canister'));
 out('blockstates/canister.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/canister', ...(y ? { y } : {}) }]),
 ) });
+// Glass jar, the Reserve and Ristretto.
+for (const item of ['glass_jar', 'baristas_reserve']) {
+	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
+	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
+}
+out('items/ristretto.json', dyed('espresso:item/ristretto'));
+out('models/item/ristretto.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: 'espresso:item/ristretto_fill' } });
+const all6 = (texture) => Object.fromEntries(['north', 'south', 'east', 'west', 'up', 'down'].map(f => [f, { texture }]));
+out('models/block/glass_jar.json', { parent: 'minecraft:block/block', textures: { particle: 'espresso:block/glass_jar', glass: 'espresso:block/glass_jar', lid: 'minecraft:block/oak_planks' }, elements: [
+	{ from: [4, 0, 4], to: [12, 11, 12], faces: all6('#glass') },
+	{ from: [5, 11, 5], to: [11, 13, 11], faces: all6('#lid') },
+] });
+out('blockstates/glass_jar.json', { variants: Object.fromEntries(
+	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/glass_jar', ...(y ? { y } : {}) }]),
+) });
+
 
 // ---------------------------------------------------------------- espresso machine
 // Drawn procedurally: brushed steel with a pressure gauge, dark fittings, a glass bean hopper.
@@ -387,6 +437,10 @@ out('lang/en_us.json', {
 	'item.espresso.loyalty_card.full': 'Full! Swap it with the wandering trader for the Golden Mug',
 	'item.espresso.unfired_canister': 'Unfired Canister',
 	'block.espresso.canister': 'Canister',
+	'block.espresso.glass_jar': 'Glass Jar',
+	'item.espresso.baristas_reserve': 'Barista\x27s Reserve',
+	'item.espresso.ristretto': 'Ristretto',
+	'entity.espresso.villager.barista': 'Barista',
 	'advancements.espresso.guide.barista.title': 'Barista',
 	'advancements.espresso.guide.first_sip.title': 'First Sip',
 	'advancements.espresso.guide.mug_shot.title': 'Mug Shot',

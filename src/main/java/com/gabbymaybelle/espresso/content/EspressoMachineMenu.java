@@ -35,7 +35,7 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 		addSlot(new Slot(machine, EspressoMachineBlockEntity.BEAN_SLOT, 79, 17) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return stack.is(EspressoContent.ROASTED_COFFEE_BEANS);
+				return EspressoMachineBlockEntity.isBeans(stack);
 			}
 		});
 		addDataSlots(data);
@@ -65,7 +65,7 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 			if (!moveItemStackTo(stack, INV_START, INV_END, true)) {
 				return ItemStack.EMPTY;
 			}
-		} else if (stack.is(EspressoContent.ROASTED_COFFEE_BEANS)) {
+		} else if (EspressoMachineBlockEntity.isBeans(stack)) {
 			if (!moveItemStackTo(stack, EspressoMachineBlockEntity.BEAN_SLOT, INV_START, false)) {
 				return ItemStack.EMPTY;
 			}

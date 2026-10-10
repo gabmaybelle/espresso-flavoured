@@ -69,7 +69,7 @@ public final class Mugs {
 
 	/** What's in a mug item; EMPTY for an empty mug (or anything that isn't a mug). */
 	public static PlacedMugBlock.Contents contentsOf(ItemStack stack) {
-		if (stack.is(EspressoContent.ESPRESSO)) {
+		if (stack.is(EspressoContent.ESPRESSO) || stack.is(EspressoContent.RISTRETTO)) {
 			return PlacedMugBlock.Contents.ESPRESSO;
 		}
 		if (stack.is(EspressoContent.LATTE)) {

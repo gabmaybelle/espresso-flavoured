@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " S ",
+    "G G",
+    "GGG"
+  ],
+  "key": {
+    "S": "#minecraft:wooden_slabs",
+    "G": "minecraft:glass"
+  },
+  "result": {
+    "id": "espresso:glass_jar",
+    "count": 2
+  }
+}

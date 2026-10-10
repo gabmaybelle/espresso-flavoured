@@ -1,13 +1,17 @@
 package com.gabbymaybelle.espresso.content;
 
 import com.gabbymaybelle.espresso.Espresso;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -16,14 +20,18 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
@@ -32,6 +40,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.trading.TradeSet;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.Consumables;
@@ -78,8 +88,29 @@ public final class EspressoContent {
 	public static final Block CANISTER_BLOCK = registerBlock("canister", CanisterBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.5F)
 					.sound(SoundType.DECORATED_POT).noOcclusion().pushReaction(PushReaction.IMMOVEABLE));
+	public static final Block GLASS_JAR_BLOCK = registerBlock("glass_jar", JarBlock::new,
+			BlockBehaviour.Properties.of().mapColor(MapColor.NONE).strength(0.3F)
+					.sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.IMMOVEABLE));
 	public static final BlockEntityType<CanisterBlockEntity> CANISTER_ENTITY = Registry.register(
-			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("canister"), new BlockEntityType<>(CanisterBlockEntity::new, Set.of(CANISTER_BLOCK)));
+			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("canister"), new BlockEntityType<>(CanisterBlockEntity::new, Set.of(CANISTER_BLOCK, GLASS_JAR_BLOCK)));
+
+	// ---------------------------------------------------------------- the barista
+	/** The espresso machine is the barista's workstation. */
+	public static final ResourceKey<PoiType> BARISTA_POI = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id("barista"));
+	static {
+		PoiHelper.register(BARISTA_POI.identifier(), 1, 1, ESPRESSO_MACHINE);
+	}
+	public static final ResourceKey<VillagerProfession> BARISTA = ResourceKey.create(Registries.VILLAGER_PROFESSION, id("barista"));
+	static {
+		Int2ObjectMap<ResourceKey<TradeSet>> trades = new Int2ObjectOpenHashMap<>();
+		for (int level = 1; level <= 5; level++) {
+			trades.put(level, ResourceKey.create(Registries.TRADE_SET, id("barista/level_" + level)));
+		}
+		Registry.register(BuiltInRegistries.VILLAGER_PROFESSION, BARISTA, new VillagerProfession(
+				Component.translatable("entity.espresso.villager.barista"),
+				poi -> poi.is(BARISTA_POI), poi -> poi.is(BARISTA_POI),
+				ImmutableSet.of(), ImmutableSet.of(), SoundEvents.BREWING_STAND_BREW, trades));
+	}
 	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
 	public static final Block PLACED_MUG = registerBlock("placed_mug", PlacedMugBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.3F)
@@ -98,6 +129,10 @@ public final class EspressoContent {
 	public static final Item UNFIRED_CANISTER = registerItem("unfired_canister", Item::new, new Item.Properties());
 	public static final Item CANISTER = registerItem("canister", props -> new BlockItem(CANISTER_BLOCK, props),
 			new Item.Properties().useBlockDescriptionPrefix());
+	public static final Item GLASS_JAR = registerItem("glass_jar", props -> new BlockItem(GLASS_JAR_BLOCK, props),
+			new Item.Properties().useBlockDescriptionPrefix());
+	/** Rare beans from a master barista; the espresso machine brews them into Ristretto. */
+	public static final Item BARISTAS_RESERVE = registerItem("baristas_reserve", Item::new, new Item.Properties().rarity(Rarity.RARE));
 	public static final Item UNFIRED_MUG = registerItem("unfired_mug", Item::new, new Item.Properties());
 	public static final Item MUG = registerItem("mug", Item::new, new Item.Properties().stacksTo(16));
 	/** The loyalty card's reward: can't be dyed, shines, and coffee drunk from it lasts longer. */
@@ -110,15 +145,22 @@ public final class EspressoContent {
 	public static final Item ESPRESSO = registerItem("espresso", CoffeeItem::new, drink(1800, null));
 	public static final Item LATTE = registerItem("latte", CoffeeItem::new, drink(3600, new FoodProperties(2, 0.2F, true)));
 	public static final Item MOCHA_LATTE = registerItem("mocha_latte", CoffeeItem::new, drink(3600, new FoodProperties(4, 0.4F, true)));
+	/** A short, strong shot from the Barista's Reserve: the only Speed II and Haste II. */
+	public static final Item RISTRETTO = registerItem("ristretto", CoffeeItem::new, drink(1200, 1, null).rarity(Rarity.RARE));
 	/** The house special: lasts longest and fills you up the most. */
 	public static final Item VANILLA_LATTE = registerItem("vanilla_latte", CoffeeItem::new, drink(4800, new FoodProperties(4, 0.6F, true)));
 
 	/** A coffee drink: Speed I, Haste I and Caffeinated for {@code ticks}, served in a mug (which you get back). */
 	private static Item.Properties drink(int ticks, FoodProperties food) {
+		return drink(ticks, 0, food);
+	}
+
+	/** As above, with Speed and Haste at the given amplifier (Caffeinated is always I). */
+	private static Item.Properties drink(int ticks, int amplifier, FoodProperties food) {
 		Consumable consumable = Consumables.defaultDrink()
 				.onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
-						new MobEffectInstance(MobEffects.SPEED, ticks, 0),
-						new MobEffectInstance(MobEffects.HASTE, ticks, 0),
+						new MobEffectInstance(MobEffects.SPEED, ticks, amplifier),
+						new MobEffectInstance(MobEffects.HASTE, ticks, amplifier),
 						new MobEffectInstance(CAFFEINATED, ticks, 0))))
 				.build();
 		Item.Properties props = new Item.Properties().stacksTo(16).usingConvertsTo(MUG);
@@ -144,10 +186,12 @@ public final class EspressoContent {
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> {
 			output.accept(ESPRESSO_MACHINE_ITEM);
 			output.accept(CANISTER);
+			output.accept(GLASS_JAR);
 		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> {
 			output.accept(UNFIRED_MUG);
 			output.accept(UNFIRED_CANISTER);
+			output.accept(BARISTAS_RESERVE);
 			output.accept(VANILLA_SYRUP);
 		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {
@@ -159,6 +203,7 @@ public final class EspressoContent {
 			output.accept(LATTE);
 			output.accept(MOCHA_LATTE);
 			output.accept(VANILLA_LATTE);
+			output.accept(RISTRETTO);
 		});
 		// Wild coffee bushes in jungles and savannas.
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.IS_JUNGLE).or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA)),

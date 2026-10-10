@@ -214,6 +214,63 @@ out('data/espresso/trade_set/wandering_trader/fair_trade.json', {
 	trades: '#espresso:wandering_trader/fair_trade',
 });
 
+// ---------------------------------------------------------------- the barista villager
+// The espresso machine is a job site, so unemployed villagers can claim it.
+out('data/minecraft/tags/point_of_interest_type/acquirable_job_site.json', { values: ['espresso:barista'] });
+// Trades by level: [name, wants (id, count), gives (id, count), max uses, xp]. Two of each level are offered.
+const E = 'minecraft:emerald';
+const BARISTA_TRADES = {
+	1: [
+		['beans_emerald', ['espresso:roasted_coffee_beans', 10], [E, 1], 16, 2],
+		['sugar_emerald', ['minecraft:sugar', 20], [E, 1], 16, 2],
+		['emerald_cherries', [E, 1], ['espresso:coffee_cherries', 3], 12, 1],
+		['emerald_mug', [E, 1], ['espresso:mug', 2], 12, 1],
+	],
+	2: [
+		['milk_emerald', ['minecraft:milk_bucket', 1], [E, 1], 12, 10],
+		['cocoa_emerald', ['minecraft:cocoa_beans', 10], [E, 1], 16, 10],
+		['emerald_espresso', [E, 2], ['espresso:espresso', 1], 12, 5],
+		['emerald_canister', [E, 2], ['espresso:canister', 1], 12, 5],
+	],
+	3: [
+		['honey_emerald', ['minecraft:honey_bottle', 4], [E, 1], 12, 20],
+		['emerald_latte', [E, 3], ['espresso:latte', 1], 12, 10],
+		['emerald_mocha', [E, 4], ['espresso:mocha_latte', 1], 12, 10],
+		['emerald_glass_jar', [E, 2], ['espresso:glass_jar', 1], 12, 10],
+	],
+	4: [
+		['glow_berries_emerald', ['minecraft:glow_berries', 12], [E, 1], 12, 30],
+		['emerald_vanilla_latte', [E, 5], ['espresso:vanilla_latte', 1], 12, 15],
+		['emerald_name_tag', [E, 20], ['minecraft:name_tag', 1], 6, 15],
+		['emerald_experience_bottle', [E, 3], ['minecraft:experience_bottle', 1], 12, 15],
+	],
+	5: [
+		['emerald_baristas_reserve', [E, 8], ['espresso:baristas_reserve', 1], 6, 30],
+		['emerald_golden_apple', [E, 10], ['minecraft:golden_apple', 1], 4, 30],
+	],
+};
+const item = ([id, count]) => (count > 1 ? { count, id } : { id });
+for (const [level, trades] of Object.entries(BARISTA_TRADES)) {
+	const ids = [];
+	for (const [name, wants, gives, maxUses, xp] of trades) {
+		ids.push(`espresso:barista/${level}/${name}`);
+		out(`data/espresso/villager_trade/barista/${level}/${name}.json`, {
+			gives: item(gives), max_uses: maxUses, reputation_discount: 0.05, wants: item(wants), xp,
+		});
+	}
+	out(`data/espresso/tags/villager_trade/barista/level_${level}.json`, { values: ids });
+	out(`data/espresso/trade_set/barista/level_${level}.json`, {
+		amount: 2, random_sequence: `espresso:trade_set/barista/level_${level}`, trades: `#espresso:barista/level_${level}`,
+	});
+}
+
+// Glass jars: glass with a wooden lid.
+out('data/espresso/recipe/glass_jar.json', {
+	type: 'minecraft:crafting_shaped', category: 'misc',
+	pattern: [' S ', 'G G', 'GGG'], key: { S: '#minecraft:wooden_slabs', G: 'minecraft:glass' },
+	result: { id: 'espresso:glass_jar', count: 2 },
+});
+
 // ---------------------------------------------------------------- field guide
 const PAGES = [
 	'Espresso Flavoured\nField Notes\n\nWelcome! This world is a little kinder to builders, so you can spend less time worrying and more time making something you love.\n\n- Gabby',

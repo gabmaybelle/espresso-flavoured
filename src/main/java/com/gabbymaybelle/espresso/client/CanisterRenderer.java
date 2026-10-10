@@ -2,6 +2,7 @@ package com.gabbymaybelle.espresso.client;
 
 import com.gabbymaybelle.espresso.content.CanisterBlock;
 import com.gabbymaybelle.espresso.content.CanisterBlockEntity;
+import com.gabbymaybelle.espresso.content.JarBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -18,7 +19,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-/** Draws a small picture of a canister's contents on its front, like a label. */
+/** Draws a canister's contents on its front like a label, or a glass jar's contents inside the glass. */
 public class CanisterRenderer implements BlockEntityRenderer<CanisterBlockEntity, CanisterRenderer.State> {
 	private final ItemModelResolver itemModelResolver;
 
@@ -29,6 +30,7 @@ public class CanisterRenderer implements BlockEntityRenderer<CanisterBlockEntity
 	public static class State extends BlockEntityRenderState {
 		final ItemStackRenderState label = new ItemStackRenderState();
 		Direction facing = Direction.NORTH;
+		boolean jar;
 	}
 
 	@Override
@@ -41,6 +43,7 @@ public class CanisterRenderer implements BlockEntityRenderer<CanisterBlockEntity
 			ModelFeatureRenderer.CrumblingOverlay crumbling) {
 		BlockEntityRenderer.super.extractRenderState(canister, state, partialTick, cameraPos, crumbling);
 		state.facing = canister.getBlockState().getValue(CanisterBlock.FACING);
+		state.jar = canister.getBlockState().getBlock() instanceof JarBlock;
 		ItemStack label = canister.labelItem();
 		itemModelResolver.updateForTopItem(state.label, label, ItemDisplayContext.FIXED, canister.getLevel(), null,
 				(int) canister.getBlockPos().asLong());
@@ -55,9 +58,15 @@ public class CanisterRenderer implements BlockEntityRenderer<CanisterBlockEntity
 		// Centre of the block, turned so the label faces out of the canister's front.
 		pose.translate(0.5F, 0.0F, 0.5F);
 		pose.rotateDegrees(Axis.YP, -state.facing.toYRot());
-		// Just in front of the front face (the canister is 8 px wide), halfway up.
-		pose.translate(0.0F, 0.33F, 0.255F);
-		pose.scale(0.28F, 0.28F, 0.28F);
+		if (state.jar) {
+			// Inside the glass, a little below the middle.
+			pose.translate(0.0F, 0.3F, 0.0F);
+			pose.scale(0.4F, 0.4F, 0.4F);
+		} else {
+			// Just in front of the front face (the canister is 8 px wide), halfway up.
+			pose.translate(0.0F, 0.33F, 0.255F);
+			pose.scale(0.28F, 0.28F, 0.28F);
+		}
 		state.label.submit(pose, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 		pose.popPose();
 	}

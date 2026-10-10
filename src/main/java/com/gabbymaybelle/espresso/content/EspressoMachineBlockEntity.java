@@ -13,6 +13,7 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -91,9 +92,10 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 
 	private void brew(ServerLevel level, BlockPos pos, BlockState state) {
 		ItemStack beans = items.get(BEAN_SLOT);
+		Item drink = beans.is(EspressoContent.BARISTAS_RESERVE) ? EspressoContent.RISTRETTO : EspressoContent.ESPRESSO;
 		for (int i = 0; i < BEAN_SLOT && !beans.isEmpty(); i++) {
 			if (Mugs.isEmptyMug(items.get(i))) {
-				items.set(i, Mugs.fill(items.get(i), EspressoContent.ESPRESSO));
+				items.set(i, Mugs.fill(items.get(i), drink));
 				beans.shrink(1);
 			}
 		}
@@ -103,6 +105,11 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 		Direction front = state.getValue(EspressoMachineBlock.FACING);
 		level.sendParticles(ParticleTypes.WHITE_SMOKE, pos.getX() + 0.5 + front.getStepX() * 0.3,
 				pos.getY() + 0.75, pos.getZ() + 0.5 + front.getStepZ() * 0.3, 6, 0.08, 0.05, 0.08, 0.01);
+	}
+
+	/** Roasted coffee beans, or the Barista's Reserve. */
+	public static boolean isBeans(ItemStack stack) {
+		return stack.is(EspressoContent.ROASTED_COFFEE_BEANS) || stack.is(EspressoContent.BARISTAS_RESERVE);
 	}
 
 	@Override
@@ -148,7 +155,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		if (slot == BEAN_SLOT) {
-			return stack.is(EspressoContent.ROASTED_COFFEE_BEANS);
+			return isBeans(stack);
 		}
 		return Mugs.isEmptyMug(stack) && items.get(slot).isEmpty();
 	}
@@ -165,6 +172,6 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 
 	@Override
 	public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
-		return side == Direction.DOWN && stack.is(EspressoContent.ESPRESSO);
+		return side == Direction.DOWN && (stack.is(EspressoContent.ESPRESSO) || stack.is(EspressoContent.RISTRETTO));
 	}
 }

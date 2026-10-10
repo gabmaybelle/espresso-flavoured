@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -66,6 +67,11 @@ public class CanisterBlock extends HorizontalDirectionalBlock implements EntityB
 		return SHAPES.get(state.getValue(FACING));
 	}
 
+	/** The item this block is placed from and drops as. */
+	protected Item item() {
+		return EspressoContent.CANISTER;
+	}
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new CanisterBlockEntity(pos, state);
@@ -83,7 +89,7 @@ public class CanisterBlock extends HorizontalDirectionalBlock implements EntityB
 	@Override
 	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
 			InteractionHand hand, BlockHitResult hit) {
-		if (!(level.getBlockEntity(pos) instanceof CanisterBlockEntity canister)) {
+		if (stack.isEmpty() || !(level.getBlockEntity(pos) instanceof CanisterBlockEntity canister)) {
 			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		}
 		ItemVariant variant = ItemVariant.of(stack);
@@ -127,7 +133,7 @@ public class CanisterBlock extends HorizontalDirectionalBlock implements EntityB
 	@Override
 	protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
 		List<ItemStack> drops = new ArrayList<>();
-		ItemStack canisterItem = new ItemStack(EspressoContent.CANISTER);
+		ItemStack canisterItem = new ItemStack(item());
 		if (params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof CanisterBlockEntity canister) {
 			if (canister.color != null) {
 				canisterItem.set(DataComponents.DYED_COLOR, canister.color);
@@ -142,7 +148,7 @@ public class CanisterBlock extends HorizontalDirectionalBlock implements EntityB
 
 	@Override
 	protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
-		ItemStack stack = new ItemStack(EspressoContent.CANISTER);
+		ItemStack stack = new ItemStack(item());
 		if (level.getBlockEntity(pos) instanceof CanisterBlockEntity canister && canister.color != null) {
 			stack.set(DataComponents.DYED_COLOR, canister.color);
 		}
