@@ -222,13 +222,14 @@ drinkLayer('ristretto', [36, 18, 8], [214, 150, 80], [24, 12, 6]);
 	png('entity/zombie_villager/profession/barista', rows, APRON);
 }
 
-// Coffee bar cabinet doors, drawn over each wood's planks: two doors with dark gaps and little handles.
+// Coffee bar cabinet doors, drawn over each wood's planks: two doors outlined in a soft shadow (it darkens
+// whichever wood is underneath, so the trim always matches) and little handles.
 png('block/coffee_bar_doors', grid((x, y) => {
 	if (y > 13) return '.';
 	if (x === 0 || x === 15 || y === 0 || y === 13 || x === 7 || x === 8) return 'g';
 	if (y === 6 && (x === 5 || x === 10)) return 'h';
 	return '.';
-}), { g: [44, 30, 20], h: [200, 200, 206] });
+}), { g: [0, 0, 0, 80], h: [200, 200, 206] }); // a soft shadow, so the lines match each wood
 
 // ---------------------------------------------------------------- bush stages
 png('block/coffee_bush_stage0', [
