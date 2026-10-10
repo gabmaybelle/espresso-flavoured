@@ -26,7 +26,9 @@
   ],
   "rewards": {
     "recipes": [
-      "espresso:latte"
+      "espresso:latte",
+      "espresso:iced_coffee",
+      "espresso:night_shift"
     ]
   }
 }

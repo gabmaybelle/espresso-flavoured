@@ -42,6 +42,8 @@ public final class Config {
 	public static boolean caffeineCrash = true;
 	/** The espresso machine only brews on a coffee bar. */
 	public static boolean coffeeBarRequired = true;
+	/** How tall sugar cane grows (vanilla: 3). */
+	public static int sugarCaneHeight = 5;
 
 	private Config() {
 	}
@@ -68,6 +70,7 @@ public final class Config {
 		drowsiness = bool(props, "drowsiness", drowsiness);
 		caffeineCrash = bool(props, "caffeineCrash", caffeineCrash);
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
+		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
 		save();
 	}
 
@@ -87,6 +90,7 @@ public final class Config {
 		props.setProperty("drowsiness", Boolean.toString(drowsiness));
 		props.setProperty("caffeineCrash", Boolean.toString(caffeineCrash));
 		props.setProperty("coffeeBarRequired", Boolean.toString(coffeeBarRequired));
+		props.setProperty("sugarCaneHeight", Integer.toString(sugarCaneHeight));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
@@ -102,6 +106,7 @@ public final class Config {
 					+ "drowsiness: Drowsy after two days without sleeping at home (any bed within your safe home radius), and Hungry if you haven't eaten in that time either\n"
 					+ "caffeineCrash: past two days away, coffee holds off Drowsy for a while and then you crash (off: it holds it off as long as you keep drinking)\n"
 					+ "coffeeBarRequired: the espresso machine only brews on top of a coffee bar\n"
+					+ "sugarCaneHeight: how tall sugar cane grows (vanilla 3)\n"
 					+ "longerDays needs a restart; everything else applies straight away");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);

@@ -102,7 +102,8 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 
 	private void brew(ServerLevel level, BlockPos pos, BlockState state) {
 		ItemStack beans = items.get(BEAN_SLOT);
-		Item drink = beans.is(EspressoContent.BARISTAS_RESERVE) ? EspressoContent.RISTRETTO : EspressoContent.ESPRESSO;
+		Item drink = beans.is(EspressoContent.BARISTAS_RESERVE) ? EspressoContent.RISTRETTO
+				: beans.is(EspressoContent.COCOA_MIX) ? EspressoContent.HOT_CHOCOLATE : EspressoContent.ESPRESSO;
 		boolean decaf = beans.is(EspressoContent.DECAF_BEANS);
 		for (int i = 0; i < BEAN_SLOT && !beans.isEmpty(); i++) {
 			if (Mugs.isEmptyMug(items.get(i))) {
@@ -118,10 +119,10 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 				pos.getY() + 0.75, pos.getZ() + 0.5 + front.getStepZ() * 0.3, 6, 0.08, 0.05, 0.08, 0.01);
 	}
 
-	/** Roasted coffee beans, decaf beans, or the Barista's Reserve. */
+	/** What goes in the top slot: roasted or decaf beans, the Barista's Reserve, or cocoa mix. */
 	public static boolean isBeans(ItemStack stack) {
 		return stack.is(EspressoContent.ROASTED_COFFEE_BEANS) || stack.is(EspressoContent.DECAF_BEANS)
-				|| stack.is(EspressoContent.BARISTAS_RESERVE);
+				|| stack.is(EspressoContent.BARISTAS_RESERVE) || stack.is(EspressoContent.COCOA_MIX);
 	}
 
 	@Override
@@ -184,6 +185,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 
 	@Override
 	public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
-		return side == Direction.DOWN && (stack.is(EspressoContent.ESPRESSO) || stack.is(EspressoContent.RISTRETTO));
+		// Finished drinks come out; empty mugs stay in to be filled.
+		return side == Direction.DOWN && slot < BEAN_SLOT && !Mugs.isEmptyMug(stack);
 	}
 }

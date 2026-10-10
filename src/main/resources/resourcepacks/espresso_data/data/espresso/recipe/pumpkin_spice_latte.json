@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_transmute",
+  "category": "misc",
+  "input": "espresso:latte",
+  "material": "espresso:pumpkin_spice",
+  "result": {
+    "id": "espresso:pumpkin_spice_latte"
+  }
+}

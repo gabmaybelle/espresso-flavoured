@@ -9,6 +9,7 @@
 - **Vanilla latte**, the house special: honey and sugar make vanilla syrup.
 - **Decaf.** Wash roasted beans in water. Decaf makes you **Cozy**: you heal slowly near home, wake up **Well Rested** with two golden hearts, and it softens a caffeine crash.
 - **Ristretto**, brewed from the Barista's Reserve: the only Speed II and Haste II.
+- **More drinks:** a Pumpkin Spice Latte (pumpkin spice is pumpkin and sugar) that makes you **Warm**, so powder snow can't freeze you; Iced Coffee with a little Fire Resistance; Night Shift, a glow berry cold brew with Night Vision; and Hot Chocolate, brewed from cocoa mix, with no coffee at all, just Cozy.
 
 ### The café
 - **Barista villagers** use the espresso machine as their workstation. They trade beans, mugs and drinks, and a master sells name tags, bottles o' enchanting, golden apples and the Barista's Reserve.
@@ -24,7 +25,8 @@
 ### Smaller things
 - New recipes appear in the recipe book as you pick up their ingredients.
 - The field guide has a Coffee Corner page.
-- New settings: "Machine Needs a Coffee Bar" and "Caffeine Crash".
+- Sugar cane grows 5 blocks tall, so a few plants keep you in sugar (there's a setting).
+- New settings: "Machine Needs a Coffee Bar", "Caffeine Crash" and "Sugar Cane Height".
 - New advancements: Barista, Mug Shot, House Special, Sweet Dreams, and On the House.
 
 ## 0.1.0

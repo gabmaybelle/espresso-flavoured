@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:pumpkin",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "id": "espresso:pumpkin_spice",
+    "count": 4
+  }
+}

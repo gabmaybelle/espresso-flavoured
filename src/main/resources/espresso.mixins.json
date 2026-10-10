@@ -14,7 +14,9 @@
 		"NaturalSpawnerMixin",
 		"PhantomSpawnerMixin",
 		"ServerChunkCacheMixin",
-		"WanderingTraderMixin"
+		"SugarCaneBlockMixin",
+		"WanderingTraderMixin",
+		"WarmMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

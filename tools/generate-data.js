@@ -86,7 +86,24 @@ out('data/espresso/recipe/vanilla_latte.json', {
 	type: 'minecraft:crafting_transmute', category: 'misc',
 	input: 'espresso:latte', material: 'espresso:vanilla_syrup', result: { id: 'espresso:vanilla_latte' },
 });
-out('data/espresso/tags/item/coffee.json', { values: ['espresso:espresso', 'espresso:latte', 'espresso:mocha_latte', 'espresso:vanilla_latte'] });
+// More drinks: pumpkin spice (pumpkin and sugar) for a seasonal latte, ice for iced coffee,
+// glow berries for a night shift, and cocoa mix that the machine brews into hot chocolate.
+out('data/espresso/recipe/pumpkin_spice.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['minecraft:pumpkin', 'minecraft:sugar'], result: { id: 'espresso:pumpkin_spice', count: 4 },
+});
+out('data/espresso/recipe/cocoa_mix.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['minecraft:cocoa_beans', 'minecraft:sugar', 'minecraft:milk_bucket'], result: { id: 'espresso:cocoa_mix', count: 4 },
+});
+for (const [name, input, material] of [['pumpkin_spice_latte', 'espresso:latte', 'espresso:pumpkin_spice'],
+	['iced_coffee', 'espresso:espresso', 'minecraft:ice'], ['night_shift', 'espresso:espresso', 'minecraft:glow_berries']]) {
+	out(`data/espresso/recipe/${name}.json`, {
+		type: 'minecraft:crafting_transmute', category: 'misc', input, material, result: { id: `espresso:${name}` },
+	});
+}
+out('data/espresso/tags/item/coffee.json', { values: ['espresso:espresso', 'espresso:latte', 'espresso:mocha_latte', 'espresso:vanilla_latte',
+	'espresso:pumpkin_spice_latte', 'espresso:iced_coffee', 'espresso:night_shift'] });
 
 // Canisters: clay, fired, dyeable, like mugs.
 out('data/espresso/recipe/unfired_canister.json', {
@@ -308,8 +325,10 @@ unlock('mug', ['espresso:unfired_mug'], ['mug']);
 unlock('canister', ['espresso:unfired_canister'], ['canister']);
 unlock('mug_dyed', ['espresso:mug'], ['mug_dyed']);
 unlock('canister_dyed', ['espresso:canister'], ['canister_dyed']);
-unlock('latte', ['espresso:espresso'], ['latte']);
-unlock('latte_drinks', ['espresso:latte'], ['mocha_latte', 'vanilla_latte']);
+unlock('latte', ['espresso:espresso'], ['latte', 'iced_coffee', 'night_shift']);
+unlock('latte_drinks', ['espresso:latte'], ['mocha_latte', 'vanilla_latte', 'pumpkin_spice_latte']);
+unlock('pumpkin_spice', ['minecraft:pumpkin'], ['pumpkin_spice']);
+unlock('cocoa_mix', ['minecraft:cocoa_beans'], ['cocoa_mix']);
 unlock('vanilla_syrup', ['minecraft:honey_bottle', 'minecraft:sugar'], ['vanilla_syrup']);
 unlock('glass_jar', ['minecraft:glass'], ['glass_jar']);
 unlock('shulker_box_overworld', ['minecraft:ender_pearl', 'minecraft:amethyst_shard'], ['shulker_box_overworld']);

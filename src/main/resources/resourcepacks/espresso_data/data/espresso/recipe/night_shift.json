@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_transmute",
+  "category": "misc",
+  "input": "espresso:espresso",
+  "material": "minecraft:glow_berries",
+  "result": {
+    "id": "espresso:night_shift"
+  }
+}

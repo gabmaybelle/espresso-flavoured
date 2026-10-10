@@ -139,6 +139,22 @@ for (const [name, liquid, top] of [['espresso', [58, 30, 14], [196, 136, 78]], [
 
 // ---------------------------------------------------------------- café extras
 drinkLayer('vanilla_latte', [214, 178, 120], [250, 244, 230], [120, 80, 40]);
+// The newer drinks: liquid, the top (foam, ice, glow or marshmallow) and a detail.
+drinkLayer('pumpkin_spice_latte', [196, 120, 60], [246, 214, 170], [120, 64, 30]);
+drinkLayer('iced_coffee', [58, 30, 14], [200, 228, 246], [140, 90, 60]);
+drinkLayer('night_shift', [36, 24, 18], [250, 214, 90], [70, 46, 24]);
+drinkLayer('hot_chocolate', [92, 50, 28], [250, 248, 244], [64, 34, 18]);
+// Pumpkin spice and cocoa mix: little paper sachets of powder.
+const sachet = (name, powder, dark) => png(`item/${name}`, grid((x, y) => {
+	if (y === 3 && x >= 5 && x <= 10) return 'f'; // folded top
+	if (y >= 4 && y <= 13 && x >= 4 && x <= 11) {
+		if (y >= 7 && y <= 10 && x >= 6 && x <= 9) return (x + y) % 3 ? 'p' : 'd'; // the powder showing through the window
+		return x === 4 || x === 11 || y === 13 ? 'e' : 'w';
+	}
+	return '.';
+}), { f: [214, 196, 160], w: [236, 224, 196], e: [190, 170, 136], p: powder, d: dark });
+sachet('pumpkin_spice', [214, 120, 52], [150, 74, 30]);
+sachet('cocoa_mix', [110, 62, 34], [70, 38, 20]);
 png('block/mug_vanilla', grid((x, y) => ((x - 7.5) ** 2 + (y - 7.5) ** 2 < 14 ? 'T' : ((x * 5 + y * 3) % 13 === 0 ? 'D' : 'L'))),
 	{ L: [214, 178, 120], T: [250, 244, 230], D: [120, 80, 40] });
 // Vanilla syrup: a little jar of golden syrup with a vanilla pod.
@@ -274,6 +290,12 @@ png('mob_effect/cozy', grid18((x, y) => {
 	if (y >= 10 && y <= 11 && x === 13) return 'S';
 	return '.';
 }), { h: [232, 120, 120], B: [240, 196, 150], S: [200, 150, 104] });
+// Warm: a little scarf-orange flame.
+png('mob_effect/warm', grid18((x, y) => {
+	const dx = x - 8.5, w = y < 6 ? 0 : (y - 5) * 0.55;
+	if (y >= 3 && y <= 15 && Math.abs(dx) <= Math.min(w, 4.5)) return Math.abs(dx) <= Math.min(w, 4.5) - 2 && y > 8 ? 'Y' : 'O';
+	return '.';
+}), { O: [224, 110, 50], Y: [250, 200, 90] });
 png('mob_effect/well_rested', grid18((x, y) => {
 	const dx = x - 8.5, dy = y - 8.5, r2 = dx * dx + dy * dy;
 	if (r2 < 9) return 'Y';
@@ -330,6 +352,10 @@ for (const item of ['vanilla_syrup', 'unfired_canister']) {
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
 out('items/vanilla_latte.json', dyed('espresso:item/vanilla_latte'));
+for (const drink of ['pumpkin_spice_latte', 'iced_coffee', 'night_shift', 'hot_chocolate']) {
+	out(`items/${drink}.json`, dyed(`espresso:item/${drink}`));
+	out(`models/item/${drink}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: `espresso:item/${drink}_fill` } });
+}
 out('models/item/vanilla_latte.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: 'espresso:item/vanilla_latte_fill' } });
 out('models/block/mug_vanilla.json', { parent: 'espresso:block/mug_full', textures: { liquid: 'espresso:block/mug_vanilla' } });
 // The golden mug carries its gold colour as a dye, so it shares the mug's tinted model.
@@ -359,7 +385,7 @@ out('blockstates/canister.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/canister', ...(y ? { y } : {}) }]),
 ) });
 // Glass jar, the Reserve and Ristretto.
-for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans']) {
+for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans', 'pumpkin_spice', 'cocoa_mix']) {
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
@@ -490,6 +516,15 @@ out('lang/en_us.json', {
 	'effect.espresso.well_rested': 'Well Rested',
 	'item.espresso.decaf_coffee_beans': 'Decaf Coffee Beans',
 	'item.espresso.decaf': 'Decaf',
+	'effect.espresso.warm': 'Warm',
+	'item.espresso.pumpkin_spice': 'Pumpkin Spice',
+	'item.espresso.cocoa_mix': 'Cocoa Mix',
+	'item.espresso.pumpkin_spice_latte': 'Pumpkin Spice Latte',
+	'item.espresso.iced_coffee': 'Iced Coffee',
+	'item.espresso.night_shift': 'Night Shift',
+	'item.espresso.hot_chocolate': 'Hot Chocolate',
+	'espresso.options.sugarCaneHeight': 'Sugar Cane Height',
+	'espresso.options.sugarCaneHeight.tooltip': 'How tall sugar cane grows. Vanilla is 3.',
 	'block.espresso.espresso_machine': 'Espresso Machine',
 	'item.espresso.mug': 'Mug',
 	'item.espresso.unfired_mug': 'Unfired Mug',

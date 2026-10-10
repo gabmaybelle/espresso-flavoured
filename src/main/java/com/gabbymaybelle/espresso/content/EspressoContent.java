@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -77,6 +78,9 @@ public final class EspressoContent {
 	/** From decaf: heals you slowly near home, and sleeping with it wakes you Well Rested (see Wellbeing). */
 	public static final Holder<MobEffect> COZY = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("cozy"),
 			new EspressoEffect(MobEffectCategory.BENEFICIAL, 0xe8a87c));
+	/** From a pumpkin spice latte: powder snow can't freeze you (see WarmMixin). */
+	public static final Holder<MobEffect> WARM = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("warm"),
+			new EspressoEffect(MobEffectCategory.BENEFICIAL, 0xe07b39));
 	/** Two golden hearts after a cozy night's sleep. */
 	public static final Holder<MobEffect> WELL_RESTED = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("well_rested"),
 			new WellRestedEffect(MobEffectCategory.BENEFICIAL, 0xf4d06f)
@@ -148,6 +152,10 @@ public final class EspressoContent {
 			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
 	/** Roasted beans washed in water; the espresso machine brews them into decaf. */
 	public static final Item DECAF_BEANS = registerItem("decaf_coffee_beans", Item::new, new Item.Properties());
+	/** Pumpkin and sugar, for a pumpkin spice latte. */
+	public static final Item PUMPKIN_SPICE = registerItem("pumpkin_spice", Item::new, new Item.Properties());
+	/** Cocoa, sugar and milk; the espresso machine brews it into hot chocolate. */
+	public static final Item COCOA_MIX = registerItem("cocoa_mix", Item::new, new Item.Properties());
 	public static final Item UNFIRED_CANISTER = registerItem("unfired_canister", Item::new, new Item.Properties());
 	public static final Item CANISTER = registerItem("canister", props -> new BlockItem(CANISTER_BLOCK, props),
 			new Item.Properties().useBlockDescriptionPrefix());
@@ -171,6 +179,18 @@ public final class EspressoContent {
 	public static final Item MOCHA_LATTE = registerItem("mocha_latte", CoffeeItem::new, drink(3600, new FoodProperties(4, 0.4F, true)));
 	/** A short, strong shot from the Barista's Reserve: the only Speed II and Haste II. */
 	public static final Item RISTRETTO = registerItem("ristretto", CoffeeItem::new, drink(1200, 1, null).rarity(Rarity.RARE));
+	/** Autumn in a mug: the usual pick-me-up, and Warm (powder snow can't freeze you). */
+	public static final Item PUMPKIN_SPICE_LATTE = registerItem("pumpkin_spice_latte", CoffeeItem::new,
+			drink(3600, 0, new FoodProperties(3, 0.3F, true), new MobEffectInstance(WARM, 3600, 0)));
+	/** For hot days and the Nether: thirty seconds of Fire Resistance with the coffee. */
+	public static final Item ICED_COFFEE = registerItem("iced_coffee", CoffeeItem::new,
+			drink(1800, 0, null, new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0)));
+	/** A glow berry cold brew for late nights: three minutes of Night Vision with the coffee. */
+	public static final Item NIGHT_SHIFT = registerItem("night_shift", CoffeeItem::new,
+			drink(1800, 0, null, new MobEffectInstance(MobEffects.NIGHT_VISION, 3600, 0)));
+	/** No coffee at all: a warm cocoa that makes you Cozy, like decaf. */
+	public static final Item HOT_CHOCOLATE = registerItem("hot_chocolate", CoffeeItem::new, new Item.Properties().stacksTo(16)
+			.usingConvertsTo(MUG).food(new FoodProperties(4, 0.4F, true), decafConsumable()));
 	/** The house special: lasts longest and fills you up the most. */
 	public static final Item VANILLA_LATTE = registerItem("vanilla_latte", CoffeeItem::new, drink(4800, new FoodProperties(4, 0.6F, true)));
 
@@ -184,14 +204,14 @@ public final class EspressoContent {
 		return Consumables.defaultDrink().onConsume(new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(COZY, 3600, 0)))).build();
 	}
 
-	/** As above, with Speed and Haste at the given amplifier (Caffeinated is always I). */
-	private static Item.Properties drink(int ticks, int amplifier, FoodProperties food) {
-		Consumable consumable = Consumables.defaultDrink()
-				.onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
-						new MobEffectInstance(MobEffects.SPEED, ticks, amplifier),
-						new MobEffectInstance(MobEffects.HASTE, ticks, amplifier),
-						new MobEffectInstance(CAFFEINATED, ticks, 0))))
-				.build();
+	/** As above, with Speed and Haste at the given amplifier (Caffeinated is always I), plus any extra perks. */
+	private static Item.Properties drink(int ticks, int amplifier, FoodProperties food, MobEffectInstance... perks) {
+		List<MobEffectInstance> effects = new ArrayList<>(List.of(
+				new MobEffectInstance(MobEffects.SPEED, ticks, amplifier),
+				new MobEffectInstance(MobEffects.HASTE, ticks, amplifier),
+				new MobEffectInstance(CAFFEINATED, ticks, 0)));
+		effects.addAll(List.of(perks));
+		Consumable consumable = Consumables.defaultDrink().onConsume(new ApplyStatusEffectsConsumeEffect(effects)).build();
 		Item.Properties props = new Item.Properties().stacksTo(16).usingConvertsTo(MUG);
 		return food == null ? props.component(DataComponents.CONSUMABLE, consumable) : props.food(food, consumable);
 	}
@@ -228,6 +248,8 @@ public final class EspressoContent {
 			output.accept(UNFIRED_CANISTER);
 			output.accept(BARISTAS_RESERVE);
 			output.accept(DECAF_BEANS);
+			output.accept(PUMPKIN_SPICE);
+			output.accept(COCOA_MIX);
 			output.accept(VANILLA_SYRUP);
 		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {
@@ -240,6 +262,10 @@ public final class EspressoContent {
 			output.accept(MOCHA_LATTE);
 			output.accept(VANILLA_LATTE);
 			output.accept(RISTRETTO);
+			output.accept(PUMPKIN_SPICE_LATTE);
+			output.accept(ICED_COFFEE);
+			output.accept(NIGHT_SHIFT);
+			output.accept(HOT_CHOCOLATE);
 		});
 		// Wild coffee bushes in jungles and savannas.
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.IS_JUNGLE).or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA)),

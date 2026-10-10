@@ -78,13 +78,14 @@ public final class Mugs {
 
 	/** What's in a mug item; EMPTY for an empty mug (or anything that isn't a mug). */
 	public static PlacedMugBlock.Contents contentsOf(ItemStack stack) {
-		if (stack.is(EspressoContent.ESPRESSO) || stack.is(EspressoContent.RISTRETTO)) {
+		if (stack.is(EspressoContent.ESPRESSO) || stack.is(EspressoContent.RISTRETTO) || stack.is(EspressoContent.ICED_COFFEE)
+				|| stack.is(EspressoContent.NIGHT_SHIFT)) {
 			return PlacedMugBlock.Contents.ESPRESSO;
 		}
-		if (stack.is(EspressoContent.LATTE)) {
+		if (stack.is(EspressoContent.LATTE) || stack.is(EspressoContent.PUMPKIN_SPICE_LATTE)) {
 			return PlacedMugBlock.Contents.LATTE;
 		}
-		if (stack.is(EspressoContent.MOCHA_LATTE)) {
+		if (stack.is(EspressoContent.MOCHA_LATTE) || stack.is(EspressoContent.HOT_CHOCOLATE)) {
 			return PlacedMugBlock.Contents.MOCHA;
 		}
 		if (stack.is(EspressoContent.VANILLA_LATTE)) {

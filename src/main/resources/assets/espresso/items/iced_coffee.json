@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "espresso:item/iced_coffee",
+    "tints": [
+      {
+        "type": "minecraft:dye",
+        "default": -990001
+      }
+    ]
+  }
+}
