@@ -2,6 +2,7 @@ package com.gabbymaybelle.espresso.content;
 
 import com.gabbymaybelle.espresso.Espresso;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -20,7 +21,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -30,6 +33,7 @@ import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.material.MapColor;
@@ -58,10 +62,20 @@ public final class EspressoContent {
 	public static final Block COFFEE_BUSH = registerBlock("coffee_bush", CoffeeBushBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollision()
 					.sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.POPPED));
+	public static final Block ESPRESSO_MACHINE = registerBlock("espresso_machine", EspressoMachineBlock::new,
+			BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.5F).requiresCorrectToolForDrops()
+					.sound(SoundType.METAL).noOcclusion());
+	public static final BlockEntityType<EspressoMachineBlockEntity> ESPRESSO_MACHINE_ENTITY = Registry.register(
+			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("espresso_machine"),
+			new BlockEntityType<>(EspressoMachineBlockEntity::new, Set.of(ESPRESSO_MACHINE)));
+	public static final MenuType<EspressoMachineMenu> ESPRESSO_MACHINE_MENU = Registry.register(
+			BuiltInRegistries.MENU, id("espresso_machine"), new MenuType<>(EspressoMachineMenu::new, FeatureFlags.VANILLA_SET));
 
 	// ---------------------------------------------------------------- items
 	public static final Item COFFEE_CHERRIES = registerItem("coffee_cherries",
 			props -> new BlockItem(COFFEE_BUSH, props), new Item.Properties().useItemDescriptionPrefix());
+	public static final Item ESPRESSO_MACHINE_ITEM = registerItem("espresso_machine",
+			props -> new BlockItem(ESPRESSO_MACHINE, props), new Item.Properties().useBlockDescriptionPrefix());
 	public static final Item ROASTED_COFFEE_BEANS = registerItem("roasted_coffee_beans", Item::new, new Item.Properties());
 	public static final Item ESPRESSO = registerItem("espresso", Item::new, drink(1800, null));
 	public static final Item LATTE = registerItem("latte", Item::new, drink(3600, new FoodProperties(2, 0.2F, true)));
@@ -92,6 +106,7 @@ public final class EspressoContent {
 	/** Loads the class (registering everything above) and hooks up creative tabs and worldgen. */
 	public static void register() {
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> output.accept(COFFEE_CHERRIES));
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> output.accept(ESPRESSO_MACHINE_ITEM));
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {
 			output.accept(ROASTED_COFFEE_BEANS);
 			output.accept(ESPRESSO);

@@ -149,6 +149,95 @@ for (const item of ['coffee_cherries', 'roasted_coffee_beans', 'espresso', 'latt
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
+// ---------------------------------------------------------------- espresso machine
+// Drawn procedurally: brushed steel with a pressure gauge, dark fittings, a glass bean hopper.
+const STEEL = { a: [150, 155, 162], b: [176, 181, 188], c: [202, 206, 212], e: [112, 116, 124],
+	d: [52, 52, 58], D: [78, 78, 86], w: [236, 232, 220], n: [150, 40, 30], r: [184, 115, 51], R: [214, 150, 80] };
+const grid = (fn) => Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => fn(x, y)).join(''));
+const brushed = (x, y) => (x === 0 || x === 15 || y === 0 || y === 15) ? 'e' : ((y + (x >> 2)) % 3 === 0 ? 'c' : ((x * 7 + y * 3) % 5 === 0 ? 'a' : 'b'));
+png('block/espresso_machine_side', grid((x, y) => {
+	// A small gauge at (7..9, 8..10): copper rim, cream face, red needle.
+	if (x >= 6 && x <= 10 && y >= 7 && y <= 11) {
+		const rim = x === 6 || x === 10 || y === 7 || y === 11;
+		const corner = (x === 6 || x === 10) && (y === 7 || y === 11);
+		if (corner) return brushed(x, y);
+		if (rim) return 'r';
+		return (x === 8 && y === 9) || (x === 9 && y === 8) ? 'n' : 'w';
+	}
+	if (y === 4 || y === 15) return 'e';
+	return brushed(x, y);
+}), STEEL);
+png('block/espresso_machine_front', grid((x, y) => {
+	if (y >= 9 && y <= 14 && x >= 5 && x <= 10) return (x === 5 || x === 10 || y === 9) ? 'D' : 'd'; // cup alcove
+	if (y === 5 || y === 6) return x % 2 ? 'r' : 'R'; // copper band
+	if (y === 4 || y === 15) return 'e';
+	return brushed(x, y);
+}), STEEL);
+png('block/espresso_machine_top', grid((x, y) => (x === 0 || x === 15 || y === 0 || y === 15) ? 'e' : (y % 3 === 1 && x > 3 && x < 12 ? 'D' : brushed(x, y))), STEEL);
+png('block/espresso_machine_dark', grid((x, y) => (x + y) % 4 === 0 ? 'D' : ((x * y) % 7 === 1 ? 'e' : 'd')), STEEL);
+const HOPPER = { ...STEEL, g: [196, 214, 226, 150], G: [236, 244, 250, 190], ...BEAN };
+const hopper = (filled) => grid((x, y) => {
+	if (y <= 1 || x === 0 || x === 15) return 'd';
+	if (filled && y >= 6) return (x * 3 + y * 5) % 7 === 0 ? 'k' : ((x + y) % 3 ? 'b' : 'B');
+	return (x + y) % 6 === 0 ? 'G' : 'g';
+});
+png('block/espresso_machine_hopper', hopper(false), HOPPER);
+png('block/espresso_machine_hopper_filled', hopper(true), HOPPER);
+
+const machineFaces = (front) => ({
+	north: { texture: front, uv: [3, 4, 13, 16] }, south: { texture: '#side', uv: [3, 4, 13, 16] },
+	east: { texture: '#side', uv: [4, 4, 12, 16] }, west: { texture: '#side', uv: [4, 4, 12, 16] },
+	up: { texture: '#top', uv: [3, 6, 13, 14] }, down: { texture: '#dark', uv: [3, 2, 13, 10] },
+});
+const all = (texture) => Object.fromEntries(['north', 'south', 'east', 'west', 'up', 'down'].map(f => [f, { texture }]));
+out('models/block/espresso_machine.json', {
+	parent: 'minecraft:block/block',
+	textures: { particle: 'espresso:block/espresso_machine_side', side: 'espresso:block/espresso_machine_side',
+		front: 'espresso:block/espresso_machine_front', top: 'espresso:block/espresso_machine_top',
+		dark: 'espresso:block/espresso_machine_dark', hopper: 'espresso:block/espresso_machine_hopper' },
+	elements: [
+		{ from: [3, 0, 6], to: [13, 12, 14], faces: machineFaces('#front') },
+		{ from: [4, 0, 1], to: [12, 1, 6], faces: all('#dark') },
+		{ from: [4, 8, 2], to: [12, 11, 6], faces: all('#dark') },
+		{ from: [7, 6, 3], to: [9, 8, 5], faces: all('#dark') },
+		{ from: [5, 12, 8], to: [11, 15, 13], faces: { ...all('#hopper'), up: { texture: '#dark' }, down: { texture: '#dark' } } },
+	],
+});
+out('models/block/espresso_machine_filled.json', {
+	parent: 'espresso:block/espresso_machine', textures: { hopper: 'espresso:block/espresso_machine_hopper_filled' },
+});
+out('blockstates/espresso_machine.json', { variants: Object.fromEntries(
+	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].flatMap(([facing, y]) =>
+		[false, true].map(beans => [`beans=${beans},facing=${facing}`,
+			{ model: `espresso:block/espresso_machine${beans ? '_filled' : ''}`, ...(y ? { y } : {}) }])),
+) });
+
+// The machine's menu (176x166 in a 256x256 sheet), in the vanilla container style, with
+// the coffee drip progress bar beside it at (176, 0).
+{
+	const W = 256, H = 256, px = Array.from({ length: H }, () => Array(W).fill('.'));
+	const rect = (x0, y0, w, h, c) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) px[y][x] = c; };
+	// Panel: black outline with clipped corners, white top-left bevel, grey bottom-right bevel.
+	rect(0, 0, 176, 166, 'K');
+	rect(1, 1, 174, 164, 'W');
+	rect(3, 3, 172, 162, 'S');
+	rect(3, 3, 170, 160, 'P');
+	for (const [x, y] of [[0, 0], [1, 0], [0, 1], [175, 0], [174, 0], [175, 1], [0, 165], [1, 165], [0, 164], [175, 165], [174, 165], [175, 164]]) px[y][x] = '.';
+	const slot = (x, y) => { rect(x - 1, y - 1, 18, 18, 'D'); rect(x, y, 17, 17, 'W'); rect(x, y, 16, 16, 'M'); };
+	for (const [x, y] of [[56, 51], [79, 58], [102, 51], [79, 17]]) slot(x, y);
+	for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) slot(8 + c * 18, 84 + r * 18);
+	for (let c = 0; c < 9; c++) slot(8 + c * 18, 142);
+	// The drip channel from the beans down to the middle bottle, and little pipes to the side bottles.
+	rect(83, 36, 9, 20, 'D'); rect(84, 37, 7, 18, 'M');
+	rect(73, 48, 10, 2, 'D'); rect(92, 48, 10, 2, 'D');
+	rect(176, 0, 9, 20, 'c'); for (let y = 0; y < 20; y++) { px[y][176] = 'k'; px[y][184] = 'k'; if (y % 4 === 1) px[y][179] = 'C'; }
+	png('gui/container/espresso_machine', px.map(r => r.join('')), {
+		K: [0, 0, 0], W: [255, 255, 255], S: [85, 85, 85], P: [198, 198, 198], D: [55, 55, 55], M: [139, 139, 139],
+		c: [112, 64, 34], C: [164, 104, 58], k: [64, 34, 16],
+	});
+}
+out('items/espresso_machine.json', { model: { type: 'minecraft:model', model: 'espresso:block/espresso_machine_filled' } });
+
 out('lang/en_us.json', {
 	'block.espresso.coffee_bush': 'Coffee Bush',
 	'item.espresso.coffee_cherries': 'Coffee Cherries',
@@ -158,6 +247,8 @@ out('lang/en_us.json', {
 	'item.espresso.mocha_latte': 'Mocha Latte',
 	'effect.espresso.drowsy': 'Drowsy',
 	'effect.espresso.caffeinated': 'Caffeinated',
+	'block.espresso.espresso_machine': 'Espresso Machine',
+	'container.espresso.espresso_machine': 'Espresso Machine',
 	"espresso.options.title": "Espresso Flavoured Settings",
 	"espresso.options.section.home": "Home and Builds",
 	"espresso.options.section.days": "Days and Nights",

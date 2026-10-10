@@ -14,7 +14,7 @@ Espresso Flavoured is a Fabric mod for Minecraft 26.3 that makes survival kinder
 
 **Looking after yourself.** Natural healing needs you to have eaten recently. Spend two days without sleeping in your own bed and you become Drowsy: too tired to sprint, and slower to mine and walk. A bed in the mine won't fix it; only a night at home will, so long trips end with the walk back. Coffee can buy you up to a day more, but when it wears off you crash, and only home will fix that. Go those two days without eating as well, and you'll get Hungry too.
 
-**Coffee.** Coffee bushes grow wild in jungles and savannas. Roast the cherries, brew an Espresso, add milk for a Latte, or cocoa for a Mocha Latte. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
+**Coffee.** Coffee bushes grow wild in jungles and savannas. Roast the cherries, then brew Espresso in your own espresso machine: beans on top, glass bottles below, just like a brewing stand (hoppers work too). Add milk for a Latte, or cocoa for a Mocha Latte. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
 
 **Death.** You keep your hotbar, armour and off-hand. Everything else stays where you fell, so there's still a trip back for your things (into a grave, if you also use a graves mod).
 

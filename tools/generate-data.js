@@ -35,13 +35,19 @@ for (const [type, suffix, time] of [['minecraft:smelting', '', 200], ['minecraft
 		ingredient: 'espresso:coffee_cherries', result: { id: 'espresso:roasted_coffee_beans' },
 	});
 }
-// A pot of three: the water bucket comes back empty.
-out('data/espresso/recipe/espresso.json', {
-	type: 'minecraft:crafting_shapeless', category: 'misc',
-	ingredients: ['espresso:roasted_coffee_beans', 'espresso:roasted_coffee_beans', 'minecraft:water_bucket',
-		'minecraft:glass_bottle', 'minecraft:glass_bottle', 'minecraft:glass_bottle'],
-	result: { id: 'espresso:espresso', count: 3 },
+// Espresso is only brewed in the espresso machine (beans in, glass bottle for a shot).
+out('data/espresso/recipe/espresso_machine.json', {
+	type: 'minecraft:crafting_shaped', category: 'misc',
+	pattern: ['III', 'IBI', 'SSS'],
+	key: { I: 'minecraft:iron_ingot', B: 'minecraft:bucket', S: 'minecraft:smooth_stone' },
+	result: { id: 'espresso:espresso_machine' },
 });
+out('data/espresso/loot_table/blocks/espresso_machine.json', {
+	type: 'minecraft:block',
+	pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'espresso:espresso_machine' }],
+		conditions: [{ condition: 'minecraft:survives_explosion' }] }],
+});
+out('data/minecraft/tags/block/mineable/pickaxe.json', { values: ['espresso:espresso_machine'] });
 out('data/espresso/recipe/latte.json', {
 	type: 'minecraft:crafting_shapeless', category: 'misc',
 	ingredients: ['espresso:espresso', 'espresso:espresso', 'espresso:espresso', 'minecraft:milk_bucket'],
@@ -220,7 +226,9 @@ adv('guide/refill', 'guide/pocket_shot', 'minecraft:shulker_box', 'Refill', 'Cra
 adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'Buy building blocks from the wandering trader',
 	{ traded: { trigger: 'minecraft:villager_trade', conditions: { villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } } } } });
 
-adv('guide/first_sip', 'guide/root', 'espresso:espresso', 'First Sip', 'Drink a coffee you brewed yourself',
+adv('guide/barista', 'guide/root', 'espresso:espresso_machine', 'Barista', 'Craft an espresso machine',
+	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:espresso_machine' } } });
+adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink a coffee you brewed yourself',
 	{ sipped: { trigger: 'minecraft:consume_item', conditions: { item: { items: '#espresso:coffee' } } } });
 adv('guide/fair_trade', 'guide/first_sip', 'espresso:roasted_coffee_beans', 'Fair Trade', 'Sell roasted coffee beans to the wandering trader',
 	{ sold: { trigger: 'minecraft:villager_trade', conditions: {

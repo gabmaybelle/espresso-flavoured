@@ -1,5 +1,5 @@
 {
-  "parent": "espresso:guide/root",
+  "parent": "espresso:guide/barista",
   "criteria": {
     "sipped": {
       "trigger": "minecraft:consume_item",

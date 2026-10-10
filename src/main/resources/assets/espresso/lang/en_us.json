@@ -7,6 +7,8 @@
   "item.espresso.mocha_latte": "Mocha Latte",
   "effect.espresso.drowsy": "Drowsy",
   "effect.espresso.caffeinated": "Caffeinated",
+  "block.espresso.espresso_machine": "Espresso Machine",
+  "container.espresso.espresso_machine": "Espresso Machine",
   "espresso.options.title": "Espresso Flavoured Settings",
   "espresso.options.section.home": "Home and Builds",
   "espresso.options.section.days": "Days and Nights",

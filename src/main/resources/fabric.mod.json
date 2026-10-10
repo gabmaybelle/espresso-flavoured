@@ -17,6 +17,9 @@
 		"main": [
 			"com.gabbymaybelle.espresso.Espresso"
 		],
+		"client": [
+			"com.gabbymaybelle.espresso.client.EspressoClient"
+		],
 		"modmenu": [
 			"com.gabbymaybelle.espresso.client.ModMenuIntegration"
 		]
