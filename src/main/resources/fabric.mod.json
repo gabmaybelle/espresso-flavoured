@@ -17,16 +17,12 @@
 		"main": [
 			"com.gabbymaybelle.espresso.Espresso"
 		],
-		"client": [
-			"com.gabbymaybelle.espresso.client.EspressoClient"
-		],
 		"modmenu": [
 			"com.gabbymaybelle.espresso.client.ModMenuIntegration"
 		]
 	},
 	"mixins": [
-		"espresso.mixins.json",
-		"espresso.client.mixins.json"
+		"espresso.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

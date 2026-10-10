@@ -12,7 +12,7 @@ Espresso Flavoured is a Fabric mod for Minecraft 26.3 that makes survival kinder
 
 **Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher.
 
-**Looking after yourself.** Natural healing needs you to have eaten recently. Stay up for two days without sleeping, or let your hunger or health run low, and you become Drowsy: a narrower, darker view and slower mining and walking until you rest, eat or heal.
+**Looking after yourself.** Natural healing needs you to have eaten recently. Stay up for two days without sleeping and you become Drowsy, mining and walking more slowly until you rest. Go those two days without eating as well, and you'll get Hungry too.
 
 **Coffee.** Coffee bushes grow wild in jungles and savannas. Roast the cherries, brew an Espresso, add milk for a Latte, or cocoa for a Mocha Latte. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
 

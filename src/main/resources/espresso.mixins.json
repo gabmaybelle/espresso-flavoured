@@ -8,6 +8,7 @@
 		"DeathLootMixin",
 		"EndermanTakeBlockGoalMixin",
 		"FoodDataMixin",
+		"FoodPropertiesMixin",
 		"MobCategoryMixin",
 		"MobNightMixin",
 		"NaturalSpawnerMixin",
