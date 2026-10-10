@@ -38,6 +38,8 @@ public final class Config {
 	public static boolean toughNights = true;
 	/** Drowsy when you haven't slept in two days, are low on food, or low on health. */
 	public static boolean drowsiness = true;
+	/** Drowsy also darkens the screen edges and narrows the view. Off keeps only the slowdown. */
+	public static boolean drowsyVisuals = true;
 
 	private Config() {
 	}
@@ -62,7 +64,13 @@ public final class Config {
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
 		toughNights = bool(props, "toughNights", toughNights);
 		drowsiness = bool(props, "drowsiness", drowsiness);
+		drowsyVisuals = bool(props, "drowsyVisuals", drowsyVisuals);
+		save();
+	}
 
+	/** Writes every setting back to the file (called after loading and from the settings screen). */
+	public static void save() {
+		Properties props = new Properties();
 		props.setProperty("creeperGriefing", Boolean.toString(creeperGriefing));
 		props.setProperty("endermanGriefing", Boolean.toString(endermanGriefing));
 		props.setProperty("phantoms", Boolean.toString(phantoms));
@@ -74,8 +82,9 @@ public final class Config {
 		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
 		props.setProperty("toughNights", Boolean.toString(toughNights));
 		props.setProperty("drowsiness", Boolean.toString(drowsiness));
+		props.setProperty("drowsyVisuals", Boolean.toString(drowsyVisuals));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
-			props.store(writer, "Espresso Flavoured (restart the game after editing)\n"
+			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
 					+ "endermanGriefing: endermen pick up blocks (vanilla behaviour)\n"
 					+ "phantoms: phantoms spawn for players who haven't slept (vanilla behaviour)\n"
@@ -86,7 +95,9 @@ public final class Config {
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
-					+ "drowsiness: Drowsy when you haven't slept in two days or are low on food or health");
+					+ "drowsiness: Drowsy when you haven't slept in two days or are low on food or health\n"
+					+ "drowsyVisuals: Drowsy darkens the screen edges and narrows your view (off = slowdown only)\n"
+					+ "longerDays needs a restart; everything else applies straight away");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);
 		}

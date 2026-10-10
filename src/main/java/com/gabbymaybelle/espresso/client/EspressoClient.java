@@ -1,5 +1,6 @@
 package com.gabbymaybelle.espresso.client;
 
+import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.Espresso;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import net.fabricmc.api.ClientModInitializer;
@@ -23,7 +24,7 @@ public class EspressoClient implements ClientModInitializer {
 
 	private static void drowsyVignette(GuiGraphicsExtractor graphics, DeltaTracker delta) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null || !mc.player.hasEffect(EspressoContent.DROWSY)) {
+		if (!Config.drowsyVisuals || mc.player == null || !mc.player.hasEffect(EspressoContent.DROWSY)) {
 			return;
 		}
 		int w = graphics.guiWidth(), h = graphics.guiHeight();

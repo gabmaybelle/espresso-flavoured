@@ -1,5 +1,6 @@
 package com.gabbymaybelle.espresso.client.mixin;
 
+import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import net.minecraft.client.player.AbstractClientPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class AbstractClientPlayerMixin {
 	@Inject(method = "getFieldOfViewModifier", at = @At("RETURN"), cancellable = true)
 	private void espresso$drowsyView(boolean firstPerson, float partialTick, CallbackInfoReturnable<Float> cir) {
-		if (((AbstractClientPlayer) (Object) this).hasEffect(EspressoContent.DROWSY)) {
+		if (Config.drowsyVisuals && ((AbstractClientPlayer) (Object) this).hasEffect(EspressoContent.DROWSY)) {
 			cir.setReturnValue(cir.getReturnValue() * 0.88F);
 		}
 	}
