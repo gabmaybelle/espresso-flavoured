@@ -161,17 +161,18 @@ png('item/vanilla_syrup', [
 	'................',
 ], { k: [120, 90, 60], W: [240, 236, 226], g: [200, 220, 230, 220], Y: [232, 196, 120], y: [214, 170, 96], p: [70, 44, 24], P: [96, 62, 34] });
 
-// Loyalty card: a cream card with a coffee cup logo and five stamp circles, filled one by one.
-for (let n = 0; n <= 5; n++) {
+// Loyalty card: a cream card with a coffee cup logo and six stamp circles, filled one by one.
+for (let n = 0; n <= 6; n++) {
 	png(`item/loyalty_card_${n}`, grid((x, y) => {
 		if (y < 3 || y > 12 || x < 1 || x > 14) return '.';
 		if (y === 3 || y === 12 || x === 1 || x === 14) return 'e';
 		if (y >= 4 && y <= 6 && x >= 3 && x <= 5) return y === 4 ? 'b' : 'B'; // cup logo
 		if (y === 5 && x === 6) return 'b';
 		if (y === 5 && x >= 8 && x <= 12) return 'l'; // the café's name, as a line
-		// Stamp circles at x = 3, 5, 7, 9, 11 (two pixels each), y = 9..10.
-		const stamp = [3, 5, 7, 9, 11].findIndex(sx => x === sx || x === sx + 1);
-		if (stamp >= 0 && (y === 9 || y === 10)) return stamp < n ? 's' : 'o';
+		// Stamps: two rows of three, two pixels each, at x = 4, 7, 10 and y = 7..8, 10..11.
+		const column = [4, 7, 10].findIndex(sx => x === sx || x === sx + 1);
+		const row = y === 7 || y === 8 ? 0 : y === 10 || y === 11 ? 1 : -1;
+		if (column >= 0 && row >= 0) return row * 3 + column < n ? 's' : 'o';
 		return 'c';
 	}), { e: [150, 120, 90], c: [246, 236, 214], b: [112, 64, 34], B: [164, 104, 58], l: [190, 170, 140], o: [214, 200, 176], s: [176, 52, 40] });
 }
@@ -333,12 +334,12 @@ out('models/item/vanilla_latte.json', { parent: 'minecraft:item/generated', text
 out('models/block/mug_vanilla.json', { parent: 'espresso:block/mug_full', textures: { liquid: 'espresso:block/mug_vanilla' } });
 // The golden mug carries its gold colour as a dye, so it shares the mug's tinted model.
 out('items/golden_mug.json', dyed('espresso:item/mug'));
-for (let n = 0; n <= 5; n++) {
+for (let n = 0; n <= 6; n++) {
 	out(`models/item/loyalty_card_${n}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/loyalty_card_${n}` } });
 }
 out('items/loyalty_card.json', { model: {
 	type: 'minecraft:range_dispatch', property: 'minecraft:custom_model_data', index: 0,
-	entries: [1, 2, 3, 4, 5].map(n => ({ threshold: n, model: { type: 'minecraft:model', model: `espresso:item/loyalty_card_${n}` } })),
+	entries: [1, 2, 3, 4, 5, 6].map(n => ({ threshold: n, model: { type: 'minecraft:model', model: `espresso:item/loyalty_card_${n}` } })),
 	fallback: { type: 'minecraft:model', model: 'espresso:item/loyalty_card_0' },
 } });
 const canisterTextures = { particle: 'espresso:block/canister', side: 'espresso:block/canister', top: 'espresso:block/canister_top' };
@@ -511,6 +512,7 @@ out('lang/en_us.json', {
 	'advancements.espresso.guide.mug_shot.title': 'Mug Shot',
 	'advancements.espresso.guide.fair_trade.title': 'Fair Trade',
 	'advancements.espresso.guide.house_special.title': 'House Special',
+	'advancements.espresso.guide.sweet_dreams.title': 'Sweet Dreams',
 	'container.espresso.espresso_machine': 'Espresso Machine',
 	"espresso.options.title": "Espresso Flavoured Settings",
 	"espresso.options.section.home": "Home and Builds",

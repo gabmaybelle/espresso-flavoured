@@ -209,7 +209,7 @@ out('data/espresso/villager_trade/wandering_trader/fair_trade_beans.json', {
 });
 out('data/espresso/villager_trade/wandering_trader/golden_mug.json', {
 	gives: { id: 'espresso:golden_mug' }, max_uses: 1, reputation_discount: 0,
-	wants: { id: 'espresso:loyalty_card', components: { 'espresso:stamps': 31 } },
+	wants: { id: 'espresso:loyalty_card', components: { 'espresso:stamps': 63 } },
 });
 out('data/espresso/tags/villager_trade/wandering_trader/fair_trade.json', {
 	values: ['espresso:wandering_trader/coffee_cherries', 'espresso:wandering_trader/fair_trade_beans', 'espresso:wandering_trader/golden_mug'],
@@ -387,7 +387,7 @@ adv('guide/barista', 'guide/root', 'espresso:espresso_machine', 'Barista', 'Craf
 	{}, { loot: ['espresso:loyalty_card'] });
 adv('guide/mug_shot', 'guide/barista', 'espresso:mug', 'Mug Shot', 'Dye a mug',
 	{ dyed: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:mug_dyed' } } });
-adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink a coffee you brewed yourself',
+adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink your first coffee',
 	{ sipped: { trigger: 'minecraft:consume_item', conditions: { item: { items: '#espresso:coffee' } } } });
 adv('guide/sweet_dreams', 'guide/first_sip', 'minecraft:white_bed', 'Sweet Dreams', 'Sleep after a decaf and wake up Well Rested',
 	{ rested: { trigger: 'minecraft:impossible' } });

@@ -30,7 +30,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
  */
 public class LoyaltyCard extends Item {
 	/** The stamps, in order: the advancement each one stands for. */
-	public static final List<String> STAMPS = List.of("barista", "first_sip", "mug_shot", "fair_trade", "house_special");
+	public static final List<String> STAMPS = List.of("barista", "first_sip", "mug_shot", "fair_trade", "house_special", "sweet_dreams");
 	public static final int FULL = (1 << STAMPS.size()) - 1;
 	/** Set once a player has had their card, so it's never handed out twice. */
 	private static final AttachmentType<Boolean> HAD_CARD = AttachmentRegistry.create(

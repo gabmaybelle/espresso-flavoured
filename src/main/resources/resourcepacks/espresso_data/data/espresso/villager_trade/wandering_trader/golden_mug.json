@@ -7,7 +7,7 @@
   "wants": {
     "id": "espresso:loyalty_card",
     "components": {
-      "espresso:stamps": 31
+      "espresso:stamps": 63
     }
   }
 }

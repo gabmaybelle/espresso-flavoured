@@ -38,6 +38,13 @@
           "type": "minecraft:model",
           "model": "espresso:item/loyalty_card_5"
         }
+      },
+      {
+        "threshold": 6,
+        "model": {
+          "type": "minecraft:model",
+          "model": "espresso:item/loyalty_card_6"
+        }
       }
     ],
     "fallback": {
