@@ -1,0 +1,11 @@
+{
+  "gives": {
+    "count": 16,
+    "id": "minecraft:mud_bricks"
+  },
+  "max_uses": 8,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "minecraft:emerald"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:command",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bundle",
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "minecraft:bundle_contents": [
+                  {
+                    "id": "minecraft:torch",
+                    "count": 16
+                  },
+                  {
+                    "id": "minecraft:oak_sapling",
+                    "count": 4
+                  },
+                  {
+                    "id": "minecraft:bread",
+                    "count": 6
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"package": "com.gabbymaybelle.espresso.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"BundleContentsMixin",
+		"CreeperMixin",
+		"EndermanTakeBlockGoalMixin",
+		"NaturalSpawnerMixin",
+		"PhantomSpawnerMixin",
+		"WanderingTraderMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

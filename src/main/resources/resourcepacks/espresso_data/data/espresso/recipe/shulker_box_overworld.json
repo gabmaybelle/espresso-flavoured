@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "P": "minecraft:ender_pearl",
+    "A": "minecraft:amethyst_shard",
+    "C": "minecraft:chest"
+  },
+  "pattern": [
+    "IPI",
+    "ACA",
+    "IPI"
+  ],
+  "result": {
+    "id": "minecraft:shulker_box"
+  }
+}

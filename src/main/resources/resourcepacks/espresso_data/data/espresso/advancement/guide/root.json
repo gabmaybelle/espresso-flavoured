@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "joined": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:cocoa_beans"
+    },
+    "title": "Espresso Flavoured",
+    "description": "A calmer, more productive survival world",
+    "background": "minecraft:block/stripped_dark_oak_log",
+    "announce_to_chat": false,
+    "show_toast": false
+  },
+  "requirements": [
+    [
+      "joined"
+    ]
+  ]
+}

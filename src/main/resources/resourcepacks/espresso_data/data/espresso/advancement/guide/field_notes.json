@@ -1,0 +1,20 @@
+{
+  "parent": "espresso:guide/root",
+  "criteria": {
+    "received": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:written_book"
+    },
+    "title": "Field Notes",
+    "description": "Get your copy of the Espresso Flavoured field guide"
+  },
+  "requirements": [
+    [
+      "received"
+    ]
+  ]
+}

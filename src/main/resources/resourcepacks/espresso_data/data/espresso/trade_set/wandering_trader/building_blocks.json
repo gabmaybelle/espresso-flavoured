@@ -1,0 +1,5 @@
+{
+  "amount": 3,
+  "random_sequence": "espresso:trade_set/wandering_trader/building_blocks",
+  "trades": "#espresso:wandering_trader/building_blocks"
+}

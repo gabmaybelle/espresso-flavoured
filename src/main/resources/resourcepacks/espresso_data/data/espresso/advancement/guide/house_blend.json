@@ -1,0 +1,29 @@
+{
+  "parent": "espresso:guide/root",
+  "criteria": {
+    "traded": {
+      "trigger": "minecraft:villager_trade",
+      "conditions": {
+        "villager": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:wandering_trader"
+          }
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:terracotta"
+    },
+    "title": "House Blend",
+    "description": "Buy building blocks from the wandering trader"
+  },
+  "requirements": [
+    [
+      "traded"
+    ]
+  ]
+}

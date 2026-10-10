@@ -1,0 +1,27 @@
+{
+  "parent": "espresso:guide/root",
+  "criteria": {
+    "bundle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bundle"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:bundle"
+    },
+    "title": "Pocket Shot",
+    "description": "Get a bundle"
+  },
+  "requirements": [
+    [
+      "bundle"
+    ]
+  ]
+}

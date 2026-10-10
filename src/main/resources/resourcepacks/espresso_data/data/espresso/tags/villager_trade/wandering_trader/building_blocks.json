@@ -1,0 +1,27 @@
+{
+  "values": [
+    "espresso:wandering_trader/terracotta",
+    "espresso:wandering_trader/red_sand",
+    "espresso:wandering_trader/red_sandstone",
+    "espresso:wandering_trader/sandstone",
+    "espresso:wandering_trader/mud_bricks",
+    "espresso:wandering_trader/packed_mud",
+    "espresso:wandering_trader/calcite",
+    "espresso:wandering_trader/tuff",
+    "espresso:wandering_trader/dripstone_block",
+    "espresso:wandering_trader/mossy_cobblestone",
+    "espresso:wandering_trader/moss_block",
+    "espresso:wandering_trader/snow_block",
+    "espresso:wandering_trader/packed_ice",
+    "espresso:wandering_trader/coarse_dirt",
+    "espresso:wandering_trader/podzol",
+    "espresso:wandering_trader/mycelium",
+    "espresso:wandering_trader/cobbled_deepslate",
+    "espresso:wandering_trader/bamboo_block",
+    "espresso:wandering_trader/cherry_planks",
+    "espresso:wandering_trader/pale_oak_planks",
+    "espresso:wandering_trader/prismarine",
+    "espresso:wandering_trader/blackstone",
+    "espresso:wandering_trader/quartz_block"
+  ]
+}
