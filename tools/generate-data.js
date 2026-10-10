@@ -70,7 +70,37 @@ out('data/espresso/recipe/mocha_latte.json', {
 	type: 'minecraft:crafting_transmute', category: 'misc',
 	input: 'espresso:latte', material: 'minecraft:cocoa_beans', result: { id: 'espresso:mocha_latte' },
 });
-out('data/espresso/tags/item/coffee.json', { values: ['espresso:espresso', 'espresso:latte', 'espresso:mocha_latte'] });
+// The house special: honey and sugar make vanilla syrup, which turns a latte into a vanilla latte.
+out('data/espresso/recipe/vanilla_syrup.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['minecraft:honey_bottle', 'minecraft:sugar'],
+	result: { id: 'espresso:vanilla_syrup', count: 2 },
+});
+out('data/espresso/recipe/vanilla_latte.json', {
+	type: 'minecraft:crafting_transmute', category: 'misc',
+	input: 'espresso:latte', material: 'espresso:vanilla_syrup', result: { id: 'espresso:vanilla_latte' },
+});
+out('data/espresso/tags/item/coffee.json', { values: ['espresso:espresso', 'espresso:latte', 'espresso:mocha_latte', 'espresso:vanilla_latte'] });
+
+// Canisters: clay, fired, dyeable, like mugs.
+out('data/espresso/recipe/unfired_canister.json', {
+	type: 'minecraft:crafting_shaped', category: 'misc',
+	pattern: ['C C', 'C C', 'CCC'], key: { C: 'minecraft:clay_ball' },
+	result: { id: 'espresso:unfired_canister' },
+});
+out('data/espresso/recipe/canister.json', {
+	type: 'minecraft:smelting', category: 'misc', cookingtime: 200, experience: 0.1,
+	ingredient: 'espresso:unfired_canister', result: { id: 'espresso:canister' },
+});
+out('data/espresso/recipe/canister_dyed.json', {
+	type: 'minecraft:crafting_dye', group: 'dyed_canister', target: 'espresso:canister', dye: '#minecraft:dyes', result: { id: 'espresso:canister' },
+});
+
+// The loyalty card comes with the Barista advancement; a full card buys the Golden Mug.
+out('data/espresso/loot_table/loyalty_card.json', {
+	type: 'minecraft:command',
+	pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'espresso:loyalty_card' }] }],
+});
 
 // Breaking a bush with cherries on it drops them, like a sweet berry bush.
 const bushDrop = (age, min, max) => ({
@@ -171,11 +201,15 @@ out('data/espresso/trade_set/wandering_trader/decor.json', {
 out('data/espresso/villager_trade/wandering_trader/fair_trade_beans.json', {
 	gives: { id: 'minecraft:emerald' }, max_uses: 16, reputation_discount: 0, wants: { count: 4, id: 'espresso:roasted_coffee_beans' },
 });
+out('data/espresso/villager_trade/wandering_trader/golden_mug.json', {
+	gives: { id: 'espresso:golden_mug' }, max_uses: 1, reputation_discount: 0,
+	wants: { id: 'espresso:loyalty_card', components: { 'espresso:stamps': 31 } },
+});
 out('data/espresso/tags/villager_trade/wandering_trader/fair_trade.json', {
-	values: ['espresso:wandering_trader/coffee_cherries', 'espresso:wandering_trader/fair_trade_beans'],
+	values: ['espresso:wandering_trader/coffee_cherries', 'espresso:wandering_trader/fair_trade_beans', 'espresso:wandering_trader/golden_mug'],
 });
 out('data/espresso/trade_set/wandering_trader/fair_trade.json', {
-	amount: 2,
+	amount: 3,
 	random_sequence: 'espresso:trade_set/wandering_trader/fair_trade',
 	trades: '#espresso:wandering_trader/fair_trade',
 });
@@ -215,11 +249,12 @@ out('data/espresso/function/starter_kit.mcfunction', [
 ].join('\n'));
 
 // ---------------------------------------------------------------- advancements
-const adv = (id, parent, icon, title, description, criteria, extra = {}) => out(`data/espresso/advancement/${id}.json`, {
+const adv = (id, parent, icon, title, description, criteria, extra = {}, rewards) => out(`data/espresso/advancement/${id}.json`, {
 	...(parent ? { parent: `espresso:${parent}` } : {}),
 	criteria,
 	display: { icon: { id: icon }, title, description, ...extra },
 	requirements: Object.keys(criteria).map(k => [k]),
+	...(rewards ? { rewards } : {}),
 });
 adv('guide/root', null, 'minecraft:cocoa_beans', 'Espresso Flavoured', 'A calmer, more productive survival world',
 	{ joined: { trigger: 'minecraft:tick' } },
@@ -238,10 +273,17 @@ adv('guide/refill', 'guide/pocket_shot', 'minecraft:shulker_box', 'Refill', 'Cra
 adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'Buy building blocks from the wandering trader',
 	{ traded: { trigger: 'minecraft:villager_trade', conditions: { villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } } } } });
 
-adv('guide/barista', 'guide/root', 'espresso:espresso_machine', 'Barista', 'Craft an espresso machine',
-	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:espresso_machine' } } });
+adv('guide/barista', 'guide/root', 'espresso:espresso_machine', 'Barista', 'Craft an espresso machine (and get a loyalty card)',
+	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:espresso_machine' } } },
+	{}, { loot: ['espresso:loyalty_card'] });
+adv('guide/mug_shot', 'guide/barista', 'espresso:mug', 'Mug Shot', 'Dye a mug',
+	{ dyed: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:mug_dyed' } } });
 adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink a coffee you brewed yourself',
 	{ sipped: { trigger: 'minecraft:consume_item', conditions: { item: { items: '#espresso:coffee' } } } });
+adv('guide/house_special', 'guide/first_sip', 'espresso:vanilla_latte', 'House Special', 'Make a vanilla latte',
+	{ made: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:vanilla_latte' } } });
+adv('guide/full_card', 'guide/house_special', 'espresso:golden_mug', 'On the House', 'Trade a full loyalty card for the Golden Mug',
+	{ redeemed: { trigger: 'minecraft:villager_trade', conditions: { item: { items: 'espresso:golden_mug' } } } }, { frame: 'challenge' });
 adv('guide/fair_trade', 'guide/first_sip', 'espresso:roasted_coffee_beans', 'Fair Trade', 'Sell roasted coffee beans to the wandering trader',
 	{ sold: { trigger: 'minecraft:villager_trade', conditions: {
 		villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } },

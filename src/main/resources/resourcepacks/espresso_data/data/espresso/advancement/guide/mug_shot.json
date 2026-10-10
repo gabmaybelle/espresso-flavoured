@@ -1,0 +1,23 @@
+{
+  "parent": "espresso:guide/barista",
+  "criteria": {
+    "dyed": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipes": "espresso:mug_dyed"
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso:mug"
+    },
+    "title": "Mug Shot",
+    "description": "Dye a mug"
+  },
+  "requirements": [
+    [
+      "dyed"
+    ]
+  ]
+}

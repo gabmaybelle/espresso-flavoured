@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "espresso:block/canister"
+    },
+    "facing=east": {
+      "model": "espresso:block/canister",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "espresso:block/canister",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "espresso:block/canister",
+      "y": 270
+    }
+  }
+}

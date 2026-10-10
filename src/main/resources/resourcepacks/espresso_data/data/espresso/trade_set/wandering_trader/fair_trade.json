@@ -1,5 +1,5 @@
 {
-  "amount": 2,
+  "amount": 3,
   "random_sequence": "espresso:trade_set/wandering_trader/fair_trade",
   "trades": "#espresso:wandering_trader/fair_trade"
 }

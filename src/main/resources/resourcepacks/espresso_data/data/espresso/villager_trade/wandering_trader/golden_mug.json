@@ -1,0 +1,13 @@
+{
+  "gives": {
+    "id": "espresso:golden_mug"
+  },
+  "max_uses": 1,
+  "reputation_discount": 0,
+  "wants": {
+    "id": "espresso:loyalty_card",
+    "components": {
+      "espresso:stamps": 31
+    }
+  }
+}

@@ -1,15 +1,19 @@
 package com.gabbymaybelle.espresso.content;
 
 import com.gabbymaybelle.espresso.Espresso;
+import com.mojang.serialization.Codec;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -29,6 +33,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.block.Block;
@@ -70,6 +75,11 @@ public final class EspressoContent {
 			new BlockEntityType<>(EspressoMachineBlockEntity::new, Set.of(ESPRESSO_MACHINE)));
 	public static final MenuType<EspressoMachineMenu> ESPRESSO_MACHINE_MENU = Registry.register(
 			BuiltInRegistries.MENU, id("espresso_machine"), new MenuType<>(EspressoMachineMenu::new, FeatureFlags.VANILLA_SET));
+	public static final Block CANISTER_BLOCK = registerBlock("canister", CanisterBlock::new,
+			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.5F)
+					.sound(SoundType.DECORATED_POT).noOcclusion().pushReaction(PushReaction.IMMOVEABLE));
+	public static final BlockEntityType<CanisterBlockEntity> CANISTER_ENTITY = Registry.register(
+			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("canister"), new BlockEntityType<>(CanisterBlockEntity::new, Set.of(CANISTER_BLOCK)));
 	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
 	public static final Block PLACED_MUG = registerBlock("placed_mug", PlacedMugBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.3F)
@@ -82,12 +92,26 @@ public final class EspressoContent {
 			props -> new BlockItem(COFFEE_BUSH, props), new Item.Properties().useItemDescriptionPrefix());
 	public static final Item ESPRESSO_MACHINE_ITEM = registerItem("espresso_machine",
 			props -> new BlockItem(ESPRESSO_MACHINE, props), new Item.Properties().useBlockDescriptionPrefix());
+	/** Loyalty card stamps, a bitmask over {@link LoyaltyCard#STAMPS}. */
+	public static final DataComponentType<Integer> STAMPS = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("stamps"),
+			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+	public static final Item UNFIRED_CANISTER = registerItem("unfired_canister", Item::new, new Item.Properties());
+	public static final Item CANISTER = registerItem("canister", props -> new BlockItem(CANISTER_BLOCK, props),
+			new Item.Properties().useBlockDescriptionPrefix());
 	public static final Item UNFIRED_MUG = registerItem("unfired_mug", Item::new, new Item.Properties());
 	public static final Item MUG = registerItem("mug", Item::new, new Item.Properties().stacksTo(16));
+	/** The loyalty card's reward: can't be dyed, shines, and coffee drunk from it lasts longer. */
+	public static final Item GOLDEN_MUG = registerItem("golden_mug", Item::new, new Item.Properties().stacksTo(1)
+			.component(DataComponents.DYED_COLOR, new DyedItemColor(Mugs.GOLD & 0xFFFFFF))
+			.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+	public static final Item LOYALTY_CARD = registerItem("loyalty_card", LoyaltyCard::new, new Item.Properties().stacksTo(1));
+	public static final Item VANILLA_SYRUP = registerItem("vanilla_syrup", Item::new, new Item.Properties());
 	public static final Item ROASTED_COFFEE_BEANS = registerItem("roasted_coffee_beans", Item::new, new Item.Properties());
-	public static final Item ESPRESSO = registerItem("espresso", Item::new, drink(1800, null));
-	public static final Item LATTE = registerItem("latte", Item::new, drink(3600, new FoodProperties(2, 0.2F, true)));
-	public static final Item MOCHA_LATTE = registerItem("mocha_latte", Item::new, drink(3600, new FoodProperties(4, 0.4F, true)));
+	public static final Item ESPRESSO = registerItem("espresso", CoffeeItem::new, drink(1800, null));
+	public static final Item LATTE = registerItem("latte", CoffeeItem::new, drink(3600, new FoodProperties(2, 0.2F, true)));
+	public static final Item MOCHA_LATTE = registerItem("mocha_latte", CoffeeItem::new, drink(3600, new FoodProperties(4, 0.4F, true)));
+	/** The house special: lasts longest and fills you up the most. */
+	public static final Item VANILLA_LATTE = registerItem("vanilla_latte", CoffeeItem::new, drink(4800, new FoodProperties(4, 0.6F, true)));
 
 	/** A coffee drink: Speed I, Haste I and Caffeinated for {@code ticks}, served in a mug (which you get back). */
 	private static Item.Properties drink(int ticks, FoodProperties food) {
@@ -114,15 +138,27 @@ public final class EspressoContent {
 	/** Loads the class (registering everything above) and hooks up creative tabs and worldgen. */
 	public static void register() {
 		Mugs.register();
+		LoyaltyCard.register();
+		ItemStorage.SIDED.registerForBlockEntity((canister, side) -> canister.storage, CANISTER_ENTITY);
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> output.accept(COFFEE_CHERRIES));
-		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> output.accept(ESPRESSO_MACHINE_ITEM));
-		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> output.accept(UNFIRED_MUG));
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> {
+			output.accept(ESPRESSO_MACHINE_ITEM);
+			output.accept(CANISTER);
+		});
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> {
+			output.accept(UNFIRED_MUG);
+			output.accept(UNFIRED_CANISTER);
+			output.accept(VANILLA_SYRUP);
+		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {
 			output.accept(MUG);
+			output.accept(GOLDEN_MUG);
+			output.accept(LOYALTY_CARD);
 			output.accept(ROASTED_COFFEE_BEANS);
 			output.accept(ESPRESSO);
 			output.accept(LATTE);
 			output.accept(MOCHA_LATTE);
+			output.accept(VANILLA_LATTE);
 		});
 		// Wild coffee bushes in jungles and savannas.
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.IS_JUNGLE).or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA)),

@@ -69,7 +69,7 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 			if (!moveItemStackTo(stack, EspressoMachineBlockEntity.BEAN_SLOT, INV_START, false)) {
 				return ItemStack.EMPTY;
 			}
-		} else if (stack.is(EspressoContent.MUG)) {
+		} else if (Mugs.isEmptyMug(stack)) {
 			if (!moveItemStackTo(stack, 0, EspressoMachineBlockEntity.BEAN_SLOT, false)) {
 				return ItemStack.EMPTY;
 			}
@@ -101,7 +101,7 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 
 		@Override
 		public boolean mayPlace(ItemStack stack) {
-			return stack.is(EspressoContent.MUG);
+			return Mugs.isEmptyMug(stack);
 		}
 
 		@Override

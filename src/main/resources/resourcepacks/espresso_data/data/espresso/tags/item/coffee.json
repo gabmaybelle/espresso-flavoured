@@ -2,6 +2,7 @@
   "values": [
     "espresso:espresso",
     "espresso:latte",
-    "espresso:mocha_latte"
+    "espresso:mocha_latte",
+    "espresso:vanilla_latte"
   ]
 }

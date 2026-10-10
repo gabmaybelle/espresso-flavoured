@@ -82,7 +82,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 			return false;
 		}
 		for (int i = 0; i < BEAN_SLOT; i++) {
-			if (items.get(i).is(EspressoContent.MUG)) {
+			if (Mugs.isEmptyMug(items.get(i))) {
 				return true;
 			}
 		}
@@ -92,7 +92,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 	private void brew(ServerLevel level, BlockPos pos, BlockState state) {
 		ItemStack beans = items.get(BEAN_SLOT);
 		for (int i = 0; i < BEAN_SLOT && !beans.isEmpty(); i++) {
-			if (items.get(i).is(EspressoContent.MUG)) {
+			if (Mugs.isEmptyMug(items.get(i))) {
 				items.set(i, Mugs.fill(items.get(i), EspressoContent.ESPRESSO));
 				beans.shrink(1);
 			}
@@ -150,7 +150,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 		if (slot == BEAN_SLOT) {
 			return stack.is(EspressoContent.ROASTED_COFFEE_BEANS);
 		}
-		return stack.is(EspressoContent.MUG) && items.get(slot).isEmpty();
+		return Mugs.isEmptyMug(stack) && items.get(slot).isEmpty();
 	}
 
 	@Override

@@ -26,6 +26,10 @@ import net.minecraft.world.level.gameevent.GameEvent;
 public final class Mugs {
 	/** The colour of an undyed mug: glazed cream. */
 	public static final int PLAIN = 0xFFF0E4CF;
+	/** The Golden Mug's colour (it also shines). */
+	public static final int GOLD = 0xFFE8B83A;
+	/** The colour index placed golden mugs use, after the 16 dyes. */
+	public static final int GOLD_INDEX = 17;
 
 	private Mugs() {
 	}
@@ -37,12 +41,30 @@ public final class Mugs {
 		if (color != null) {
 			filled.set(DataComponents.DYED_COLOR, color);
 		}
+		Boolean glint = mug.get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
+		if (glint != null) {
+			filled.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, glint);
+		}
 		filled.set(DataComponents.USE_REMAINDER, new UseRemainder(ItemStackTemplate.fromNonEmptyStack(mug, 1)));
 		return filled;
 	}
 
+	/** An empty mug: plain, dyed or golden. */
+	public static boolean isEmptyMug(ItemStack stack) {
+		return stack.is(EspressoContent.MUG) || stack.is(EspressoContent.GOLDEN_MUG);
+	}
+
 	public static boolean isMug(ItemStack stack) {
-		return stack.is(EspressoContent.MUG) || contentsOf(stack) != PlacedMugBlock.Contents.EMPTY;
+		return isEmptyMug(stack) || contentsOf(stack) != PlacedMugBlock.Contents.EMPTY;
+	}
+
+	/** The Golden Mug, or a drink in it. */
+	public static boolean isGolden(ItemStack stack) {
+		if (stack.is(EspressoContent.GOLDEN_MUG)) {
+			return true;
+		}
+		UseRemainder remainder = stack.get(DataComponents.USE_REMAINDER);
+		return remainder != null && remainder.convertInto().typeHolder().value() == EspressoContent.GOLDEN_MUG;
 	}
 
 	/** What's in a mug item; EMPTY for an empty mug (or anything that isn't a mug). */
@@ -56,11 +78,17 @@ public final class Mugs {
 		if (stack.is(EspressoContent.MOCHA_LATTE)) {
 			return PlacedMugBlock.Contents.MOCHA;
 		}
+		if (stack.is(EspressoContent.VANILLA_LATTE)) {
+			return PlacedMugBlock.Contents.VANILLA;
+		}
 		return PlacedMugBlock.Contents.EMPTY;
 	}
 
 	/** Placed mugs show the nearest of the 16 dye colours (0 = undyed); the exact colour is kept for when it's picked up. */
 	public static int colorIndex(ItemStack stack) {
+		if (isGolden(stack)) {
+			return GOLD_INDEX;
+		}
 		DyedItemColor color = stack.get(DataComponents.DYED_COLOR);
 		if (color == null) {
 			return 0;
@@ -81,6 +109,9 @@ public final class Mugs {
 
 	/** The tint for a placed mug's colour index. */
 	public static int tint(int colorIndex) {
+		if (colorIndex == GOLD_INDEX) {
+			return GOLD;
+		}
 		return colorIndex == 0 ? PLAIN : 0xFF000000 | DyeColor.byId(colorIndex - 1).getTextureDiffuseColor();
 	}
 

@@ -40,7 +40,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class PlacedMugBlock extends HorizontalDirectionalBlock implements EntityBlock {
 	public enum Contents implements StringRepresentable {
-		EMPTY("empty"), ESPRESSO("espresso"), LATTE("latte"), MOCHA("mocha");
+		EMPTY("empty"), ESPRESSO("espresso"), LATTE("latte"), MOCHA("mocha"), VANILLA("vanilla");
 
 		private final String name;
 
@@ -55,8 +55,8 @@ public class PlacedMugBlock extends HorizontalDirectionalBlock implements Entity
 	}
 
 	public static final EnumProperty<Contents> CONTENTS = EnumProperty.create("contents", Contents.class);
-	/** 0 = undyed, 1..16 = the nearest dye colour (id + 1). */
-	public static final IntegerProperty COLOR = IntegerProperty.create("color", 0, 16);
+	/** 0 = undyed, 1..16 = the nearest dye colour (id + 1), 17 = the Golden Mug. */
+	public static final IntegerProperty COLOR = IntegerProperty.create("color", 0, Mugs.GOLD_INDEX);
 	/** Mug and handle, handle to the east when facing north; rotated for the other sides. */
 	private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Shapes.or(
 			Block.box(5, 0, 5, 11, 6, 11), Block.box(11, 1, 7, 13, 5, 9)));

@@ -13,11 +13,16 @@
       "id": "espresso:espresso_machine"
     },
     "title": "Barista",
-    "description": "Craft an espresso machine"
+    "description": "Craft an espresso machine (and get a loyalty card)"
   },
   "requirements": [
     [
       "crafted"
     ]
-  ]
+  ],
+  "rewards": {
+    "loot": [
+      "espresso:loyalty_card"
+    ]
+  }
 }

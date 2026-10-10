@@ -1,0 +1,26 @@
+{
+  "parent": "espresso:guide/house_special",
+  "criteria": {
+    "redeemed": {
+      "trigger": "minecraft:villager_trade",
+      "conditions": {
+        "item": {
+          "items": "espresso:golden_mug"
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso:golden_mug"
+    },
+    "title": "On the House",
+    "description": "Trade a full loyalty card for the Golden Mug",
+    "frame": "challenge"
+  },
+  "requirements": [
+    [
+      "redeemed"
+    ]
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_dye",
+  "group": "dyed_canister",
+  "target": "espresso:canister",
+  "dye": "#minecraft:dyes",
+  "result": {
+    "id": "espresso:canister"
+  }
+}

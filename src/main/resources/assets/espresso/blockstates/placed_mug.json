@@ -12,6 +12,9 @@
     "contents=mocha,facing=north": {
       "model": "espresso:block/mug_mocha"
     },
+    "contents=vanilla,facing=north": {
+      "model": "espresso:block/mug_vanilla"
+    },
     "contents=empty,facing=east": {
       "model": "espresso:block/mug_empty",
       "y": 90
@@ -26,6 +29,10 @@
     },
     "contents=mocha,facing=east": {
       "model": "espresso:block/mug_mocha",
+      "y": 90
+    },
+    "contents=vanilla,facing=east": {
+      "model": "espresso:block/mug_vanilla",
       "y": 90
     },
     "contents=empty,facing=south": {
@@ -44,6 +51,10 @@
       "model": "espresso:block/mug_mocha",
       "y": 180
     },
+    "contents=vanilla,facing=south": {
+      "model": "espresso:block/mug_vanilla",
+      "y": 180
+    },
     "contents=empty,facing=west": {
       "model": "espresso:block/mug_empty",
       "y": 270
@@ -58,6 +69,10 @@
     },
     "contents=mocha,facing=west": {
       "model": "espresso:block/mug_mocha",
+      "y": 270
+    },
+    "contents=vanilla,facing=west": {
+      "model": "espresso:block/mug_vanilla",
       "y": 270
     }
   }

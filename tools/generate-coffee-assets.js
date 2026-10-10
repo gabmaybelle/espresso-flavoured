@@ -117,6 +117,57 @@ for (const [name, liquid, top] of [['espresso', [58, 30, 14], [196, 136, 78]], [
 	png(`block/mug_${name}`, grid((x, y) => ((x - 7.5) ** 2 + (y - 7.5) ** 2 < 14 ? 'T' : 'L')), { L: liquid, T: top });
 }
 
+// ---------------------------------------------------------------- café extras
+drinkLayer('vanilla_latte', [214, 178, 120], [250, 244, 230], [120, 80, 40]);
+png('block/mug_vanilla', grid((x, y) => ((x - 7.5) ** 2 + (y - 7.5) ** 2 < 14 ? 'T' : ((x * 5 + y * 3) % 13 === 0 ? 'D' : 'L'))),
+	{ L: [214, 178, 120], T: [250, 244, 230], D: [120, 80, 40] });
+// Vanilla syrup: a little jar of golden syrup with a vanilla pod.
+png('item/vanilla_syrup', [
+	'................',
+	'................',
+	'.........pP.....',
+	'.....kkkkpk.....',
+	'.....kWWWpk.....',
+	'....gggggpggg...',
+	'....gYYYYpYYg...',
+	'....gYyYYpYYg...',
+	'....gYYYYpyYg...',
+	'....gYYyYPYYg...',
+	'....gYYYYYYYg...',
+	'....gyYYYYyYg...',
+	'....gYYYYYYYg...',
+	'.....ggggggg....',
+	'................',
+	'................',
+], { k: [120, 90, 60], W: [240, 236, 226], g: [200, 220, 230, 220], Y: [232, 196, 120], y: [214, 170, 96], p: [70, 44, 24], P: [96, 62, 34] });
+
+// Loyalty card: a cream card with a coffee cup logo and five stamp circles, filled one by one.
+for (let n = 0; n <= 5; n++) {
+	png(`item/loyalty_card_${n}`, grid((x, y) => {
+		if (y < 3 || y > 12 || x < 1 || x > 14) return '.';
+		if (y === 3 || y === 12 || x === 1 || x === 14) return 'e';
+		if (y >= 4 && y <= 6 && x >= 3 && x <= 5) return y === 4 ? 'b' : 'B'; // cup logo
+		if (y === 5 && x === 6) return 'b';
+		if (y === 5 && x >= 8 && x <= 12) return 'l'; // the café's name, as a line
+		// Stamp circles at x = 3, 5, 7, 9, 11 (two pixels each), y = 9..10.
+		const stamp = [3, 5, 7, 9, 11].findIndex(sx => x === sx || x === sx + 1);
+		if (stamp >= 0 && (y === 9 || y === 10)) return stamp < n ? 's' : 'o';
+		return 'c';
+	}), { e: [150, 120, 90], c: [246, 236, 214], b: [112, 64, 34], B: [164, 104, 58], l: [190, 170, 140], o: [214, 200, 176], s: [176, 52, 40] });
+}
+
+// Canisters: glazed like the mugs (greys, tinted), with a lid and knob.
+png('block/canister', grid((x, y) => (y <= 1 ? 'W' : (y >= 14 ? 'S' : ((x * 7 + y) % 13 === 0 ? 'S' : 'B')))), MUG);
+png('block/canister_top', grid((x, y) => (x <= 1 || x >= 14 || y <= 1 || y >= 14 ? 'S' : 'W')), MUG);
+const canisterShape = (x, y) => {
+	if (y === 2 && x >= 7 && x <= 8) return 'S'; // knob
+	if (y === 3 && x >= 4 && x <= 11) return 'W'; // lid
+	if (y === 4 && x >= 3 && x <= 12) return 'S';
+	if (y >= 5 && y <= 13 && x >= 3 && x <= 12) return x === 3 ? 'W' : (x === 12 || y === 13 ? 'S' : 'B');
+	return '.';
+};
+png('item/unfired_canister', grid(canisterShape), { W: [176, 182, 196], B: [160, 166, 179], S: [128, 134, 148] });
+
 // ---------------------------------------------------------------- bush stages
 png('block/coffee_bush_stage0', [
 	'................', '................', '................', '................',
@@ -191,8 +242,43 @@ out('models/block/mug_full.json', { parent: 'minecraft:block/block', textures: m
 for (const c of ['espresso', 'latte', 'mocha']) out(`models/block/mug_${c}.json`, { parent: 'espresso:block/mug_full', textures: { liquid: `espresso:block/mug_${c}` } });
 out('blockstates/placed_mug.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].flatMap(([facing, y]) =>
-		['empty', 'espresso', 'latte', 'mocha'].map(c => [`contents=${c},facing=${facing}`, { model: `espresso:block/mug_${c}`, ...(y ? { y } : {}) }])),
+		['empty', 'espresso', 'latte', 'mocha', 'vanilla'].map(c => [`contents=${c},facing=${facing}`, { model: `espresso:block/mug_${c}`, ...(y ? { y } : {}) }])),
 ) });
+// Vanilla, the golden mug, the loyalty card and canisters.
+for (const item of ['vanilla_syrup', 'unfired_canister']) {
+	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
+	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
+}
+out('items/vanilla_latte.json', dyed('espresso:item/vanilla_latte'));
+out('models/item/vanilla_latte.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: 'espresso:item/vanilla_latte_fill' } });
+out('models/block/mug_vanilla.json', { parent: 'espresso:block/mug_full', textures: { liquid: 'espresso:block/mug_vanilla' } });
+// The golden mug carries its gold colour as a dye, so it shares the mug's tinted model.
+out('items/golden_mug.json', dyed('espresso:item/mug'));
+for (let n = 0; n <= 5; n++) {
+	out(`models/item/loyalty_card_${n}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/loyalty_card_${n}` } });
+}
+out('items/loyalty_card.json', { model: {
+	type: 'minecraft:range_dispatch', property: 'minecraft:custom_model_data', index: 0,
+	entries: [1, 2, 3, 4, 5].map(n => ({ threshold: n, model: { type: 'minecraft:model', model: `espresso:item/loyalty_card_${n}` } })),
+	fallback: { type: 'minecraft:model', model: 'espresso:item/loyalty_card_0' },
+} });
+const canisterTextures = { particle: 'espresso:block/canister', side: 'espresso:block/canister', top: 'espresso:block/canister_top' };
+out('models/block/canister.json', { parent: 'minecraft:block/block', textures: canisterTextures, display: {
+	gui: { rotation: [30, 225, 0], translation: [0, 1, 0], scale: [0.9, 0.9, 0.9] },
+	ground: { rotation: [0, 0, 0], translation: [0, 3, 0], scale: [0.5, 0.5, 0.5] },
+	fixed: { rotation: [0, 0, 0], translation: [0, 0, 0], scale: [0.8, 0.8, 0.8] },
+	thirdperson_righthand: { rotation: [75, 45, 0], translation: [0, 2.5, 0], scale: [0.5, 0.5, 0.5] },
+	firstperson_righthand: { rotation: [0, 45, 0], translation: [0, 2, 0], scale: [0.6, 0.6, 0.6] },
+}, elements: [
+	{ from: [4, 0, 4], to: [12, 10, 12], faces: tinted({ ...sides('#side'), down: '#side', up: '#top' }) },
+	{ from: [4.5, 10, 4.5], to: [11.5, 11, 11.5], faces: tinted({ ...sides('#side'), up: '#top', down: '#side' }) },
+	{ from: [7, 11, 7], to: [9, 12, 9], faces: tinted({ ...sides('#side'), up: '#top', down: '#side' }) },
+] });
+out('items/canister.json', dyed('espresso:block/canister'));
+out('blockstates/canister.json', { variants: Object.fromEntries(
+	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/canister', ...(y ? { y } : {}) }]),
+) });
+
 // ---------------------------------------------------------------- espresso machine
 // Drawn procedurally: brushed steel with a pressure gauge, dark fittings, a glass bean hopper.
 const STEEL = { a: [150, 155, 162], b: [176, 181, 188], c: [202, 206, 212], e: [112, 116, 124],
@@ -294,6 +380,18 @@ out('lang/en_us.json', {
 	'item.espresso.mug': 'Mug',
 	'item.espresso.unfired_mug': 'Unfired Mug',
 	'block.espresso.placed_mug': 'Mug',
+	'item.espresso.vanilla_syrup': 'Vanilla Syrup',
+	'item.espresso.vanilla_latte': 'Vanilla Latte',
+	'item.espresso.golden_mug': 'Golden Mug',
+	'item.espresso.loyalty_card': 'Loyalty Card',
+	'item.espresso.loyalty_card.full': 'Full! Swap it with the wandering trader for the Golden Mug',
+	'item.espresso.unfired_canister': 'Unfired Canister',
+	'block.espresso.canister': 'Canister',
+	'advancements.espresso.guide.barista.title': 'Barista',
+	'advancements.espresso.guide.first_sip.title': 'First Sip',
+	'advancements.espresso.guide.mug_shot.title': 'Mug Shot',
+	'advancements.espresso.guide.fair_trade.title': 'Fair Trade',
+	'advancements.espresso.guide.house_special.title': 'House Special',
 	'container.espresso.espresso_machine': 'Espresso Machine',
 	"espresso.options.title": "Espresso Flavoured Settings",
 	"espresso.options.section.home": "Home and Builds",
