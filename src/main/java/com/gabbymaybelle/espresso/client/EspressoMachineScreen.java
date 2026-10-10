@@ -26,6 +26,16 @@ public class EspressoMachineScreen extends AbstractContainerScreen<EspressoMachi
 	}
 
 	@Override
+	protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		super.extractLabels(graphics, mouseX, mouseY);
+		if (!menu.isOnCoffeeBar()) {
+			Component warning = Component.translatable("container.espresso.espresso_machine.needs_bar");
+			// Right-aligned on the inventory label's line.
+			graphics.text(font, warning, imageWidth - 8 - font.width(warning), inventoryLabelY, 0xFFB03A2E, false);
+		}
+	}
+
+	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.extractBackground(graphics, mouseX, mouseY, partialTick);
 		graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);

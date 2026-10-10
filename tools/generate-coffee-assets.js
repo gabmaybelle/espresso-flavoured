@@ -222,6 +222,14 @@ drinkLayer('ristretto', [36, 18, 8], [214, 150, 80], [24, 12, 6]);
 	png('entity/zombie_villager/profession/barista', rows, APRON);
 }
 
+// Coffee bar cabinet doors, drawn over each wood's planks: two doors with dark gaps and little handles.
+png('block/coffee_bar_doors', grid((x, y) => {
+	if (y > 13) return '.';
+	if (x === 0 || x === 15 || y === 0 || y === 13 || x === 7 || x === 8) return 'g';
+	if (y === 6 && (x === 5 || x === 10)) return 'h';
+	return '.';
+}), { g: [44, 30, 20], h: [200, 200, 206] });
+
 // ---------------------------------------------------------------- bush stages
 png('block/coffee_bush_stage0', [
 	'................', '................', '................', '................',
@@ -360,6 +368,20 @@ out('models/block/glass_jar.json', { parent: 'minecraft:block/block', textures: 
 	{ from: [4, 0, 4], to: [12, 11, 12], faces: all6('#glass') },
 	{ from: [5, 11, 5], to: [11, 13, 11], faces: all6('#lid') },
 ] });
+// Coffee bars: plank cabinets with doors on the front and a smooth stone counter top.
+out('models/block/coffee_bar.json', { parent: 'minecraft:block/block', textures: { particle: '#planks', top: 'minecraft:block/smooth_stone',
+	top_side: 'minecraft:block/smooth_stone_slab_side', doors: 'espresso:block/coffee_bar_doors' }, elements: [
+	{ from: [0, 0, 0], to: [16, 14, 16], faces: { ...Object.fromEntries(['north', 'south', 'east', 'west'].map(f => [f, { texture: '#planks', uv: [0, 2, 16, 16] }])), down: { texture: '#planks', cullface: 'down' } } },
+	{ from: [0, 14, 0], to: [16, 16, 16], faces: { up: { texture: '#top', cullface: 'up' }, ...Object.fromEntries(['north', 'south', 'east', 'west'].map(f => [f, { texture: '#top_side', uv: [0, 0, 16, 2] }])) } },
+	{ from: [0.5, 0.5, -0.01], to: [15.5, 13.5, -0.01], faces: { north: { texture: '#doors', uv: [0, 0, 16, 14] } } },
+] });
+for (const wood of ['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'mangrove', 'cherry', 'pale_oak', 'poplar', 'bamboo', 'crimson', 'warped']) {
+	out(`models/block/${wood}_coffee_bar.json`, { parent: 'espresso:block/coffee_bar', textures: { planks: `minecraft:block/${wood}_planks` } });
+	out(`items/${wood}_coffee_bar.json`, { model: { type: 'minecraft:model', model: `espresso:block/${wood}_coffee_bar` } });
+	out(`blockstates/${wood}_coffee_bar.json`, { variants: Object.fromEntries(
+		[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: `espresso:block/${wood}_coffee_bar`, ...(y ? { y } : {}) }]),
+	) });
+}
 out('blockstates/glass_jar.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/glass_jar', ...(y ? { y } : {}) }]),
 ) });
@@ -478,6 +500,8 @@ out('lang/en_us.json', {
 	'item.espresso.unfired_canister': 'Unfired Canister',
 	'block.espresso.canister': 'Canister',
 	'block.espresso.glass_jar': 'Glass Jar',
+	'container.espresso.espresso_machine.needs_bar': 'Needs a coffee bar',
+	...Object.fromEntries(['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'mangrove', 'cherry', 'pale_oak', 'poplar', 'bamboo', 'crimson', 'warped'].map(w => [`block.espresso.${w}_coffee_bar`, w.split('_').map(p => p[0].toUpperCase() + p.slice(1)).join(' ') + ' Coffee Bar'])),
 	'item.espresso.baristas_reserve': 'Barista\x27s Reserve',
 	'item.espresso.ristretto': 'Ristretto',
 	'entity.espresso.villager.barista': 'Barista',

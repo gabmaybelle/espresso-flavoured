@@ -22,7 +22,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * The espresso machine's insides: three mug slots and a bean slot, like a brewing stand.
+ * The espresso machine's insides: three mug slots and a bean slot, like a brewing stand. It
+ * only brews while it sits on a coffee bar.
  * While there are beans and at least one empty mug, it brews for ten seconds, then fills
  * each mug with an Espresso (keeping its colour), one bean per mug. Hoppers put beans in
  * from above, mugs in from the sides, and take Espresso out from below.
@@ -41,17 +42,19 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 	private final ContainerData data = new ContainerData() {
 		@Override
 		public int get(int index) {
-			return brewTime;
+			return index == 0 ? brewTime : (onCoffeeBar() ? 1 : 0);
 		}
 
 		@Override
 		public void set(int index, int value) {
-			brewTime = value;
+			if (index == 0) {
+				brewTime = value;
+			}
 		}
 
 		@Override
 		public int getCount() {
-			return 1;
+			return 2;
 		}
 	};
 
@@ -78,8 +81,13 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 		}
 	}
 
+	/** The machine only works on a coffee bar. */
+	public boolean onCoffeeBar() {
+		return level != null && level.getBlockState(worldPosition.below()).getBlock() instanceof CoffeeBarBlock;
+	}
+
 	private boolean canBrew() {
-		if (items.get(BEAN_SLOT).isEmpty()) {
+		if (items.get(BEAN_SLOT).isEmpty() || !onCoffeeBar()) {
 			return false;
 		}
 		for (int i = 0; i < BEAN_SLOT; i++) {

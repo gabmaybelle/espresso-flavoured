@@ -20,13 +20,13 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 
 	/** Client side: the server fills these in. */
 	public EspressoMachineMenu(int containerId, Inventory inventory) {
-		this(containerId, inventory, new SimpleContainer(EspressoMachineBlockEntity.SLOT_COUNT), new SimpleContainerData(1));
+		this(containerId, inventory, new SimpleContainer(EspressoMachineBlockEntity.SLOT_COUNT), new SimpleContainerData(2));
 	}
 
 	public EspressoMachineMenu(int containerId, Inventory inventory, Container machine, ContainerData data) {
 		super(EspressoContent.ESPRESSO_MACHINE_MENU, containerId);
 		checkContainerSize(machine, EspressoMachineBlockEntity.SLOT_COUNT);
-		checkContainerDataCount(data, 1);
+		checkContainerDataCount(data, 2);
 		this.machine = machine;
 		this.data = data;
 		addSlot(new MugSlot(machine, 0, 56, 51));
@@ -45,6 +45,11 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 	/** Ticks left on the current brew, 0 when idle. */
 	public int getBrewTime() {
 		return data.get(0);
+	}
+
+	/** Whether the machine sits on a coffee bar (it won't brew otherwise). */
+	public boolean isOnCoffeeBar() {
+		return data.get(1) != 0;
 	}
 
 	@Override

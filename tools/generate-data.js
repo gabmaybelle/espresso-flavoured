@@ -270,6 +270,21 @@ for (const [level, trades] of Object.entries(BARISTA_TRADES)) {
 	});
 }
 
+// Coffee bars: a smooth stone counter on a plank cabinet, one for every wood.
+const COFFEE_BARS = ['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'mangrove', 'cherry', 'pale_oak', 'poplar', 'bamboo', 'crimson', 'warped'];
+for (const wood of COFFEE_BARS) {
+	out(`data/espresso/recipe/${wood}_coffee_bar.json`, {
+		type: 'minecraft:crafting_shaped', category: 'building', group: 'coffee_bar',
+		pattern: ['SSS', 'P P', 'PPP'], key: { S: 'minecraft:smooth_stone_slab', P: `minecraft:${wood}_planks` },
+		result: { id: `espresso:${wood}_coffee_bar`, count: 2 },
+	});
+	out(`data/espresso/loot_table/blocks/${wood}_coffee_bar.json`, {
+		type: 'minecraft:block',
+		pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: `espresso:${wood}_coffee_bar` }], conditions: [{ condition: 'minecraft:survives_explosion' }] }],
+	});
+}
+out('data/minecraft/tags/block/mineable/axe.json', { values: COFFEE_BARS.map(w => `espresso:${w}_coffee_bar`) });
+
 // Glass jars: glass with a wooden lid.
 out('data/espresso/recipe/glass_jar.json', {
 	type: 'minecraft:crafting_shaped', category: 'misc',

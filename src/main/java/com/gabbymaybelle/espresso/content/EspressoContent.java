@@ -12,7 +12,9 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper;
+import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -118,6 +120,14 @@ public final class EspressoContent {
 				poi -> poi.is(BARISTA_POI), poi -> poi.is(BARISTA_POI),
 				ImmutableSet.of(), ImmutableSet.of(), SoundEvents.BREWING_STAND_BREW, trades));
 	}
+	/** Every wood the coffee bar comes in. */
+	public static final List<String> WOODS = List.of("oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove",
+			"cherry", "pale_oak", "poplar", "bamboo", "crimson", "warped");
+	/** Coffee bars by wood, in {@link #WOODS} order. */
+	public static final List<Block> COFFEE_BARS = WOODS.stream().map(wood -> registerBlock(wood + "_coffee_bar", CoffeeBarBlock::new,
+			BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.5F)
+					.sound(wood.equals("crimson") || wood.equals("warped") ? SoundType.NETHER_WOOD
+							: wood.equals("bamboo") ? SoundType.BAMBOO_WOOD : wood.equals("cherry") ? SoundType.CHERRY_WOOD : SoundType.WOOD))).toList();
 	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
 	public static final Block PLACED_MUG = registerBlock("placed_mug", PlacedMugBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.3F)
@@ -141,6 +151,8 @@ public final class EspressoContent {
 	public static final Item UNFIRED_CANISTER = registerItem("unfired_canister", Item::new, new Item.Properties());
 	public static final Item CANISTER = registerItem("canister", props -> new BlockItem(CANISTER_BLOCK, props),
 			new Item.Properties().useBlockDescriptionPrefix());
+	public static final List<Item> COFFEE_BAR_ITEMS = COFFEE_BARS.stream().map(bar -> registerItem(
+			BuiltInRegistries.BLOCK.getKey(bar).getPath(), props -> new BlockItem(bar, props), new Item.Properties().useBlockDescriptionPrefix())).toList();
 	public static final Item GLASS_JAR = registerItem("glass_jar", props -> new BlockItem(GLASS_JAR_BLOCK, props),
 			new Item.Properties().useBlockDescriptionPrefix());
 	/** Rare beans from a master barista; the espresso machine brews them into Ristretto. */
@@ -199,11 +211,17 @@ public final class EspressoContent {
 		Mugs.register();
 		LoyaltyCard.register();
 		ItemStorage.SIDED.registerForBlockEntity((canister, side) -> canister.storage, CANISTER_ENTITY);
+		// A hopper under a coffee bar takes finished drinks out of the espresso machine on top.
+		ItemStorage.SIDED.registerForBlocks((level, pos, state, entity, side) ->
+				side == Direction.DOWN && level.getBlockEntity(pos.above()) instanceof EspressoMachineBlockEntity machine
+						? ContainerStorage.of(machine, Direction.DOWN) : null,
+				COFFEE_BARS.toArray(Block[]::new));
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> output.accept(COFFEE_CHERRIES));
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> {
 			output.accept(ESPRESSO_MACHINE_ITEM);
 			output.accept(CANISTER);
 			output.accept(GLASS_JAR);
+			COFFEE_BAR_ITEMS.forEach(output::accept);
 		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> {
 			output.accept(UNFIRED_MUG);

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "coffee_bar",
+  "pattern": [
+    "SSS",
+    "P P",
+    "PPP"
+  ],
+  "key": {
+    "S": "minecraft:smooth_stone_slab",
+    "P": "minecraft:dark_oak_planks"
+  },
+  "result": {
+    "id": "espresso:dark_oak_coffee_bar",
+    "count": 2
+  }
+}
