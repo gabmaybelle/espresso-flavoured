@@ -50,7 +50,7 @@ public final class EspressoContent {
 			new EspressoEffect(MobEffectCategory.HARMFUL, 0x5a4a6e)
 					.addAttributeModifier(Attributes.BLOCK_BREAK_SPEED, id("drowsy_mining"), -0.3, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
 					.addAttributeModifier(Attributes.MOVEMENT_SPEED, id("drowsy_walking"), -0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-	/** From coffee: holds off the drowsiness of staying up too long. */
+	/** From coffee: holds off Drowsy for a while, at the price of a crash when it wears off (see Wellbeing). */
 	public static final Holder<MobEffect> CAFFEINATED = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("caffeinated"),
 			new EspressoEffect(MobEffectCategory.BENEFICIAL, 0xc4884e));
 
