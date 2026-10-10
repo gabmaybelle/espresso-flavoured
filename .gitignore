@@ -39,3 +39,6 @@ replay_*.log
 *.hprof
 *.jfr
 test-instance/
+
+# planning notes (kept locally)
+CONCEPT.md
