@@ -1,0 +1,1893 @@
+{
+  "clock": "minecraft:overworld",
+  "period_ticks": 36000,
+  "time_markers": {
+    "minecraft:day": {
+      "show_in_commands": true,
+      "ticks": 2000
+    },
+    "minecraft:midnight": {
+      "show_in_commands": true,
+      "ticks": 30000
+    },
+    "minecraft:night": {
+      "show_in_commands": true,
+      "ticks": 25000
+    },
+    "minecraft:noon": {
+      "show_in_commands": true,
+      "ticks": 12000
+    },
+    "minecraft:roll_village_siege": 30000,
+    "minecraft:wake_up_from_sleep": 0
+  },
+  "tracks": {
+    "minecraft:audio/firefly_bush_sounds": {
+      "keyframes": [
+        {
+          "ticks": 24600,
+          "value": true
+        },
+        {
+          "ticks": 35401,
+          "value": false
+        }
+      ],
+      "modifier": "or"
+    },
+    "minecraft:gameplay/bees_stay_in_hive": {
+      "keyframes": [
+        {
+          "ticks": 24542,
+          "value": true
+        },
+        {
+          "ticks": 35460,
+          "value": false
+        }
+      ],
+      "modifier": "or"
+    },
+    "minecraft:gameplay/cat_waking_up_gift_chance": {
+      "ease": "constant",
+      "keyframes": [
+        {
+          "ticks": 724,
+          "value": 0
+        },
+        {
+          "ticks": 35667,
+          "value": 0.7
+        }
+      ],
+      "modifier": "maximum"
+    },
+    "minecraft:gameplay/creaking_active": {
+      "keyframes": [
+        {
+          "ticks": 24600,
+          "value": true
+        },
+        {
+          "ticks": 35401,
+          "value": false
+        }
+      ],
+      "modifier": "or"
+    },
+    "minecraft:gameplay/eyeblossom_open": {
+      "keyframes": [
+        {
+          "ticks": 24600,
+          "value": true
+        },
+        {
+          "ticks": 35401,
+          "value": false
+        }
+      ]
+    },
+    "minecraft:gameplay/monsters_burn": {
+      "keyframes": [
+        {
+          "ticks": 24542,
+          "value": false
+        },
+        {
+          "ticks": 35460,
+          "value": true
+        }
+      ],
+      "modifier": "or"
+    },
+    "minecraft:gameplay/sky_light_level": {
+      "keyframes": [
+        {
+          "ticks": 266,
+          "value": 1
+        },
+        {
+          "ticks": 23734,
+          "value": 1
+        },
+        {
+          "ticks": 25670,
+          "value": 0.26666668
+        },
+        {
+          "ticks": 34330,
+          "value": 0.26666668
+        }
+      ],
+      "modifier": "multiply"
+    },
+    "minecraft:gameplay/turtle_egg_hatch_chance": {
+      "ease": "constant",
+      "keyframes": [
+        {
+          "ticks": 33062,
+          "value": 1
+        },
+        {
+          "ticks": 33905,
+          "value": 0.002
+        }
+      ],
+      "modifier": "maximum"
+    },
+    "minecraft:visual/cloud_color": {
+      "keyframes": [
+        {
+          "ticks": 266,
+          "value": "#ffffffff"
+        },
+        {
+          "ticks": 23734,
+          "value": "#ffffffff"
+        },
+        {
+          "ticks": 25670,
+          "value": "#ff191926"
+        },
+        {
+          "ticks": 34330,
+          "value": "#ff191926"
+        }
+      ],
+      "modifier": "multiply"
+    },
+    "minecraft:visual/fog_color": {
+      "keyframes": [
+        {
+          "ticks": 266,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 23734,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 25670,
+          "value": "#0f0f16"
+        },
+        {
+          "ticks": 34330,
+          "value": "#0f0f16"
+        }
+      ],
+      "modifier": "multiply"
+    },
+    "minecraft:visual/moon_angle": {
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": 462.371
+        },
+        {
+          "ticks": 400,
+          "value": 465.467
+        },
+        {
+          "ticks": 800,
+          "value": 468.533
+        },
+        {
+          "ticks": 1200,
+          "value": 471.568
+        },
+        {
+          "ticks": 1600,
+          "value": 474.573
+        },
+        {
+          "ticks": 2000,
+          "value": 477.546
+        },
+        {
+          "ticks": 2400,
+          "value": 480.486
+        },
+        {
+          "ticks": 2800,
+          "value": 483.394
+        },
+        {
+          "ticks": 3200,
+          "value": 486.268
+        },
+        {
+          "ticks": 3600,
+          "value": 489.108
+        },
+        {
+          "ticks": 4000,
+          "value": 491.913
+        },
+        {
+          "ticks": 4400,
+          "value": 494.683
+        },
+        {
+          "ticks": 4800,
+          "value": 497.417
+        },
+        {
+          "ticks": 5200,
+          "value": 500.114
+        },
+        {
+          "ticks": 5600,
+          "value": 502.775
+        },
+        {
+          "ticks": 6000,
+          "value": 505.399
+        },
+        {
+          "ticks": 6400,
+          "value": 507.984
+        },
+        {
+          "ticks": 6800,
+          "value": 510.532
+        },
+        {
+          "ticks": 7200,
+          "value": 513.04
+        },
+        {
+          "ticks": 7600,
+          "value": 515.51
+        },
+        {
+          "ticks": 8000,
+          "value": 517.94
+        },
+        {
+          "ticks": 8400,
+          "value": 520.33
+        },
+        {
+          "ticks": 8800,
+          "value": 522.68
+        },
+        {
+          "ticks": 9200,
+          "value": 524.99
+        },
+        {
+          "ticks": 9600,
+          "value": 527.259
+        },
+        {
+          "ticks": 10000,
+          "value": 529.487
+        },
+        {
+          "ticks": 10400,
+          "value": 531.673
+        },
+        {
+          "ticks": 10800,
+          "value": 533.818
+        },
+        {
+          "ticks": 11200,
+          "value": 535.921
+        },
+        {
+          "ticks": 11600,
+          "value": 537.982
+        },
+        {
+          "ticks": 12000,
+          "value": 540
+        },
+        {
+          "ticks": 12000,
+          "value": 180
+        },
+        {
+          "ticks": 12400,
+          "value": 182.018
+        },
+        {
+          "ticks": 12800,
+          "value": 184.079
+        },
+        {
+          "ticks": 13200,
+          "value": 186.182
+        },
+        {
+          "ticks": 13600,
+          "value": 188.327
+        },
+        {
+          "ticks": 14000,
+          "value": 190.513
+        },
+        {
+          "ticks": 14400,
+          "value": 192.741
+        },
+        {
+          "ticks": 14800,
+          "value": 195.01
+        },
+        {
+          "ticks": 15200,
+          "value": 197.32
+        },
+        {
+          "ticks": 15600,
+          "value": 199.67
+        },
+        {
+          "ticks": 16000,
+          "value": 202.06
+        },
+        {
+          "ticks": 16400,
+          "value": 204.49
+        },
+        {
+          "ticks": 16800,
+          "value": 206.96
+        },
+        {
+          "ticks": 17200,
+          "value": 209.468
+        },
+        {
+          "ticks": 17600,
+          "value": 212.016
+        },
+        {
+          "ticks": 18000,
+          "value": 214.601
+        },
+        {
+          "ticks": 18400,
+          "value": 217.225
+        },
+        {
+          "ticks": 18800,
+          "value": 219.886
+        },
+        {
+          "ticks": 19200,
+          "value": 222.583
+        },
+        {
+          "ticks": 19600,
+          "value": 225.317
+        },
+        {
+          "ticks": 20000,
+          "value": 228.087
+        },
+        {
+          "ticks": 20400,
+          "value": 230.892
+        },
+        {
+          "ticks": 20800,
+          "value": 233.732
+        },
+        {
+          "ticks": 21200,
+          "value": 236.606
+        },
+        {
+          "ticks": 21600,
+          "value": 239.514
+        },
+        {
+          "ticks": 22000,
+          "value": 242.454
+        },
+        {
+          "ticks": 22400,
+          "value": 245.427
+        },
+        {
+          "ticks": 22800,
+          "value": 248.432
+        },
+        {
+          "ticks": 23200,
+          "value": 251.467
+        },
+        {
+          "ticks": 23600,
+          "value": 254.533
+        },
+        {
+          "ticks": 24000,
+          "value": 257.629
+        },
+        {
+          "ticks": 24200,
+          "value": 260.753
+        },
+        {
+          "ticks": 24400,
+          "value": 263.906
+        },
+        {
+          "ticks": 24600,
+          "value": 267.085
+        },
+        {
+          "ticks": 24800,
+          "value": 270.292
+        },
+        {
+          "ticks": 25000,
+          "value": 273.524
+        },
+        {
+          "ticks": 25200,
+          "value": 276.781
+        },
+        {
+          "ticks": 25400,
+          "value": 280.062
+        },
+        {
+          "ticks": 25600,
+          "value": 283.366
+        },
+        {
+          "ticks": 25800,
+          "value": 286.692
+        },
+        {
+          "ticks": 26000,
+          "value": 290.04
+        },
+        {
+          "ticks": 26200,
+          "value": 293.409
+        },
+        {
+          "ticks": 26400,
+          "value": 296.797
+        },
+        {
+          "ticks": 26600,
+          "value": 300.203
+        },
+        {
+          "ticks": 26800,
+          "value": 303.628
+        },
+        {
+          "ticks": 27000,
+          "value": 307.069
+        },
+        {
+          "ticks": 27200,
+          "value": 310.525
+        },
+        {
+          "ticks": 27400,
+          "value": 313.997
+        },
+        {
+          "ticks": 27600,
+          "value": 317.482
+        },
+        {
+          "ticks": 27800,
+          "value": 320.98
+        },
+        {
+          "ticks": 28000,
+          "value": 324.49
+        },
+        {
+          "ticks": 28200,
+          "value": 328.01
+        },
+        {
+          "ticks": 28400,
+          "value": 331.54
+        },
+        {
+          "ticks": 28600,
+          "value": 335.079
+        },
+        {
+          "ticks": 28800,
+          "value": 338.625
+        },
+        {
+          "ticks": 29000,
+          "value": 342.178
+        },
+        {
+          "ticks": 29200,
+          "value": 345.736
+        },
+        {
+          "ticks": 29400,
+          "value": 349.298
+        },
+        {
+          "ticks": 29600,
+          "value": 352.864
+        },
+        {
+          "ticks": 29800,
+          "value": 356.431
+        },
+        {
+          "ticks": 30000,
+          "value": 360
+        },
+        {
+          "ticks": 30200,
+          "value": 363.569
+        },
+        {
+          "ticks": 30400,
+          "value": 367.136
+        },
+        {
+          "ticks": 30600,
+          "value": 370.702
+        },
+        {
+          "ticks": 30800,
+          "value": 374.264
+        },
+        {
+          "ticks": 31000,
+          "value": 377.822
+        },
+        {
+          "ticks": 31200,
+          "value": 381.375
+        },
+        {
+          "ticks": 31400,
+          "value": 384.921
+        },
+        {
+          "ticks": 31600,
+          "value": 388.46
+        },
+        {
+          "ticks": 31800,
+          "value": 391.99
+        },
+        {
+          "ticks": 32000,
+          "value": 395.51
+        },
+        {
+          "ticks": 32200,
+          "value": 399.02
+        },
+        {
+          "ticks": 32400,
+          "value": 402.518
+        },
+        {
+          "ticks": 32600,
+          "value": 406.003
+        },
+        {
+          "ticks": 32800,
+          "value": 409.475
+        },
+        {
+          "ticks": 33000,
+          "value": 412.931
+        },
+        {
+          "ticks": 33200,
+          "value": 416.372
+        },
+        {
+          "ticks": 33400,
+          "value": 419.797
+        },
+        {
+          "ticks": 33600,
+          "value": 423.203
+        },
+        {
+          "ticks": 33800,
+          "value": 426.591
+        },
+        {
+          "ticks": 34000,
+          "value": 429.96
+        },
+        {
+          "ticks": 34200,
+          "value": 433.308
+        },
+        {
+          "ticks": 34400,
+          "value": 436.634
+        },
+        {
+          "ticks": 34600,
+          "value": 439.938
+        },
+        {
+          "ticks": 34800,
+          "value": 443.219
+        },
+        {
+          "ticks": 35000,
+          "value": 446.476
+        },
+        {
+          "ticks": 35200,
+          "value": 449.708
+        },
+        {
+          "ticks": 35400,
+          "value": 452.915
+        },
+        {
+          "ticks": 35600,
+          "value": 456.094
+        },
+        {
+          "ticks": 35800,
+          "value": 459.247
+        }
+      ]
+    },
+    "minecraft:visual/sky_color": {
+      "keyframes": [
+        {
+          "ticks": 266,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 23734,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 25670,
+          "value": "#000000"
+        },
+        {
+          "ticks": 34330,
+          "value": "#000000"
+        }
+      ],
+      "modifier": "multiply"
+    },
+    "minecraft:visual/sky_light_color": {
+      "keyframes": [
+        {
+          "ticks": 1460,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 22540,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 25140,
+          "value": "#7a7aff"
+        },
+        {
+          "ticks": 34860,
+          "value": "#7a7aff"
+        }
+      ],
+      "modifier": "multiply"
+    },
+    "minecraft:visual/sky_light_factor": {
+      "keyframes": [
+        {
+          "ticks": 1460,
+          "value": 1
+        },
+        {
+          "ticks": 22540,
+          "value": 1
+        },
+        {
+          "ticks": 25140,
+          "value": 0.24
+        },
+        {
+          "ticks": 34860,
+          "value": 0.24
+        }
+      ],
+      "modifier": "multiply"
+    },
+    "minecraft:visual/star_angle": {
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": 282.371
+        },
+        {
+          "ticks": 400,
+          "value": 285.467
+        },
+        {
+          "ticks": 800,
+          "value": 288.533
+        },
+        {
+          "ticks": 1200,
+          "value": 291.568
+        },
+        {
+          "ticks": 1600,
+          "value": 294.573
+        },
+        {
+          "ticks": 2000,
+          "value": 297.546
+        },
+        {
+          "ticks": 2400,
+          "value": 300.486
+        },
+        {
+          "ticks": 2800,
+          "value": 303.394
+        },
+        {
+          "ticks": 3200,
+          "value": 306.268
+        },
+        {
+          "ticks": 3600,
+          "value": 309.108
+        },
+        {
+          "ticks": 4000,
+          "value": 311.913
+        },
+        {
+          "ticks": 4400,
+          "value": 314.683
+        },
+        {
+          "ticks": 4800,
+          "value": 317.417
+        },
+        {
+          "ticks": 5200,
+          "value": 320.114
+        },
+        {
+          "ticks": 5600,
+          "value": 322.775
+        },
+        {
+          "ticks": 6000,
+          "value": 325.399
+        },
+        {
+          "ticks": 6400,
+          "value": 327.984
+        },
+        {
+          "ticks": 6800,
+          "value": 330.532
+        },
+        {
+          "ticks": 7200,
+          "value": 333.04
+        },
+        {
+          "ticks": 7600,
+          "value": 335.51
+        },
+        {
+          "ticks": 8000,
+          "value": 337.94
+        },
+        {
+          "ticks": 8400,
+          "value": 340.33
+        },
+        {
+          "ticks": 8800,
+          "value": 342.68
+        },
+        {
+          "ticks": 9200,
+          "value": 344.99
+        },
+        {
+          "ticks": 9600,
+          "value": 347.259
+        },
+        {
+          "ticks": 10000,
+          "value": 349.487
+        },
+        {
+          "ticks": 10400,
+          "value": 351.673
+        },
+        {
+          "ticks": 10800,
+          "value": 353.818
+        },
+        {
+          "ticks": 11200,
+          "value": 355.921
+        },
+        {
+          "ticks": 11600,
+          "value": 357.982
+        },
+        {
+          "ticks": 12000,
+          "value": 360
+        },
+        {
+          "ticks": 12000,
+          "value": 0
+        },
+        {
+          "ticks": 12400,
+          "value": 2.018
+        },
+        {
+          "ticks": 12800,
+          "value": 4.079
+        },
+        {
+          "ticks": 13200,
+          "value": 6.182
+        },
+        {
+          "ticks": 13600,
+          "value": 8.327
+        },
+        {
+          "ticks": 14000,
+          "value": 10.513
+        },
+        {
+          "ticks": 14400,
+          "value": 12.741
+        },
+        {
+          "ticks": 14800,
+          "value": 15.01
+        },
+        {
+          "ticks": 15200,
+          "value": 17.32
+        },
+        {
+          "ticks": 15600,
+          "value": 19.67
+        },
+        {
+          "ticks": 16000,
+          "value": 22.06
+        },
+        {
+          "ticks": 16400,
+          "value": 24.49
+        },
+        {
+          "ticks": 16800,
+          "value": 26.96
+        },
+        {
+          "ticks": 17200,
+          "value": 29.468
+        },
+        {
+          "ticks": 17600,
+          "value": 32.016
+        },
+        {
+          "ticks": 18000,
+          "value": 34.601
+        },
+        {
+          "ticks": 18400,
+          "value": 37.225
+        },
+        {
+          "ticks": 18800,
+          "value": 39.886
+        },
+        {
+          "ticks": 19200,
+          "value": 42.583
+        },
+        {
+          "ticks": 19600,
+          "value": 45.317
+        },
+        {
+          "ticks": 20000,
+          "value": 48.087
+        },
+        {
+          "ticks": 20400,
+          "value": 50.892
+        },
+        {
+          "ticks": 20800,
+          "value": 53.732
+        },
+        {
+          "ticks": 21200,
+          "value": 56.606
+        },
+        {
+          "ticks": 21600,
+          "value": 59.514
+        },
+        {
+          "ticks": 22000,
+          "value": 62.454
+        },
+        {
+          "ticks": 22400,
+          "value": 65.427
+        },
+        {
+          "ticks": 22800,
+          "value": 68.432
+        },
+        {
+          "ticks": 23200,
+          "value": 71.467
+        },
+        {
+          "ticks": 23600,
+          "value": 74.533
+        },
+        {
+          "ticks": 24000,
+          "value": 77.629
+        },
+        {
+          "ticks": 24200,
+          "value": 80.753
+        },
+        {
+          "ticks": 24400,
+          "value": 83.906
+        },
+        {
+          "ticks": 24600,
+          "value": 87.085
+        },
+        {
+          "ticks": 24800,
+          "value": 90.292
+        },
+        {
+          "ticks": 25000,
+          "value": 93.524
+        },
+        {
+          "ticks": 25200,
+          "value": 96.781
+        },
+        {
+          "ticks": 25400,
+          "value": 100.062
+        },
+        {
+          "ticks": 25600,
+          "value": 103.366
+        },
+        {
+          "ticks": 25800,
+          "value": 106.692
+        },
+        {
+          "ticks": 26000,
+          "value": 110.04
+        },
+        {
+          "ticks": 26200,
+          "value": 113.409
+        },
+        {
+          "ticks": 26400,
+          "value": 116.797
+        },
+        {
+          "ticks": 26600,
+          "value": 120.203
+        },
+        {
+          "ticks": 26800,
+          "value": 123.628
+        },
+        {
+          "ticks": 27000,
+          "value": 127.069
+        },
+        {
+          "ticks": 27200,
+          "value": 130.525
+        },
+        {
+          "ticks": 27400,
+          "value": 133.997
+        },
+        {
+          "ticks": 27600,
+          "value": 137.482
+        },
+        {
+          "ticks": 27800,
+          "value": 140.98
+        },
+        {
+          "ticks": 28000,
+          "value": 144.49
+        },
+        {
+          "ticks": 28200,
+          "value": 148.01
+        },
+        {
+          "ticks": 28400,
+          "value": 151.54
+        },
+        {
+          "ticks": 28600,
+          "value": 155.079
+        },
+        {
+          "ticks": 28800,
+          "value": 158.625
+        },
+        {
+          "ticks": 29000,
+          "value": 162.178
+        },
+        {
+          "ticks": 29200,
+          "value": 165.736
+        },
+        {
+          "ticks": 29400,
+          "value": 169.298
+        },
+        {
+          "ticks": 29600,
+          "value": 172.864
+        },
+        {
+          "ticks": 29800,
+          "value": 176.431
+        },
+        {
+          "ticks": 30000,
+          "value": 180
+        },
+        {
+          "ticks": 30200,
+          "value": 183.569
+        },
+        {
+          "ticks": 30400,
+          "value": 187.136
+        },
+        {
+          "ticks": 30600,
+          "value": 190.702
+        },
+        {
+          "ticks": 30800,
+          "value": 194.264
+        },
+        {
+          "ticks": 31000,
+          "value": 197.822
+        },
+        {
+          "ticks": 31200,
+          "value": 201.375
+        },
+        {
+          "ticks": 31400,
+          "value": 204.921
+        },
+        {
+          "ticks": 31600,
+          "value": 208.46
+        },
+        {
+          "ticks": 31800,
+          "value": 211.99
+        },
+        {
+          "ticks": 32000,
+          "value": 215.51
+        },
+        {
+          "ticks": 32200,
+          "value": 219.02
+        },
+        {
+          "ticks": 32400,
+          "value": 222.518
+        },
+        {
+          "ticks": 32600,
+          "value": 226.003
+        },
+        {
+          "ticks": 32800,
+          "value": 229.475
+        },
+        {
+          "ticks": 33000,
+          "value": 232.931
+        },
+        {
+          "ticks": 33200,
+          "value": 236.372
+        },
+        {
+          "ticks": 33400,
+          "value": 239.797
+        },
+        {
+          "ticks": 33600,
+          "value": 243.203
+        },
+        {
+          "ticks": 33800,
+          "value": 246.591
+        },
+        {
+          "ticks": 34000,
+          "value": 249.96
+        },
+        {
+          "ticks": 34200,
+          "value": 253.308
+        },
+        {
+          "ticks": 34400,
+          "value": 256.634
+        },
+        {
+          "ticks": 34600,
+          "value": 259.938
+        },
+        {
+          "ticks": 34800,
+          "value": 263.219
+        },
+        {
+          "ticks": 35000,
+          "value": 266.476
+        },
+        {
+          "ticks": 35200,
+          "value": 269.708
+        },
+        {
+          "ticks": 35400,
+          "value": 272.915
+        },
+        {
+          "ticks": 35600,
+          "value": 276.094
+        },
+        {
+          "ticks": 35800,
+          "value": 279.247
+        }
+      ]
+    },
+    "minecraft:visual/star_brightness": {
+      "keyframes": [
+        {
+          "ticks": 184,
+          "value": 0.037
+        },
+        {
+          "ticks": 1254,
+          "value": 0
+        },
+        {
+          "ticks": 22746,
+          "value": 0
+        },
+        {
+          "ticks": 23464,
+          "value": 0.016
+        },
+        {
+          "ticks": 23918,
+          "value": 0.044
+        },
+        {
+          "ticks": 24399,
+          "value": 0.143
+        },
+        {
+          "ticks": 24729,
+          "value": 0.258
+        },
+        {
+          "ticks": 25228,
+          "value": 0.5
+        },
+        {
+          "ticks": 34772,
+          "value": 0.5
+        },
+        {
+          "ticks": 35032,
+          "value": 0.364
+        },
+        {
+          "ticks": 35356,
+          "value": 0.225
+        },
+        {
+          "ticks": 35758,
+          "value": 0.101
+        }
+      ],
+      "modifier": "maximum"
+    },
+    "minecraft:visual/sun_angle": {
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": 282.371
+        },
+        {
+          "ticks": 400,
+          "value": 285.467
+        },
+        {
+          "ticks": 800,
+          "value": 288.533
+        },
+        {
+          "ticks": 1200,
+          "value": 291.568
+        },
+        {
+          "ticks": 1600,
+          "value": 294.573
+        },
+        {
+          "ticks": 2000,
+          "value": 297.546
+        },
+        {
+          "ticks": 2400,
+          "value": 300.486
+        },
+        {
+          "ticks": 2800,
+          "value": 303.394
+        },
+        {
+          "ticks": 3200,
+          "value": 306.268
+        },
+        {
+          "ticks": 3600,
+          "value": 309.108
+        },
+        {
+          "ticks": 4000,
+          "value": 311.913
+        },
+        {
+          "ticks": 4400,
+          "value": 314.683
+        },
+        {
+          "ticks": 4800,
+          "value": 317.417
+        },
+        {
+          "ticks": 5200,
+          "value": 320.114
+        },
+        {
+          "ticks": 5600,
+          "value": 322.775
+        },
+        {
+          "ticks": 6000,
+          "value": 325.399
+        },
+        {
+          "ticks": 6400,
+          "value": 327.984
+        },
+        {
+          "ticks": 6800,
+          "value": 330.532
+        },
+        {
+          "ticks": 7200,
+          "value": 333.04
+        },
+        {
+          "ticks": 7600,
+          "value": 335.51
+        },
+        {
+          "ticks": 8000,
+          "value": 337.94
+        },
+        {
+          "ticks": 8400,
+          "value": 340.33
+        },
+        {
+          "ticks": 8800,
+          "value": 342.68
+        },
+        {
+          "ticks": 9200,
+          "value": 344.99
+        },
+        {
+          "ticks": 9600,
+          "value": 347.259
+        },
+        {
+          "ticks": 10000,
+          "value": 349.487
+        },
+        {
+          "ticks": 10400,
+          "value": 351.673
+        },
+        {
+          "ticks": 10800,
+          "value": 353.818
+        },
+        {
+          "ticks": 11200,
+          "value": 355.921
+        },
+        {
+          "ticks": 11600,
+          "value": 357.982
+        },
+        {
+          "ticks": 12000,
+          "value": 360
+        },
+        {
+          "ticks": 12000,
+          "value": 0
+        },
+        {
+          "ticks": 12400,
+          "value": 2.018
+        },
+        {
+          "ticks": 12800,
+          "value": 4.079
+        },
+        {
+          "ticks": 13200,
+          "value": 6.182
+        },
+        {
+          "ticks": 13600,
+          "value": 8.327
+        },
+        {
+          "ticks": 14000,
+          "value": 10.513
+        },
+        {
+          "ticks": 14400,
+          "value": 12.741
+        },
+        {
+          "ticks": 14800,
+          "value": 15.01
+        },
+        {
+          "ticks": 15200,
+          "value": 17.32
+        },
+        {
+          "ticks": 15600,
+          "value": 19.67
+        },
+        {
+          "ticks": 16000,
+          "value": 22.06
+        },
+        {
+          "ticks": 16400,
+          "value": 24.49
+        },
+        {
+          "ticks": 16800,
+          "value": 26.96
+        },
+        {
+          "ticks": 17200,
+          "value": 29.468
+        },
+        {
+          "ticks": 17600,
+          "value": 32.016
+        },
+        {
+          "ticks": 18000,
+          "value": 34.601
+        },
+        {
+          "ticks": 18400,
+          "value": 37.225
+        },
+        {
+          "ticks": 18800,
+          "value": 39.886
+        },
+        {
+          "ticks": 19200,
+          "value": 42.583
+        },
+        {
+          "ticks": 19600,
+          "value": 45.317
+        },
+        {
+          "ticks": 20000,
+          "value": 48.087
+        },
+        {
+          "ticks": 20400,
+          "value": 50.892
+        },
+        {
+          "ticks": 20800,
+          "value": 53.732
+        },
+        {
+          "ticks": 21200,
+          "value": 56.606
+        },
+        {
+          "ticks": 21600,
+          "value": 59.514
+        },
+        {
+          "ticks": 22000,
+          "value": 62.454
+        },
+        {
+          "ticks": 22400,
+          "value": 65.427
+        },
+        {
+          "ticks": 22800,
+          "value": 68.432
+        },
+        {
+          "ticks": 23200,
+          "value": 71.467
+        },
+        {
+          "ticks": 23600,
+          "value": 74.533
+        },
+        {
+          "ticks": 24000,
+          "value": 77.629
+        },
+        {
+          "ticks": 24200,
+          "value": 80.753
+        },
+        {
+          "ticks": 24400,
+          "value": 83.906
+        },
+        {
+          "ticks": 24600,
+          "value": 87.085
+        },
+        {
+          "ticks": 24800,
+          "value": 90.292
+        },
+        {
+          "ticks": 25000,
+          "value": 93.524
+        },
+        {
+          "ticks": 25200,
+          "value": 96.781
+        },
+        {
+          "ticks": 25400,
+          "value": 100.062
+        },
+        {
+          "ticks": 25600,
+          "value": 103.366
+        },
+        {
+          "ticks": 25800,
+          "value": 106.692
+        },
+        {
+          "ticks": 26000,
+          "value": 110.04
+        },
+        {
+          "ticks": 26200,
+          "value": 113.409
+        },
+        {
+          "ticks": 26400,
+          "value": 116.797
+        },
+        {
+          "ticks": 26600,
+          "value": 120.203
+        },
+        {
+          "ticks": 26800,
+          "value": 123.628
+        },
+        {
+          "ticks": 27000,
+          "value": 127.069
+        },
+        {
+          "ticks": 27200,
+          "value": 130.525
+        },
+        {
+          "ticks": 27400,
+          "value": 133.997
+        },
+        {
+          "ticks": 27600,
+          "value": 137.482
+        },
+        {
+          "ticks": 27800,
+          "value": 140.98
+        },
+        {
+          "ticks": 28000,
+          "value": 144.49
+        },
+        {
+          "ticks": 28200,
+          "value": 148.01
+        },
+        {
+          "ticks": 28400,
+          "value": 151.54
+        },
+        {
+          "ticks": 28600,
+          "value": 155.079
+        },
+        {
+          "ticks": 28800,
+          "value": 158.625
+        },
+        {
+          "ticks": 29000,
+          "value": 162.178
+        },
+        {
+          "ticks": 29200,
+          "value": 165.736
+        },
+        {
+          "ticks": 29400,
+          "value": 169.298
+        },
+        {
+          "ticks": 29600,
+          "value": 172.864
+        },
+        {
+          "ticks": 29800,
+          "value": 176.431
+        },
+        {
+          "ticks": 30000,
+          "value": 180
+        },
+        {
+          "ticks": 30200,
+          "value": 183.569
+        },
+        {
+          "ticks": 30400,
+          "value": 187.136
+        },
+        {
+          "ticks": 30600,
+          "value": 190.702
+        },
+        {
+          "ticks": 30800,
+          "value": 194.264
+        },
+        {
+          "ticks": 31000,
+          "value": 197.822
+        },
+        {
+          "ticks": 31200,
+          "value": 201.375
+        },
+        {
+          "ticks": 31400,
+          "value": 204.921
+        },
+        {
+          "ticks": 31600,
+          "value": 208.46
+        },
+        {
+          "ticks": 31800,
+          "value": 211.99
+        },
+        {
+          "ticks": 32000,
+          "value": 215.51
+        },
+        {
+          "ticks": 32200,
+          "value": 219.02
+        },
+        {
+          "ticks": 32400,
+          "value": 222.518
+        },
+        {
+          "ticks": 32600,
+          "value": 226.003
+        },
+        {
+          "ticks": 32800,
+          "value": 229.475
+        },
+        {
+          "ticks": 33000,
+          "value": 232.931
+        },
+        {
+          "ticks": 33200,
+          "value": 236.372
+        },
+        {
+          "ticks": 33400,
+          "value": 239.797
+        },
+        {
+          "ticks": 33600,
+          "value": 243.203
+        },
+        {
+          "ticks": 33800,
+          "value": 246.591
+        },
+        {
+          "ticks": 34000,
+          "value": 249.96
+        },
+        {
+          "ticks": 34200,
+          "value": 253.308
+        },
+        {
+          "ticks": 34400,
+          "value": 256.634
+        },
+        {
+          "ticks": 34600,
+          "value": 259.938
+        },
+        {
+          "ticks": 34800,
+          "value": 263.219
+        },
+        {
+          "ticks": 35000,
+          "value": 266.476
+        },
+        {
+          "ticks": 35200,
+          "value": 269.708
+        },
+        {
+          "ticks": 35400,
+          "value": 272.915
+        },
+        {
+          "ticks": 35600,
+          "value": 276.094
+        },
+        {
+          "ticks": 35800,
+          "value": 279.247
+        }
+      ]
+    },
+    "minecraft:visual/sunrise_sunset_color": {
+      "keyframes": [
+        {
+          "ticks": 142,
+          "value": "#5fefa333"
+        },
+        {
+          "ticks": 620,
+          "value": "#29f5ba33"
+        },
+        {
+          "ticks": 1130,
+          "value": "#06fbd433"
+        },
+        {
+          "ticks": 1460,
+          "value": "#00ffe533"
+        },
+        {
+          "ticks": 22540,
+          "value": "#00ffe533"
+        },
+        {
+          "ticks": 22794,
+          "value": "#04fcd833"
+        },
+        {
+          "ticks": 23044,
+          "value": "#0ff9cb33"
+        },
+        {
+          "ticks": 23380,
+          "value": "#29f5ba33"
+        },
+        {
+          "ticks": 23858,
+          "value": "#5fefa333"
+        },
+        {
+          "ticks": 24243,
+          "value": "#b1e78733"
+        },
+        {
+          "ticks": 24358,
+          "value": "#cce47e33"
+        },
+        {
+          "ticks": 24512,
+          "value": "#e9e07233"
+        },
+        {
+          "ticks": 24613,
+          "value": "#f6dd6b33"
+        },
+        {
+          "ticks": 24732,
+          "value": "#feda6333"
+        },
+        {
+          "ticks": 24841,
+          "value": "#fed75c33"
+        },
+        {
+          "ticks": 25035,
+          "value": "#ecd25133"
+        },
+        {
+          "ticks": 25252,
+          "value": "#c1cc4733"
+        },
+        {
+          "ticks": 25775,
+          "value": "#36be3733"
+        },
+        {
+          "ticks": 25888,
+          "value": "#1fbb3533"
+        },
+        {
+          "ticks": 26039,
+          "value": "#09b73333"
+        },
+        {
+          "ticks": 26192,
+          "value": "#00b33333"
+        },
+        {
+          "ticks": 33807,
+          "value": "#00b23333"
+        },
+        {
+          "ticks": 33961,
+          "value": "#09b73333"
+        },
+        {
+          "ticks": 34112,
+          "value": "#1fbb3533"
+        },
+        {
+          "ticks": 34225,
+          "value": "#36be3733"
+        },
+        {
+          "ticks": 34748,
+          "value": "#c1cc4733"
+        },
+        {
+          "ticks": 34965,
+          "value": "#ecd25133"
+        },
+        {
+          "ticks": 35159,
+          "value": "#fed75c33"
+        },
+        {
+          "ticks": 35272,
+          "value": "#feda6333"
+        },
+        {
+          "ticks": 35488,
+          "value": "#e9e07233"
+        },
+        {
+          "ticks": 35642,
+          "value": "#cce47e33"
+        },
+        {
+          "ticks": 35757,
+          "value": "#b1e78733"
+        }
+      ]
+    }
+  }
+}

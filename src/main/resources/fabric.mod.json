@@ -3,7 +3,7 @@
 	"id": "espresso",
 	"version": "${version}",
 	"name": "Espresso Flavoured",
-	"description": "A shot of espresso for your survival world: creepers spare your builds, endermen leave blocks alone, no phantoms, a safe radius around your bed, Overworld shulker boxes, a wandering trader who sells building blocks, and a field guide to get you started.",
+	"description": "A shot of espresso for your survival world: a safe home radius, builds creepers can't wreck, longer days, shorter but sharper nights, graves-friendly deaths that keep your hotbar, Overworld shulker boxes, roomier bundles, a block merchant, and coffee to keep you going.",
 	"authors": [
 		"Gabby"
 	],
@@ -13,10 +13,14 @@
 	"entrypoints": {
 		"main": [
 			"com.gabbymaybelle.espresso.Espresso"
+		],
+		"client": [
+			"com.gabbymaybelle.espresso.client.EspressoClient"
 		]
 	},
 	"mixins": [
-		"espresso.mixins.json"
+		"espresso.mixins.json",
+		"espresso.client.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

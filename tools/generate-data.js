@@ -28,6 +28,73 @@ out('data/espresso/recipe/bundle_from_rabbit_hide.json', {
 	key: { '-': 'minecraft:string', '#': 'minecraft:rabbit_hide' }, pattern: ['-', '#'], result: { id: 'minecraft:bundle' },
 });
 
+// ---------------------------------------------------------------- coffee
+for (const [type, suffix, time] of [['minecraft:smelting', '', 200], ['minecraft:smoking', '_from_smoking', 100], ['minecraft:campfire_cooking', '_from_campfire_cooking', 600]]) {
+	out(`data/espresso/recipe/roasted_coffee_beans${suffix}.json`, {
+		type, category: 'food', cookingtime: time, experience: 0.35,
+		ingredient: 'espresso:coffee_cherries', result: { id: 'espresso:roasted_coffee_beans' },
+	});
+}
+// A pot of three: the water bucket comes back empty.
+out('data/espresso/recipe/espresso.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['espresso:roasted_coffee_beans', 'espresso:roasted_coffee_beans', 'minecraft:water_bucket',
+		'minecraft:glass_bottle', 'minecraft:glass_bottle', 'minecraft:glass_bottle'],
+	result: { id: 'espresso:espresso', count: 3 },
+});
+out('data/espresso/recipe/latte.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['espresso:espresso', 'espresso:espresso', 'espresso:espresso', 'minecraft:milk_bucket'],
+	result: { id: 'espresso:latte', count: 3 },
+});
+out('data/espresso/recipe/mocha_latte.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['espresso:latte', 'minecraft:cocoa_beans'],
+	result: { id: 'espresso:mocha_latte' },
+});
+out('data/espresso/tags/item/coffee.json', { values: ['espresso:espresso', 'espresso:latte', 'espresso:mocha_latte'] });
+
+// Breaking a bush with cherries on it drops them, like a sweet berry bush.
+const bushDrop = (age, min, max) => ({
+	condition: { type: 'minecraft:match_block', blocks: 'espresso:coffee_bush', state: { age: String(age) } },
+	entries: [{ type: 'minecraft:item', name: 'espresso:coffee_cherries' }],
+	modifier: [{ type: 'minecraft:set_count', count: { type: 'minecraft:uniform', min, max } }],
+	rolls: 1,
+});
+out('data/espresso/loot_table/blocks/coffee_bush.json', {
+	type: 'minecraft:block', modifier: { type: 'minecraft:explosion_decay' },
+	pools: [bushDrop(3, 2, 3), bushDrop(2, 1, 2)],
+});
+
+// Wild coffee bushes (added to jungles and savannas by the mod).
+out('data/espresso/worldgen/feature/coffee_bush.json', {
+	type: 'minecraft:simple_block', to_place: { id: 'espresso:coffee_bush', properties: { age: '3' } },
+});
+out('data/espresso/worldgen/placed_feature/patch_coffee_bush.json', {
+	feature: 'espresso:coffee_bush',
+	placement: [
+		{ type: 'minecraft:rarity_filter', chance: 12 },
+		{ type: 'minecraft:in_square' },
+		{ type: 'minecraft:heightmap', heightmap: 'WORLD_SURFACE_WG' },
+		{ type: 'minecraft:biome' },
+		{ type: 'minecraft:count', count: 48 },
+		{ type: 'minecraft:offset',
+			x: { type: 'minecraft:trapezoid', max: 6, min: -6, plateau: 0 },
+			y: { type: 'minecraft:trapezoid', max: 3, min: -3, plateau: 0 },
+			z: { type: 'minecraft:trapezoid', max: 6, min: -6, plateau: 0 } },
+		{ type: 'minecraft:block_predicate_filter', predicate: { type: 'minecraft:all_of', predicates: [
+			{ type: 'minecraft:matching_block_tag', tag: 'minecraft:air' },
+			{ type: 'minecraft:matching_blocks', blocks: 'minecraft:grass_block', offset: [0, -1, 0] },
+		] } },
+	],
+});
+
+// The wandering trader sometimes carries coffee cherries too, for worlds far from a jungle.
+out('data/espresso/villager_trade/wandering_trader/coffee_cherries.json', {
+	gives: { count: 3, id: 'espresso:coffee_cherries' }, max_uses: 8, reputation_discount: 0.05, wants: { id: 'minecraft:emerald' },
+});
+out('data/minecraft/tags/villager_trade/wandering_trader/common.json', { values: ['espresso:wandering_trader/coffee_cherries'] });
+
 // ---------------------------------------------------------------- block merchant
 // [item, how many for one emerald (or for `price` emeralds), price]
 const BLOCKS = [
@@ -112,6 +179,9 @@ adv('guide/refill', 'guide/pocket_shot', 'minecraft:shulker_box', 'Refill', 'Cra
 	{ frame: 'goal' });
 adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'Buy building blocks from the wandering trader',
 	{ traded: { trigger: 'minecraft:villager_trade', conditions: { villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } } } } });
+
+adv('guide/first_sip', 'guide/root', 'espresso:espresso', 'First Sip', 'Drink a coffee you brewed yourself',
+	{ sipped: { trigger: 'minecraft:consume_item', conditions: { item: { items: '#espresso:coffee' } } } });
 
 // Gives the starter kit once, the first time a player joins.
 out('data/espresso/advancement/starter_kit.json', {

@@ -1,0 +1,25 @@
+{
+  "parent": "espresso:guide/root",
+  "criteria": {
+    "sipped": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "#espresso:coffee"
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso:espresso"
+    },
+    "title": "First Sip",
+    "description": "Drink a coffee you brewed yourself"
+  },
+  "requirements": [
+    [
+      "sipped"
+    ]
+  ]
+}

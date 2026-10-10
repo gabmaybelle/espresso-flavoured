@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "espresso:roasted_coffee_beans",
+    "espresso:roasted_coffee_beans",
+    "minecraft:water_bucket",
+    "minecraft:glass_bottle",
+    "minecraft:glass_bottle",
+    "minecraft:glass_bottle"
+  ],
+  "result": {
+    "id": "espresso:espresso",
+    "count": 3
+  }
+}

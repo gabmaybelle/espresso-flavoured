@@ -28,6 +28,16 @@ public final class Config {
 	public static boolean blockMerchant = true;
 	/** How many tools, armour pieces and other non-stacking items fit in one bundle. 1 is vanilla. */
 	public static int bundleUnstackables = 4;
+	/** 20-minute days and 10-minute nights (vanilla: 10 and 10). */
+	public static boolean longerDays = true;
+	/** Keep the hotbar, armour and off-hand on death; everything else drops. */
+	public static boolean keepHotbarOnDeath = true;
+	/** Slow natural healing only happens while you have saturation (you've eaten recently). */
+	public static boolean regenNeedsSaturation = true;
+	/** Nights bring a few more hostile mobs, with 20% more health and damage. */
+	public static boolean toughNights = true;
+	/** Drowsy when you haven't slept in two days, are low on food, or low on health. */
+	public static boolean drowsiness = true;
 
 	private Config() {
 	}
@@ -47,6 +57,11 @@ public final class Config {
 		safeHomeRadius = integer(props, "safeHomeRadius", safeHomeRadius);
 		blockMerchant = bool(props, "blockMerchant", blockMerchant);
 		bundleUnstackables = Math.max(1, integer(props, "bundleUnstackables", bundleUnstackables));
+		longerDays = bool(props, "longerDays", longerDays);
+		keepHotbarOnDeath = bool(props, "keepHotbarOnDeath", keepHotbarOnDeath);
+		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
+		toughNights = bool(props, "toughNights", toughNights);
+		drowsiness = bool(props, "drowsiness", drowsiness);
 
 		props.setProperty("creeperGriefing", Boolean.toString(creeperGriefing));
 		props.setProperty("endermanGriefing", Boolean.toString(endermanGriefing));
@@ -54,6 +69,11 @@ public final class Config {
 		props.setProperty("safeHomeRadius", Integer.toString(safeHomeRadius));
 		props.setProperty("blockMerchant", Boolean.toString(blockMerchant));
 		props.setProperty("bundleUnstackables", Integer.toString(bundleUnstackables));
+		props.setProperty("longerDays", Boolean.toString(longerDays));
+		props.setProperty("keepHotbarOnDeath", Boolean.toString(keepHotbarOnDeath));
+		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
+		props.setProperty("toughNights", Boolean.toString(toughNights));
+		props.setProperty("drowsiness", Boolean.toString(drowsiness));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
 			props.store(writer, "Espresso Flavoured (restart the game after editing)\n"
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
@@ -61,7 +81,12 @@ public final class Config {
 					+ "phantoms: phantoms spawn for players who haven't slept (vanilla behaviour)\n"
 					+ "safeHomeRadius: no natural hostile spawns within this many blocks of your home bed (crouch + use a bed with an empty hand; 0 = off)\n"
 					+ "blockMerchant: the wandering trader also sells building blocks\n"
-					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)");
+					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
+					+ "longerDays: 20-minute days and 10-minute nights\n"
+					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
+					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
+					+ "toughNights: a few more, slightly tougher monsters at night\n"
+					+ "drowsiness: Drowsy when you haven't slept in two days or are low on food or health");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);
 		}

@@ -1,0 +1,54 @@
+{
+  "clock": "minecraft:overworld",
+  "period_ticks": 36000,
+  "tracks": {
+    "minecraft:gameplay/baby_villager_activity": {
+      "keyframes": [
+        {
+          "ticks": 20,
+          "value": "minecraft:idle"
+        },
+        {
+          "ticks": 6000,
+          "value": "minecraft:play"
+        },
+        {
+          "ticks": 12000,
+          "value": "minecraft:idle"
+        },
+        {
+          "ticks": 20000,
+          "value": "minecraft:play"
+        },
+        {
+          "ticks": 24000,
+          "value": "minecraft:rest"
+        }
+      ]
+    },
+    "minecraft:gameplay/villager_activity": {
+      "keyframes": [
+        {
+          "ticks": 20,
+          "value": "minecraft:idle"
+        },
+        {
+          "ticks": 4000,
+          "value": "minecraft:work"
+        },
+        {
+          "ticks": 18000,
+          "value": "minecraft:meet"
+        },
+        {
+          "ticks": 22000,
+          "value": "minecraft:idle"
+        },
+        {
+          "ticks": 24000,
+          "value": "minecraft:rest"
+        }
+      ]
+    }
+  }
+}

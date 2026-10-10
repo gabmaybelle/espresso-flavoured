@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "espresso:latte",
+    "minecraft:cocoa_beans"
+  ],
+  "result": {
+    "id": "espresso:mocha_latte"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "block.espresso.coffee_bush": "Coffee Bush",
+  "item.espresso.coffee_cherries": "Coffee Cherries",
+  "item.espresso.roasted_coffee_beans": "Roasted Coffee Beans",
+  "item.espresso.espresso": "Espresso",
+  "item.espresso.latte": "Latte",
+  "item.espresso.mocha_latte": "Mocha Latte",
+  "effect.espresso.drowsy": "Drowsy",
+  "effect.espresso.caffeinated": "Caffeinated"
+}

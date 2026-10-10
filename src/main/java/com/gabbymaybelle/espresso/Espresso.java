@@ -1,5 +1,6 @@
 package com.gabbymaybelle.espresso;
 
+import com.gabbymaybelle.espresso.content.EspressoContent;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
@@ -18,6 +19,9 @@ public class Espresso implements ModInitializer {
 	public void onInitialize() {
 		Config.load();
 		HomeBeds.register();
+		EspressoContent.register();
+		Wellbeing.register();
+		KeepOnDeath.register();
 
 		ModContainer mod = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow();
 		// Recipes, advancements, the starter kit, the field guide and the block merchant's trades.
@@ -26,6 +30,11 @@ public class Espresso implements ModInitializer {
 		// The title-screen logo and splash texts; can be switched off in the Resource Packs screen.
 		ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_look"), mod,
 				Component.literal("Espresso Flavoured Look"), PackActivationType.DEFAULT_ENABLED);
+		// 20-minute days and 10-minute nights.
+		if (Config.longerDays) {
+			ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_long_days"), mod,
+					Component.literal("Espresso Flavoured: Longer Days"), PackActivationType.ALWAYS_ENABLED);
+		}
 		LOGGER.info("Espresso Flavoured: ready (safe home radius {}, creeper griefing {}, enderman griefing {}, phantoms {})",
 				Config.safeHomeRadius, Config.creeperGriefing, Config.endermanGriefing, Config.phantoms);
 	}
