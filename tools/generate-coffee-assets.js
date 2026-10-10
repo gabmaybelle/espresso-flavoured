@@ -114,19 +114,30 @@ const mugShape = (x, y) => {
 };
 png('item/mug', grid(mugShape), MUG);
 png('item/unfired_mug', grid(mugShape), { W: [176, 182, 196], B: [160, 166, 179], S: [128, 134, 148], i: [104, 108, 120] });
-/** A drink's layer: the coffee in the mouth of the mug, and steam above. */
-function drinkLayer(name, liquid, top, detail) {
+/**
+ * A drink's layer, drawn over the tinted mug: the drink in the mouth of the mug, steam, and
+ * the drink's own detail (from {@code extra}) so each one is easy to tell apart at a glance.
+ */
+function drinkLayer(name, liquid, top, detail, extra = () => null, extraPalette = {}, steam = true) {
 	png(`item/${name}_fill`, grid((x, y) => {
+		const e = extra(x, y);
+		if (e) return e;
 		if (y === 4 && x >= 4 && x <= 10) return x === 6 || x === 9 ? 'T' : (x === 8 ? 'D' : 'L');
-		if (y === 2 && (x === 6 || x === 9)) return 's';
-		if (y === 1 && (x === 7 || x === 8)) return 's';
-		if (y === 0 && x === 7) return 's';
+		if (steam && ((y === 2 && (x === 6 || x === 9)) || (y === 1 && (x === 7 || x === 8)) || (y === 0 && x === 7))) return 's';
 		return '.';
-	}), { L: liquid, T: top, D: detail, s: [240, 240, 240, 150] });
+	}), { L: liquid, T: top, D: detail, s: [240, 240, 240, 150], ...extraPalette });
 }
+const WHITE = [252, 250, 246], CREAM = [238, 228, 210];
+/** A dome of foam or cream rising above the rim. */
+const foam = (x, y) => (y === 3 && x >= 4 && x <= 10) || (y === 2 && x >= 5 && x <= 9) || (y === 1 && x >= 6 && x <= 8);
 drinkLayer('espresso', [58, 30, 14], [196, 136, 78], [44, 22, 10]);
-drinkLayer('latte', [178, 128, 84], [246, 238, 222], [160, 112, 72]);
-drinkLayer('mocha_latte', [104, 58, 32], [250, 246, 238], [70, 36, 18]);
+// Latte: a tall foam cap with a little leaf.
+drinkLayer('latte', [178, 128, 84], [246, 238, 222], [160, 112, 72],
+	(x, y) => (y === 2 && x === 7 ? 'K' : foam(x, y) ? (x === 4 || x === 10 ? 'c' : 'F') : null), { F: WHITE, c: CREAM, K: [150, 104, 64] }, false);
+// Mocha: cream on top and chocolate drizzled down the side.
+drinkLayer('mocha_latte', [104, 58, 32], [250, 246, 238], [70, 36, 18],
+	(x, y) => ((x === 5 && y >= 5 && y <= 8) || (x === 8 && y >= 5 && y <= 10) || (x === 10 && y >= 5 && y <= 7) ? 'C'
+		: (y === 3 && x >= 5 && x <= 9) || (y === 2 && x >= 6 && x <= 8) ? 'F' : null), { F: WHITE, C: [92, 48, 26] }, false);
 for (const old of ['espresso', 'latte', 'mocha_latte']) fs.rmSync(path.join(A, 'textures', 'item', old + '.png'), { force: true });
 
 // Placed mugs: glazed sides, a rim, and the drink's surface.
@@ -138,12 +149,29 @@ for (const [name, liquid, top] of [['espresso', [58, 30, 14], [196, 136, 78]], [
 }
 
 // ---------------------------------------------------------------- café extras
-drinkLayer('vanilla_latte', [214, 178, 120], [250, 244, 230], [120, 80, 40]);
+// Vanilla latte: foam with a vanilla pod standing in it.
+drinkLayer('vanilla_latte', [214, 178, 120], [250, 244, 230], [120, 80, 40],
+	(x, y) => (x - 7 === 4 - y && y >= 0 && y <= 4 ? 'P' : x - 8 === 4 - y && y >= 0 && y <= 3 ? 'p' : foam(x, y) ? 'F' : null),
+	{ F: [250, 242, 222], P: [62, 36, 20], p: [96, 58, 32] }, false);
 // The newer drinks: liquid, the top (foam, ice, glow or marshmallow) and a detail.
-drinkLayer('pumpkin_spice_latte', [196, 120, 60], [246, 214, 170], [120, 64, 30]);
-drinkLayer('iced_coffee', [58, 30, 14], [200, 228, 246], [140, 90, 60]);
-drinkLayer('night_shift', [36, 24, 18], [250, 214, 90], [70, 46, 24]);
-drinkLayer('hot_chocolate', [92, 50, 28], [250, 248, 244], [64, 34, 18]);
+// Pumpkin spice latte: whipped cream with a dusting of cinnamon, and an orange sleeve.
+drinkLayer('pumpkin_spice_latte', [196, 120, 60], [246, 214, 170], [120, 64, 30],
+	(x, y) => (y >= 8 && y <= 10 && x >= 3 && x <= 11 ? (y === 9 ? 'O' : 'o') : (y === 1 && x === 7) || (y === 2 && x === 6) ? 'n' : foam(x, y) ? 'F' : null),
+	{ F: WHITE, O: [232, 126, 48], o: [196, 96, 34], n: [150, 82, 40] }, false);
+// Iced coffee: ice cubes poking out and a striped straw, no steam.
+drinkLayer('iced_coffee', [58, 30, 14], [200, 228, 246], [140, 90, 60],
+	(x, y) => (x === 10 - Math.floor(y / 2) && y <= 4 ? (y % 2 ? 'r' : 'w')
+		: (x >= 4 && x <= 5 && y >= 2 && y <= 3) || (x >= 7 && x <= 8 && y >= 3 && y <= 4) ? (x === 4 || x === 7 ? 'J' : 'I') : null),
+	{ I: [178, 216, 240], J: [226, 244, 252], r: [210, 56, 56], w: [250, 250, 250] }, false);
+// Night shift: a glowing rim and a few stars.
+drinkLayer('night_shift', [36, 24, 18], [250, 214, 90], [70, 46, 24],
+	(x, y) => ((y === 3 && x >= 4 && x <= 10) || ((x === 3 || x === 11) && y === 4) ? 'G'
+		: (x === 2 && y === 1) || (x === 13 && y === 2) || (x === 12 && y === 0) || (x === 4 && y === 0) ? 'g' : null),
+	{ G: [252, 222, 96], g: [255, 244, 170] }, false);
+// Hot chocolate: marshmallows on top, and steam.
+drinkLayer('hot_chocolate', [92, 50, 28], [250, 248, 244], [64, 34, 18],
+	(x, y) => ((x >= 5 && x <= 6 && y === 3) || (x >= 8 && x <= 9 && y >= 3 && y <= 4) || (x === 7 && y === 4) ? (x === 6 || x === 9 ? 'm' : 'M') : null),
+	{ M: WHITE, m: [244, 210, 214] });
 // Pumpkin spice and cocoa mix: little paper sachets of powder.
 const sachet = (name, powder, dark) => png(`item/${name}`, grid((x, y) => {
 	if (y === 3 && x >= 5 && x <= 10) return 'f'; // folded top
@@ -222,7 +250,9 @@ png('item/baristas_reserve', grid((x, y) => {
 	if (y >= 6 && y <= 14 && x >= 3 + (y < 8 ? 1 : 0) && x <= 12 - (y < 8 ? 1 : 0)) return (x + y * 2) % 5 === 0 ? 'S' : (x === 3 || x === 12 || y === 14 ? 'D' : 'B');
 	return '.';
 }), { k: [44, 24, 12], b: [112, 64, 34], G: [232, 184, 58], B: [176, 146, 102], S: [150, 122, 82], D: [120, 96, 62] });
-drinkLayer('ristretto', [36, 18, 8], [214, 150, 80], [24, 12, 6]);
+// Ristretto: a thick layer of crema right to the rim, and a gold band (it's special).
+drinkLayer('ristretto', [36, 18, 8], [214, 150, 80], [24, 12, 6],
+	(x, y) => (y === 4 && x >= 4 && x <= 10 ? 'T' : y === 3 && x >= 5 && x <= 9 ? 'L' : y === 7 && x >= 3 && x <= 11 ? 'Y' : null), { Y: [232, 184, 58] });
 
 // The barista's apron, over the villager's robe (front 6..13 x 44..63 on the 64x64 sheet),
 // with ties round the sides and a coffee bean on the pocket.
