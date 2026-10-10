@@ -29,7 +29,7 @@
   "espresso.options.regenNeedsSaturation": "Heal Only When Fed",
   "espresso.options.regenNeedsSaturation.tooltip": "Natural healing only happens when you have eaten recently.",
   "espresso.options.drowsiness": "Drowsiness",
-  "espresso.options.drowsiness.tooltip": "Become Drowsy after two days without sleep, and Hungry if you haven't eaten in that time either.",
+  "espresso.options.drowsiness.tooltip": "Become Drowsy after two days without sleeping at home, and Hungry if you haven't eaten in that time either.",
   "espresso.options.bundleUnstackables": "Tools per Bundle",
   "espresso.options.bundleUnstackables.tooltip": "How many tools or pieces of armour fit in one bundle (1 is vanilla).",
   "espresso.options.blockMerchant": "Block Merchant",

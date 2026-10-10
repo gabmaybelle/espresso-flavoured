@@ -69,6 +69,21 @@ public final class HomeBeds {
 		return level.getServer().overworld().getAttachedOrCreate(HOMES);
 	}
 
+	/**
+	 * True when a bed at {@code bed} counts as sleeping at home for this player: inside the
+	 * safe home radius of their home bed. Players without a home (or with the radius off)
+	 * are at home in any bed.
+	 */
+	public static boolean isAtHome(ServerPlayer player, ServerLevel level, BlockPos bed) {
+		GlobalPos home = store(level).get(player.getUUID());
+		int radius = Config.safeHomeRadius;
+		if (home == null || radius <= 0) {
+			return true;
+		}
+		long dx = home.pos().getX() - bed.getX(), dz = home.pos().getZ() - bed.getZ();
+		return home.dimension() == level.dimension() && dx * dx + dz * dz <= (long) radius * radius;
+	}
+
 	/** True when a hostile spawn at {@code pos} would be inside someone's safe home radius. */
 	public static boolean isProtected(ServerLevel level, BlockPos pos) {
 		int radius = Config.safeHomeRadius;

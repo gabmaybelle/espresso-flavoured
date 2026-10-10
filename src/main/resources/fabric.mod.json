@@ -22,7 +22,8 @@
 		]
 	},
 	"mixins": [
-		"espresso.mixins.json"
+		"espresso.mixins.json",
+		"espresso.client.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

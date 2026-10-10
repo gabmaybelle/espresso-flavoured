@@ -36,7 +36,7 @@ public final class Config {
 	public static boolean regenNeedsSaturation = true;
 	/** Nights bring a few more hostile mobs, with 20% more health and damage. */
 	public static boolean toughNights = true;
-	/** Drowsy after two days without sleep; Hungry too if you haven't eaten in that time. */
+	/** Drowsy after two days without sleeping at home; Hungry too if you haven't eaten in that time. */
 	public static boolean drowsiness = true;
 
 	private Config() {
@@ -91,7 +91,7 @@ public final class Config {
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
-					+ "drowsiness: Drowsy after two days without sleep, and Hungry if you haven't eaten in that time either\n"
+					+ "drowsiness: Drowsy after two days without sleeping at home (any bed within your safe home radius), and Hungry if you haven't eaten in that time either\n"
 					+ "longerDays needs a restart; everything else applies straight away");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);

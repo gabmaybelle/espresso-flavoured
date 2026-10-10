@@ -45,7 +45,7 @@ public final class EspressoContent {
 	}
 
 	// ---------------------------------------------------------------- effects
-	/** Heavy eyelids: slower mining and walking. */
+	/** Heavy eyelids: slower mining and walking, and (client side) no sprinting. */
 	public static final Holder<MobEffect> DROWSY = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("drowsy"),
 			new EspressoEffect(MobEffectCategory.HARMFUL, 0x5a4a6e)
 					.addAttributeModifier(Attributes.BLOCK_BREAK_SPEED, id("drowsy_mining"), -0.3, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
