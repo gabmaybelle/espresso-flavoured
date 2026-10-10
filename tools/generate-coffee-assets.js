@@ -74,10 +74,30 @@ png('item/roasted_coffee_beans', [
 	'................',
 	'................',
 ], BEAN);
+// Decaf beans: the same beans, washed paler, with a little water drop.
+png('item/decaf_coffee_beans', [
+	'................',
+	'............w...',
+	'...kkkk....wWw..',
+	'..kbBbbk...wWw..',
+	'.kbBbcbbk...w...',
+	'.kbbbcbbk.......',
+	'.kbbcbbbk.......',
+	'..kbcbbk..kkkk..',
+	'...kkkk..kbBbbk.',
+	'........kbBbcbbk',
+	'........kbbbcbbk',
+	'........kbbcbbbk',
+	'.........kbcbbk.',
+	'..........kkkk..',
+	'................',
+	'................',
+], { k: [96, 64, 40], b: [176, 132, 92], B: [212, 172, 126], c: [128, 90, 58], w: [120, 170, 220], W: [200, 230, 250] });
 
 // ---------------------------------------------------------------- mugs
 // Mugs are drawn in greys and tinted by their dye colour (cream when undyed); a drink adds
 // an untinted second layer with the coffee and a curl of steam.
+const grid18 = (fn) => Array.from({ length: 18 }, (_, y) => Array.from({ length: 18 }, (_, x) => fn(x, y)).join(''));
 const grid = (fn) => Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => fn(x, y)).join(''));
 const MUG = { W: [255, 255, 255], B: [226, 226, 226], S: [178, 178, 178], i: [120, 120, 120] };
 const mugShape = (x, y) => {
@@ -236,6 +256,22 @@ png('mob_effect/drowsy', [
 	'....l.l.l.l.l.....', '..................', '..................', '..................',
 	'..................', '..................',
 ], { z: [196, 186, 230], e: [120, 100, 150], l: [90, 74, 118] });
+// Cozy: a warm mug with a heart of steam. Well Rested: a little golden sun.
+png('mob_effect/cozy', grid18((x, y) => {
+	if (y >= 2 && y <= 4 && ((x === 7 || x === 9) && y === 2 || (x >= 6 && x <= 10 && y === 3) || (x === 8 && y === 4))) return 'h';
+	if (y >= 7 && y <= 14 && x >= 4 && x <= 11) return x === 4 || x === 11 || y === 14 ? 'S' : 'B';
+	if ((y === 9 || y === 12) && (x === 12 || x === 13)) return 'B';
+	if (y >= 10 && y <= 11 && x === 13) return 'S';
+	return '.';
+}), { h: [232, 120, 120], B: [240, 196, 150], S: [200, 150, 104] });
+png('mob_effect/well_rested', grid18((x, y) => {
+	const dx = x - 8.5, dy = y - 8.5, r2 = dx * dx + dy * dy;
+	if (r2 < 9) return 'Y';
+	if (r2 < 16) return 'y';
+	if ((x === 8 || x === 9) && (y <= 2 || y >= 15)) return 'y';
+	if ((y === 8 || y === 9) && (x <= 2 || x >= 15)) return 'y';
+	return '.';
+}), { Y: [252, 220, 110], y: [232, 176, 60] });
 png('mob_effect/caffeinated', [
 	'..................', '..................', '..................', '......kkkkk.......',
 	'.....kbBbbbk......', '....kbBbbcbbk.....', '....kbBbcbbbk.....', '....kbbbcbbbk.....',
@@ -313,7 +349,7 @@ out('blockstates/canister.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/canister', ...(y ? { y } : {}) }]),
 ) });
 // Glass jar, the Reserve and Ristretto.
-for (const item of ['glass_jar', 'baristas_reserve']) {
+for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans']) {
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
@@ -426,6 +462,10 @@ out('lang/en_us.json', {
 	'item.espresso.mocha_latte': 'Mocha Latte',
 	'effect.espresso.drowsy': 'Drowsy',
 	'effect.espresso.caffeinated': 'Caffeinated',
+	'effect.espresso.cozy': 'Cozy',
+	'effect.espresso.well_rested': 'Well Rested',
+	'item.espresso.decaf_coffee_beans': 'Decaf Coffee Beans',
+	'item.espresso.decaf': 'Decaf',
 	'block.espresso.espresso_machine': 'Espresso Machine',
 	'item.espresso.mug': 'Mug',
 	'item.espresso.unfired_mug': 'Unfired Mug',

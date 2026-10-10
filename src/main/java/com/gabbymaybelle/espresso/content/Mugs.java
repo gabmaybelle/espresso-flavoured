@@ -36,7 +36,16 @@ public final class Mugs {
 
 	/** A drink in this mug: same colour, and drinking it gives this mug back. */
 	public static ItemStack fill(ItemStack mug, Item drink) {
+		return fill(mug, drink, false);
+	}
+
+	/** As above; a decaf drink gives Cozy instead of the caffeine. */
+	public static ItemStack fill(ItemStack mug, Item drink, boolean decaf) {
 		ItemStack filled = new ItemStack(drink);
+		if (decaf) {
+			filled.set(EspressoContent.DECAF, true);
+			filled.set(DataComponents.CONSUMABLE, EspressoContent.decafConsumable());
+		}
 		DyedItemColor color = mug.get(DataComponents.DYED_COLOR);
 		if (color != null) {
 			filled.set(DataComponents.DYED_COLOR, color);

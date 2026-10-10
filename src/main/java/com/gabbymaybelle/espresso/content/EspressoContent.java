@@ -72,6 +72,13 @@ public final class EspressoContent {
 	/** From coffee: holds off Drowsy for a while, at the price of a crash when it wears off (see Wellbeing). */
 	public static final Holder<MobEffect> CAFFEINATED = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("caffeinated"),
 			new EspressoEffect(MobEffectCategory.BENEFICIAL, 0xc4884e));
+	/** From decaf: heals you slowly near home, and sleeping with it wakes you Well Rested (see Wellbeing). */
+	public static final Holder<MobEffect> COZY = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("cozy"),
+			new EspressoEffect(MobEffectCategory.BENEFICIAL, 0xe8a87c));
+	/** Two golden hearts after a cozy night's sleep. */
+	public static final Holder<MobEffect> WELL_RESTED = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("well_rested"),
+			new WellRestedEffect(MobEffectCategory.BENEFICIAL, 0xf4d06f)
+					.addAttributeModifier(Attributes.MAX_ABSORPTION, id("well_rested_hearts"), WellRestedEffect.HEARTS, AttributeModifier.Operation.ADD_VALUE));
 
 	// ---------------------------------------------------------------- blocks
 	public static final Block COFFEE_BUSH = registerBlock("coffee_bush", CoffeeBushBlock::new,
@@ -126,6 +133,11 @@ public final class EspressoContent {
 	/** Loyalty card stamps, a bitmask over {@link LoyaltyCard#STAMPS}. */
 	public static final DataComponentType<Integer> STAMPS = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("stamps"),
 			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+	/** Marks a drink as decaf; it carries from Espresso to Latte and on, like the mug's colour. */
+	public static final DataComponentType<Boolean> DECAF = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("decaf"),
+			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
+	/** Roasted beans washed in water; the espresso machine brews them into decaf. */
+	public static final Item DECAF_BEANS = registerItem("decaf_coffee_beans", Item::new, new Item.Properties());
 	public static final Item UNFIRED_CANISTER = registerItem("unfired_canister", Item::new, new Item.Properties());
 	public static final Item CANISTER = registerItem("canister", props -> new BlockItem(CANISTER_BLOCK, props),
 			new Item.Properties().useBlockDescriptionPrefix());
@@ -153,6 +165,11 @@ public final class EspressoContent {
 	/** A coffee drink: Speed I, Haste I and Caffeinated for {@code ticks}, served in a mug (which you get back). */
 	private static Item.Properties drink(int ticks, FoodProperties food) {
 		return drink(ticks, 0, food);
+	}
+
+	/** What a decaf drink does instead of the caffeine: three minutes of Cozy. */
+	public static Consumable decafConsumable() {
+		return Consumables.defaultDrink().onConsume(new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(COZY, 3600, 0)))).build();
 	}
 
 	/** As above, with Speed and Haste at the given amplifier (Caffeinated is always I). */
@@ -192,6 +209,7 @@ public final class EspressoContent {
 			output.accept(UNFIRED_MUG);
 			output.accept(UNFIRED_CANISTER);
 			output.accept(BARISTAS_RESERVE);
+			output.accept(DECAF_BEANS);
 			output.accept(VANILLA_SYRUP);
 		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {

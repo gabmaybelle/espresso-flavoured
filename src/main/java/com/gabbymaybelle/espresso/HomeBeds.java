@@ -84,6 +84,20 @@ public final class HomeBeds {
 		return home.dimension() == level.dimension() && dx * dx + dz * dz <= (long) radius * radius;
 	}
 
+	/** True when the player is within the safe home radius of their own home bed (false with no home). */
+	public static boolean isNearHome(ServerPlayer player) {
+		if (!(player.level() instanceof ServerLevel level)) {
+			return false;
+		}
+		GlobalPos home = store(level).get(player.getUUID());
+		int radius = Math.max(Config.safeHomeRadius, 8);
+		if (home == null || home.dimension() != level.dimension()) {
+			return false;
+		}
+		double dx = home.pos().getX() + 0.5 - player.getX(), dz = home.pos().getZ() + 0.5 - player.getZ();
+		return dx * dx + dz * dz <= (double) radius * radius;
+	}
+
 	/** True when a hostile spawn at {@code pos} would be inside someone's safe home radius. */
 	public static boolean isProtected(ServerLevel level, BlockPos pos) {
 		int radius = Config.safeHomeRadius;

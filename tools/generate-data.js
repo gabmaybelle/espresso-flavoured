@@ -70,6 +70,12 @@ out('data/espresso/recipe/mocha_latte.json', {
 	type: 'minecraft:crafting_transmute', category: 'misc',
 	input: 'espresso:latte', material: 'minecraft:cocoa_beans', result: { id: 'espresso:mocha_latte' },
 });
+// Decaf: wash roasted beans in water (the bucket comes back empty).
+out('data/espresso/recipe/decaf_coffee_beans.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['espresso:roasted_coffee_beans', 'espresso:roasted_coffee_beans', 'espresso:roasted_coffee_beans', 'espresso:roasted_coffee_beans', 'minecraft:water_bucket'],
+	result: { id: 'espresso:decaf_coffee_beans', count: 4 },
+});
 // The house special: honey and sugar make vanilla syrup, which turns a latte into a vanilla latte.
 out('data/espresso/recipe/vanilla_syrup.json', {
 	type: 'minecraft:crafting_shapeless', category: 'misc',
@@ -337,6 +343,8 @@ adv('guide/mug_shot', 'guide/barista', 'espresso:mug', 'Mug Shot', 'Dye a mug',
 	{ dyed: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:mug_dyed' } } });
 adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink a coffee you brewed yourself',
 	{ sipped: { trigger: 'minecraft:consume_item', conditions: { item: { items: '#espresso:coffee' } } } });
+adv('guide/sweet_dreams', 'guide/first_sip', 'minecraft:white_bed', 'Sweet Dreams', 'Sleep after a decaf and wake up Well Rested',
+	{ rested: { trigger: 'minecraft:impossible' } });
 adv('guide/house_special', 'guide/first_sip', 'espresso:vanilla_latte', 'House Special', 'Make a vanilla latte',
 	{ made: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:vanilla_latte' } } });
 adv('guide/full_card', 'guide/house_special', 'espresso:golden_mug', 'On the House', 'Trade a full loyalty card for the Golden Mug',

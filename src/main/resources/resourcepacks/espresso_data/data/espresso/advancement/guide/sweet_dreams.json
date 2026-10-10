@@ -1,0 +1,20 @@
+{
+  "parent": "espresso:guide/first_sip",
+  "criteria": {
+    "rested": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:white_bed"
+    },
+    "title": "Sweet Dreams",
+    "description": "Sleep after a decaf and wake up Well Rested"
+  },
+  "requirements": [
+    [
+      "rested"
+    ]
+  ]
+}

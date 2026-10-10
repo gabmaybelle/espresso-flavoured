@@ -93,9 +93,10 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 	private void brew(ServerLevel level, BlockPos pos, BlockState state) {
 		ItemStack beans = items.get(BEAN_SLOT);
 		Item drink = beans.is(EspressoContent.BARISTAS_RESERVE) ? EspressoContent.RISTRETTO : EspressoContent.ESPRESSO;
+		boolean decaf = beans.is(EspressoContent.DECAF_BEANS);
 		for (int i = 0; i < BEAN_SLOT && !beans.isEmpty(); i++) {
 			if (Mugs.isEmptyMug(items.get(i))) {
-				items.set(i, Mugs.fill(items.get(i), drink));
+				items.set(i, Mugs.fill(items.get(i), drink, decaf));
 				beans.shrink(1);
 			}
 		}
@@ -107,9 +108,10 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 				pos.getY() + 0.75, pos.getZ() + 0.5 + front.getStepZ() * 0.3, 6, 0.08, 0.05, 0.08, 0.01);
 	}
 
-	/** Roasted coffee beans, or the Barista's Reserve. */
+	/** Roasted coffee beans, decaf beans, or the Barista's Reserve. */
 	public static boolean isBeans(ItemStack stack) {
-		return stack.is(EspressoContent.ROASTED_COFFEE_BEANS) || stack.is(EspressoContent.BARISTAS_RESERVE);
+		return stack.is(EspressoContent.ROASTED_COFFEE_BEANS) || stack.is(EspressoContent.DECAF_BEANS)
+				|| stack.is(EspressoContent.BARISTAS_RESERVE);
 	}
 
 	@Override
