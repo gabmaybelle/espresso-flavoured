@@ -285,6 +285,36 @@ for (const wood of COFFEE_BARS) {
 }
 out('data/minecraft/tags/block/mineable/axe.json', { values: COFFEE_BARS.map(w => `espresso:${w}_coffee_bar`) });
 
+// ---------------------------------------------------------------- recipe book
+// Like vanilla, recipes show up in the recipe book once you pick up something they use.
+const unlock = (name, items, recipes) => {
+	const criteria = Object.fromEntries(items.map((item, i) => [`has_item_${i}`, {
+		trigger: 'minecraft:inventory_changed', conditions: { items: [{ items: item }] },
+	}]));
+	criteria.has_the_recipe = { trigger: 'minecraft:recipe_unlocked', conditions: { recipes: `espresso:${recipes[0]}` } };
+	out(`data/espresso/advancement/recipes/${name}.json`, {
+		parent: 'minecraft:recipes/root',
+		criteria,
+		requirements: [Object.keys(criteria)],
+		rewards: { recipes: recipes.map(r => `espresso:${r}`) },
+	});
+};
+unlock('roasted_coffee_beans', ['espresso:coffee_cherries'],
+	['roasted_coffee_beans', 'roasted_coffee_beans_from_smoking', 'roasted_coffee_beans_from_campfire_cooking']);
+unlock('espresso_machine', ['espresso:roasted_coffee_beans'], ['espresso_machine', 'decaf_coffee_beans']);
+unlock('coffee_bars', ['minecraft:smooth_stone_slab', 'espresso:espresso_machine'], COFFEE_BARS.map(w => `${w}_coffee_bar`));
+unlock('clay_pottery', ['minecraft:clay_ball'], ['unfired_mug', 'unfired_canister']);
+unlock('mug', ['espresso:unfired_mug'], ['mug']);
+unlock('canister', ['espresso:unfired_canister'], ['canister']);
+unlock('mug_dyed', ['espresso:mug'], ['mug_dyed']);
+unlock('canister_dyed', ['espresso:canister'], ['canister_dyed']);
+unlock('latte', ['espresso:espresso'], ['latte']);
+unlock('latte_drinks', ['espresso:latte'], ['mocha_latte', 'vanilla_latte']);
+unlock('vanilla_syrup', ['minecraft:honey_bottle', 'minecraft:sugar'], ['vanilla_syrup']);
+unlock('glass_jar', ['minecraft:glass'], ['glass_jar']);
+unlock('shulker_box_overworld', ['minecraft:ender_pearl', 'minecraft:amethyst_shard'], ['shulker_box_overworld']);
+unlock('bundles', ['#minecraft:wool', 'minecraft:rabbit_hide'], ['bundle_from_wool', 'bundle_from_rabbit_hide']);
+
 // Glass jars: glass with a wooden lid.
 out('data/espresso/recipe/glass_jar.json', {
 	type: 'minecraft:crafting_shaped', category: 'misc',
@@ -297,6 +327,7 @@ const PAGES = [
 	'Espresso Flavoured\nField Notes\n\nWelcome! This world is a little kinder to builders, so you can spend less time worrying and more time making something you love.\n\n- Gabby',
 	'Your Safe Haven\n\nCrouch and use a bed with an empty hand to make it your home. Monsters won\'t spawn within 32 blocks of it.\n\nSleeping elsewhere won\'t move it. Break the bed and the protection goes. Only a night at home leaves you truly rested.',
 	'Builds Stay Built\n\nCreepers still bite, but their blasts no longer break blocks.\n\nEndermen leave your walls alone, and phantoms never visit, so rest whenever you like.',
+	'Coffee Corner\n\nRoast coffee cherries, then brew them in an espresso machine on a coffee bar. Mugs are fired clay.\n\nAway two days? Only your own bed leaves you rested. Decaf helps you sleep well.',
 	'If You Fall\n\nPlaying the Espresso Flavoured pack? Your things wait for you in a grave where you fell. Head back, open it, and carry on.\n\nHappy building!',
 ];
 out('data/espresso/loot_table/field_guide.json', {

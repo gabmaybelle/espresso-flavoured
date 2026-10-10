@@ -36,7 +36,12 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		list.addHeader(Component.translatable("espresso.options.section.wellbeing"));
 		list.addSmall(
 				toggle("regenNeedsSaturation", Config.regenNeedsSaturation, v -> Config.regenNeedsSaturation = v),
-				toggle("drowsiness", Config.drowsiness, v -> Config.drowsiness = v));
+				toggle("drowsiness", Config.drowsiness, v -> Config.drowsiness = v),
+				toggle("caffeineCrash", Config.caffeineCrash, v -> Config.caffeineCrash = v));
+
+		list.addHeader(Component.translatable("espresso.options.section.coffee"));
+		list.addSmall(
+				toggle("coffeeBarRequired", Config.coffeeBarRequired, v -> Config.coffeeBarRequired = v));
 
 		list.addHeader(Component.translatable("espresso.options.section.storage"));
 		list.addSmall(

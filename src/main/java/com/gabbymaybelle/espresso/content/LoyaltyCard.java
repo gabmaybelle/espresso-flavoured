@@ -1,8 +1,11 @@
 package com.gabbymaybelle.espresso.content;
 
 import com.gabbymaybelle.espresso.Espresso;
+import com.mojang.serialization.Codec;
 import java.util.List;
 import java.util.function.Consumer;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.ChatFormatting;
@@ -11,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +32,9 @@ public class LoyaltyCard extends Item {
 	/** The stamps, in order: the advancement each one stands for. */
 	public static final List<String> STAMPS = List.of("barista", "first_sip", "mug_shot", "fair_trade", "house_special");
 	public static final int FULL = (1 << STAMPS.size()) - 1;
+	/** Set once a player has had their card, so it's never handed out twice. */
+	private static final AttachmentType<Boolean> HAD_CARD = AttachmentRegistry.create(
+			Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "had_loyalty_card"), builder -> builder.persistent(Codec.BOOL).copyOnDeath());
 
 	public LoyaltyCard(Properties properties) {
 		super(properties);
@@ -66,6 +73,13 @@ public class LoyaltyCard extends Item {
 			}
 		}
 		Inventory inventory = player.getInventory();
+		if ((stamps & 1) != 0 && !player.getAttachedOrElse(HAD_CARD, false)) {
+			// Earned Barista before cards existed (or just now: the advancement gives one).
+			if (!inventory.contains(stack -> stack.is(EspressoContent.LOYALTY_CARD))) {
+				inventory.placeItemBackInInventory(new ItemStack(EspressoContent.LOYALTY_CARD), Prediction.SERVER_ONLY);
+			}
+			player.setAttached(HAD_CARD, true);
+		}
 		for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
 			ItemStack stack = inventory.getItem(slot);
 			if (stack.is(EspressoContent.LOYALTY_CARD) && stack.getOrDefault(EspressoContent.STAMPS, 0) != stamps) {

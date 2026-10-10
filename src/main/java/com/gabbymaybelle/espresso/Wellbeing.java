@@ -127,8 +127,10 @@ public final class Wellbeing {
 				int caffeine = player.getAttachedOrElse(CAFFEINE, 0);
 				if (upTwoDays && caffeine != CRASHED && caffeine != CALMED) {
 					boolean caffeinated = player.hasEffect(EspressoContent.CAFFEINATED);
-					if (caffeinated && sinceRest < twoDays() + oneDay()) {
+					if (caffeinated && (!Config.caffeineCrash || sinceRest < twoDays() + oneDay())) {
 						caffeine = BORROWING;
+					} else if (caffeine == BORROWING && !Config.caffeineCrash) {
+						caffeine = 0;
 					} else if (caffeine == BORROWING) {
 						caffeine = CRASHED;
 					}

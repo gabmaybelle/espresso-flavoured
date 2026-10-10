@@ -1,5 +1,6 @@
 package com.gabbymaybelle.espresso.content;
 
+import com.gabbymaybelle.espresso.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -81,9 +82,10 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 		}
 	}
 
-	/** The machine only works on a coffee bar. */
+	/** The machine only works on a coffee bar (unless that's turned off in the settings). */
 	public boolean onCoffeeBar() {
-		return level != null && level.getBlockState(worldPosition.below()).getBlock() instanceof CoffeeBarBlock;
+		return !Config.coffeeBarRequired
+				|| level != null && level.getBlockState(worldPosition.below()).getBlock() instanceof CoffeeBarBlock;
 	}
 
 	private boolean canBrew() {

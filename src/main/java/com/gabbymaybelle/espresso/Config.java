@@ -38,6 +38,10 @@ public final class Config {
 	public static boolean toughNights = true;
 	/** Drowsy after two days without sleeping at home; Hungry too if you haven't eaten in that time. */
 	public static boolean drowsiness = true;
+	/** After two days away, coffee only holds Drowsy off for a while, then you crash. Off: coffee holds it off for as long as you keep drinking. */
+	public static boolean caffeineCrash = true;
+	/** The espresso machine only brews on a coffee bar. */
+	public static boolean coffeeBarRequired = true;
 
 	private Config() {
 	}
@@ -62,6 +66,8 @@ public final class Config {
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
 		toughNights = bool(props, "toughNights", toughNights);
 		drowsiness = bool(props, "drowsiness", drowsiness);
+		caffeineCrash = bool(props, "caffeineCrash", caffeineCrash);
+		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
 		save();
 	}
 
@@ -79,6 +85,8 @@ public final class Config {
 		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
 		props.setProperty("toughNights", Boolean.toString(toughNights));
 		props.setProperty("drowsiness", Boolean.toString(drowsiness));
+		props.setProperty("caffeineCrash", Boolean.toString(caffeineCrash));
+		props.setProperty("coffeeBarRequired", Boolean.toString(coffeeBarRequired));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
@@ -92,6 +100,8 @@ public final class Config {
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
 					+ "drowsiness: Drowsy after two days without sleeping at home (any bed within your safe home radius), and Hungry if you haven't eaten in that time either\n"
+					+ "caffeineCrash: past two days away, coffee holds off Drowsy for a while and then you crash (off: it holds it off as long as you keep drinking)\n"
+					+ "coffeeBarRequired: the espresso machine only brews on top of a coffee bar\n"
 					+ "longerDays needs a restart; everything else applies straight away");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);
