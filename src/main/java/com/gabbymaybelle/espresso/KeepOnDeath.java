@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,22 +33,35 @@ public final class KeepOnDeath {
 	}
 
 	static void register() {
-		ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-			Map<String, ItemStack> kept = newPlayer.getAttached(KEPT);
-			if (kept == null) {
+		// The kept items are copied onto the respawned player after the respawn events run,
+		// so they're handed back on the next ticks instead (this also covers logging out
+		// while dead and coming back later).
+		ServerTickEvents.END_SERVER_TICK.register(server -> {
+			if (server.getTickCount() % 10 != 0) {
 				return;
 			}
-			Inventory inventory = newPlayer.getInventory();
-			for (Map.Entry<String, ItemStack> entry : kept.entrySet()) {
-				int slot = Integer.parseInt(entry.getKey());
-				if (inventory.getItem(slot).isEmpty()) {
-					inventory.setItem(slot, entry.getValue());
-				} else if (!inventory.add(entry.getValue())) {
-					newPlayer.spawnAtLocation(newPlayer.level(), entry.getValue());
+			for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+				if (player.isAlive() && player.hasAttached(KEPT)) {
+					restore(player);
 				}
 			}
-			newPlayer.removeAttached(KEPT);
 		});
+	}
+
+	private static void restore(ServerPlayer player) {
+		Map<String, ItemStack> kept = player.removeAttached(KEPT);
+		if (kept == null) {
+			return;
+		}
+		Inventory inventory = player.getInventory();
+		for (Map.Entry<String, ItemStack> entry : kept.entrySet()) {
+			int slot = Integer.parseInt(entry.getKey());
+			if (inventory.getItem(slot).isEmpty()) {
+				inventory.setItem(slot, entry.getValue());
+			} else if (!inventory.add(entry.getValue())) {
+				player.spawnAtLocation(player.level(), entry.getValue());
+			}
+		}
 	}
 
 	/** Called just before a player's equipment drops on death. */

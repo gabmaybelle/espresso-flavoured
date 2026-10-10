@@ -4,6 +4,7 @@ import com.gabbymaybelle.espresso.Espresso;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,7 +16,9 @@ public class EspressoClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		HudElementRegistry.addFirst(Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "drowsy_vignette"), EspressoClient::drowsyVignette);
+		// Just above vanilla's full-screen overlays (pumpkin, frost), below the crosshair and hotbar.
+		HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS,
+				Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "drowsy_vignette"), EspressoClient::drowsyVignette);
 	}
 
 	private static void drowsyVignette(GuiGraphicsExtractor graphics, DeltaTracker delta) {
@@ -27,7 +30,7 @@ public class EspressoClient implements ClientModInitializer {
 		int depthX = w / 6, depthY = h / 5;
 		// Bands that get darker towards the edges; deeper at the top and bottom, like eyelids.
 		for (int i = 0; i < BANDS; i++) {
-			int alpha = (int) (110 * Math.pow(1.0 - (double) i / BANDS, 2));
+			int alpha = (int) (150 * Math.pow(1.0 - (double) i / BANDS, 2));
 			int color = alpha << 24 | 0x0a0610;
 			int dy = depthY * i / BANDS, dyNext = depthY * (i + 1) / BANDS;
 			int dx = depthX * i / BANDS, dxNext = depthX * (i + 1) / BANDS;
