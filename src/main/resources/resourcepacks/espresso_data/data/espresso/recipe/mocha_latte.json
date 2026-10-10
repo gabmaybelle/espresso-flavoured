@@ -1,10 +1,8 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_transmute",
   "category": "misc",
-  "ingredients": [
-    "espresso:latte",
-    "minecraft:cocoa_beans"
-  ],
+  "input": "espresso:latte",
+  "material": "minecraft:cocoa_beans",
   "result": {
     "id": "espresso:mocha_latte"
   }

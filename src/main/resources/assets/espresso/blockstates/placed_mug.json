@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "contents=empty,facing=north": {
+      "model": "espresso:block/mug_empty"
+    },
+    "contents=espresso,facing=north": {
+      "model": "espresso:block/mug_espresso"
+    },
+    "contents=latte,facing=north": {
+      "model": "espresso:block/mug_latte"
+    },
+    "contents=mocha,facing=north": {
+      "model": "espresso:block/mug_mocha"
+    },
+    "contents=empty,facing=east": {
+      "model": "espresso:block/mug_empty",
+      "y": 90
+    },
+    "contents=espresso,facing=east": {
+      "model": "espresso:block/mug_espresso",
+      "y": 90
+    },
+    "contents=latte,facing=east": {
+      "model": "espresso:block/mug_latte",
+      "y": 90
+    },
+    "contents=mocha,facing=east": {
+      "model": "espresso:block/mug_mocha",
+      "y": 90
+    },
+    "contents=empty,facing=south": {
+      "model": "espresso:block/mug_empty",
+      "y": 180
+    },
+    "contents=espresso,facing=south": {
+      "model": "espresso:block/mug_espresso",
+      "y": 180
+    },
+    "contents=latte,facing=south": {
+      "model": "espresso:block/mug_latte",
+      "y": 180
+    },
+    "contents=mocha,facing=south": {
+      "model": "espresso:block/mug_mocha",
+      "y": 180
+    },
+    "contents=empty,facing=west": {
+      "model": "espresso:block/mug_empty",
+      "y": 270
+    },
+    "contents=espresso,facing=west": {
+      "model": "espresso:block/mug_espresso",
+      "y": 270
+    },
+    "contents=latte,facing=west": {
+      "model": "espresso:block/mug_latte",
+      "y": 270
+    },
+    "contents=mocha,facing=west": {
+      "model": "espresso:block/mug_mocha",
+      "y": 270
+    }
+  }
+}

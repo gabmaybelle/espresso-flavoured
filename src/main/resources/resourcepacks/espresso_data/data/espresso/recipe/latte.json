@@ -1,14 +1,9 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_transmute",
   "category": "misc",
-  "ingredients": [
-    "espresso:espresso",
-    "espresso:espresso",
-    "espresso:espresso",
-    "minecraft:milk_bucket"
-  ],
+  "input": "espresso:espresso",
+  "material": "minecraft:milk_bucket",
   "result": {
-    "id": "espresso:latte",
-    "count": 3
+    "id": "espresso:latte"
   }
 }

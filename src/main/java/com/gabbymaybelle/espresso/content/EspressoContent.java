@@ -70,18 +70,26 @@ public final class EspressoContent {
 			new BlockEntityType<>(EspressoMachineBlockEntity::new, Set.of(ESPRESSO_MACHINE)));
 	public static final MenuType<EspressoMachineMenu> ESPRESSO_MACHINE_MENU = Registry.register(
 			BuiltInRegistries.MENU, id("espresso_machine"), new MenuType<>(EspressoMachineMenu::new, FeatureFlags.VANILLA_SET));
+	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
+	public static final Block PLACED_MUG = registerBlock("placed_mug", PlacedMugBlock::new,
+			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.3F)
+					.sound(SoundType.DECORATED_POT).noOcclusion().pushReaction(PushReaction.POPPED));
+	public static final BlockEntityType<PlacedMugBlockEntity> PLACED_MUG_ENTITY = Registry.register(
+			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("placed_mug"), new BlockEntityType<>(PlacedMugBlockEntity::new, Set.of(PLACED_MUG)));
 
 	// ---------------------------------------------------------------- items
 	public static final Item COFFEE_CHERRIES = registerItem("coffee_cherries",
 			props -> new BlockItem(COFFEE_BUSH, props), new Item.Properties().useItemDescriptionPrefix());
 	public static final Item ESPRESSO_MACHINE_ITEM = registerItem("espresso_machine",
 			props -> new BlockItem(ESPRESSO_MACHINE, props), new Item.Properties().useBlockDescriptionPrefix());
+	public static final Item UNFIRED_MUG = registerItem("unfired_mug", Item::new, new Item.Properties());
+	public static final Item MUG = registerItem("mug", Item::new, new Item.Properties().stacksTo(16));
 	public static final Item ROASTED_COFFEE_BEANS = registerItem("roasted_coffee_beans", Item::new, new Item.Properties());
 	public static final Item ESPRESSO = registerItem("espresso", Item::new, drink(1800, null));
 	public static final Item LATTE = registerItem("latte", Item::new, drink(3600, new FoodProperties(2, 0.2F, true)));
 	public static final Item MOCHA_LATTE = registerItem("mocha_latte", Item::new, drink(3600, new FoodProperties(4, 0.4F, true)));
 
-	/** A coffee drink: Speed I, Haste I and Caffeinated for {@code ticks}, served in a glass bottle. */
+	/** A coffee drink: Speed I, Haste I and Caffeinated for {@code ticks}, served in a mug (which you get back). */
 	private static Item.Properties drink(int ticks, FoodProperties food) {
 		Consumable consumable = Consumables.defaultDrink()
 				.onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
@@ -89,7 +97,7 @@ public final class EspressoContent {
 						new MobEffectInstance(MobEffects.HASTE, ticks, 0),
 						new MobEffectInstance(CAFFEINATED, ticks, 0))))
 				.build();
-		Item.Properties props = new Item.Properties().stacksTo(16).usingConvertsTo(Items.GLASS_BOTTLE);
+		Item.Properties props = new Item.Properties().stacksTo(16).usingConvertsTo(MUG);
 		return food == null ? props.component(DataComponents.CONSUMABLE, consumable) : props.food(food, consumable);
 	}
 
@@ -105,9 +113,12 @@ public final class EspressoContent {
 
 	/** Loads the class (registering everything above) and hooks up creative tabs and worldgen. */
 	public static void register() {
+		Mugs.register();
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> output.accept(COFFEE_CHERRIES));
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> output.accept(ESPRESSO_MACHINE_ITEM));
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> output.accept(UNFIRED_MUG));
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {
+			output.accept(MUG);
 			output.accept(ROASTED_COFFEE_BEANS);
 			output.accept(ESPRESSO);
 			output.accept(LATTE);

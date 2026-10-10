@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "espresso:item/espresso"
+    "layer0": "espresso:item/mug",
+    "layer1": "espresso:item/espresso_fill"
   }
 }

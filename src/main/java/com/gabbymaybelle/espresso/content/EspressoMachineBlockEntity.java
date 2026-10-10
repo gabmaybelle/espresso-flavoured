@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,10 +21,10 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * The espresso machine's insides: three bottle slots and a bean slot, like a brewing stand.
- * While there are beans and at least one empty glass bottle, it brews for ten seconds, then
- * fills each bottle with an Espresso, one bean per bottle. Hoppers put beans in from above,
- * bottles in from the sides, and take Espresso out from below.
+ * The espresso machine's insides: three mug slots and a bean slot, like a brewing stand.
+ * While there are beans and at least one empty mug, it brews for ten seconds, then fills
+ * each mug with an Espresso (keeping its colour), one bean per mug. Hoppers put beans in
+ * from above, mugs in from the sides, and take Espresso out from below.
  */
 public class EspressoMachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
 	public static final int BEAN_SLOT = 3;
@@ -83,7 +82,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 			return false;
 		}
 		for (int i = 0; i < BEAN_SLOT; i++) {
-			if (items.get(i).is(Items.GLASS_BOTTLE)) {
+			if (items.get(i).is(EspressoContent.MUG)) {
 				return true;
 			}
 		}
@@ -93,8 +92,8 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 	private void brew(ServerLevel level, BlockPos pos, BlockState state) {
 		ItemStack beans = items.get(BEAN_SLOT);
 		for (int i = 0; i < BEAN_SLOT && !beans.isEmpty(); i++) {
-			if (items.get(i).is(Items.GLASS_BOTTLE)) {
-				items.set(i, new ItemStack(EspressoContent.ESPRESSO));
+			if (items.get(i).is(EspressoContent.MUG)) {
+				items.set(i, Mugs.fill(items.get(i), EspressoContent.ESPRESSO));
 				beans.shrink(1);
 			}
 		}
@@ -151,7 +150,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 		if (slot == BEAN_SLOT) {
 			return stack.is(EspressoContent.ROASTED_COFFEE_BEANS);
 		}
-		return stack.is(Items.GLASS_BOTTLE) && items.get(slot).isEmpty();
+		return stack.is(EspressoContent.MUG) && items.get(slot).isEmpty();
 	}
 
 	@Override

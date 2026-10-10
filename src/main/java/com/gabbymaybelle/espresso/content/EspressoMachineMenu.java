@@ -9,9 +9,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
-/** The espresso machine's menu: three bottle slots below, the bean slot on top, laid out like a brewing stand. */
+/** The espresso machine's menu: three mug slots below, the bean slot on top, laid out like a brewing stand. */
 public class EspressoMachineMenu extends AbstractContainerMenu {
 	private static final int INV_START = EspressoMachineBlockEntity.SLOT_COUNT;
 	private static final int INV_END = INV_START + 36;
@@ -30,9 +29,9 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 		checkContainerDataCount(data, 1);
 		this.machine = machine;
 		this.data = data;
-		addSlot(new BottleSlot(machine, 0, 56, 51));
-		addSlot(new BottleSlot(machine, 1, 79, 58));
-		addSlot(new BottleSlot(machine, 2, 102, 51));
+		addSlot(new MugSlot(machine, 0, 56, 51));
+		addSlot(new MugSlot(machine, 1, 79, 58));
+		addSlot(new MugSlot(machine, 2, 102, 51));
 		addSlot(new Slot(machine, EspressoMachineBlockEntity.BEAN_SLOT, 79, 17) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
@@ -70,7 +69,7 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 			if (!moveItemStackTo(stack, EspressoMachineBlockEntity.BEAN_SLOT, INV_START, false)) {
 				return ItemStack.EMPTY;
 			}
-		} else if (stack.is(Items.GLASS_BOTTLE)) {
+		} else if (stack.is(EspressoContent.MUG)) {
 			if (!moveItemStackTo(stack, 0, EspressoMachineBlockEntity.BEAN_SLOT, false)) {
 				return ItemStack.EMPTY;
 			}
@@ -94,15 +93,15 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 		return original;
 	}
 
-	/** Holds one glass bottle (or the Espresso it becomes). */
-	private static class BottleSlot extends Slot {
-		BottleSlot(Container container, int slot, int x, int y) {
+	/** Holds one mug (or the Espresso it becomes). */
+	private static class MugSlot extends Slot {
+		MugSlot(Container container, int slot, int x, int y) {
 			super(container, slot, x, y);
 		}
 
 		@Override
 		public boolean mayPlace(ItemStack stack) {
-			return stack.is(Items.GLASS_BOTTLE);
+			return stack.is(EspressoContent.MUG);
 		}
 
 		@Override

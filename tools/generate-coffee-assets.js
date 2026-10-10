@@ -75,30 +75,47 @@ png('item/roasted_coffee_beans', [
 	'................',
 ], BEAN);
 
-/** A corked glass bottle filled with a drink: L liquid, F foam on top, D a detail colour. */
-function drink(name, liquid, foam, detail) {
-	png(`item/${name}`, [
-		'................',
-		'......oOOo......',
-		'......oOOo......',
-		'.......qq.......',
-		'......qQQq......',
-		'.....qQ..Qq.....',
-		'....qFFFFFFq....',
-		'...qFFFFFFFFq...',
-		'...qLLLDLLLLq...',
-		'...qLLLLLLDLq...',
-		'...qLDLLLLLLq...',
-		'...qLLLLLDLLq...',
-		'....qLLLLLLq....',
-		'.....qqqqqq.....',
-		'................',
-		'................',
-	], { ...GLASS, L: liquid, F: foam, D: detail });
+// ---------------------------------------------------------------- mugs
+// Mugs are drawn in greys and tinted by their dye colour (cream when undyed); a drink adds
+// an untinted second layer with the coffee and a curl of steam.
+const grid = (fn) => Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => fn(x, y)).join(''));
+const MUG = { W: [255, 255, 255], B: [226, 226, 226], S: [178, 178, 178], i: [120, 120, 120] };
+const mugShape = (x, y) => {
+	if (y === 3 && x >= 4 && x <= 10) return 'W';
+	if (y === 4) return x === 3 || x === 11 ? 'W' : (x >= 4 && x <= 10 ? 'i' : '.');
+	if (y === 5 && x >= 3 && x <= 11) return 'W';
+	if (y >= 6 && y <= 13 && x >= 3 && x <= 11) return x === 3 ? 'W' : (x === 11 || y === 13 ? 'S' : 'B');
+	if (y === 14 && x >= 4 && x <= 10) return 'S';
+	// The handle.
+	if ((y === 6 || y === 11) && (x === 12 || x === 13)) return 'B';
+	if ((y === 7 || y === 10) && x === 13) return 'B';
+	if (y >= 7 && y <= 10 && x === 14) return 'S';
+	return '.';
+};
+png('item/mug', grid(mugShape), MUG);
+png('item/unfired_mug', grid(mugShape), { W: [176, 182, 196], B: [160, 166, 179], S: [128, 134, 148], i: [104, 108, 120] });
+/** A drink's layer: the coffee in the mouth of the mug, and steam above. */
+function drinkLayer(name, liquid, top, detail) {
+	png(`item/${name}_fill`, grid((x, y) => {
+		if (y === 4 && x >= 4 && x <= 10) return x === 6 || x === 9 ? 'T' : (x === 8 ? 'D' : 'L');
+		if (y === 2 && (x === 6 || x === 9)) return 's';
+		if (y === 1 && (x === 7 || x === 8)) return 's';
+		if (y === 0 && x === 7) return 's';
+		return '.';
+	}), { L: liquid, T: top, D: detail, s: [240, 240, 240, 150] });
 }
-drink('espresso', [58, 30, 14], [196, 136, 78], [44, 22, 10]);
-drink('latte', [178, 128, 84], [246, 238, 222], [160, 112, 72]);
-drink('mocha_latte', [104, 58, 32], [250, 246, 238], [70, 36, 18]);
+drinkLayer('espresso', [58, 30, 14], [196, 136, 78], [44, 22, 10]);
+drinkLayer('latte', [178, 128, 84], [246, 238, 222], [160, 112, 72]);
+drinkLayer('mocha_latte', [104, 58, 32], [250, 246, 238], [70, 36, 18]);
+for (const old of ['espresso', 'latte', 'mocha_latte']) fs.rmSync(path.join(A, 'textures', 'item', old + '.png'), { force: true });
+
+// Placed mugs: glazed sides, a rim, and the drink's surface.
+png('block/mug', grid((x, y) => (y === 0 ? 'W' : (y >= 14 ? 'S' : ((x + y * 3) % 11 === 0 ? 'S' : 'B')))), MUG);
+png('block/mug_inside', grid((x, y) => (x <= 1 || x >= 14 || y <= 1 || y >= 14 ? 'W' : 'i')), MUG);
+for (const [name, liquid, top] of [['espresso', [58, 30, 14], [196, 136, 78]], ['latte', [178, 128, 84], [246, 238, 222]], ['mocha', [104, 58, 32], [250, 246, 238]]]) {
+	// A round of crema or foam in the middle.
+	png(`block/mug_${name}`, grid((x, y) => ((x - 7.5) ** 2 + (y - 7.5) ** 2 < 14 ? 'T' : 'L')), { L: liquid, T: top });
+}
 
 // ---------------------------------------------------------------- bush stages
 png('block/coffee_bush_stage0', [
@@ -145,15 +162,41 @@ png('mob_effect/caffeinated', [
 // ---------------------------------------------------------------- models, states, names
 out('blockstates/coffee_bush.json', { variants: Object.fromEntries([0, 1, 2, 3].map(a => [`age=${a}`, { model: `espresso:block/coffee_bush_stage${a}` }])) });
 for (const a of [0, 1, 2, 3]) out(`models/block/coffee_bush_stage${a}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso:block/coffee_bush_stage${a}` } });
-for (const item of ['coffee_cherries', 'roasted_coffee_beans', 'espresso', 'latte', 'mocha_latte']) {
+for (const item of ['coffee_cherries', 'roasted_coffee_beans', 'unfired_mug']) {
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
+const PLAIN_MUG = 0xF0E4CF - 0x1000000; // Mugs.PLAIN as a signed ARGB int
+const dyed = (model) => ({ model: { type: 'minecraft:model', model, tints: [{ type: 'minecraft:dye', default: PLAIN_MUG }] } });
+out('items/mug.json', dyed('espresso:item/mug'));
+out('models/item/mug.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug' } });
+for (const item of ['espresso', 'latte', 'mocha_latte']) {
+	out(`items/${item}.json`, dyed(`espresso:item/${item}`));
+	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: `espresso:item/${item}_fill` } });
+}
+
+// Placed mug: tinted body and handle (tintindex 0), rim on top, and the drink's surface.
+const tinted = (faces) => Object.fromEntries(Object.entries(faces).map(([f, t]) => [f, { texture: t, tintindex: 0 }]));
+const sides = (t) => ({ north: t, south: t, east: t, west: t });
+const mugElements = [
+	{ from: [5, 0, 5], to: [11, 6, 11], faces: tinted({ ...sides('#mug'), down: '#mug', up: '#inside' }) },
+	{ from: [11, 4, 7.5], to: [12.5, 5, 8.5], faces: tinted({ ...sides('#mug'), up: '#mug', down: '#mug' }) },
+	{ from: [11, 1, 7.5], to: [12.5, 2, 8.5], faces: tinted({ ...sides('#mug'), up: '#mug', down: '#mug' }) },
+	{ from: [12.5, 1, 7.5], to: [13.5, 5, 8.5], faces: tinted({ ...sides('#mug'), up: '#mug', down: '#mug' }) },
+];
+const mugTextures = { particle: 'espresso:block/mug', mug: 'espresso:block/mug', inside: 'espresso:block/mug_inside' };
+out('models/block/mug_empty.json', { parent: 'minecraft:block/block', textures: mugTextures, elements: mugElements });
+out('models/block/mug_full.json', { parent: 'minecraft:block/block', textures: mugTextures,
+	elements: [...mugElements, { from: [6, 6.01, 6], to: [10, 6.01, 10], faces: { up: { texture: '#liquid' } } }] });
+for (const c of ['espresso', 'latte', 'mocha']) out(`models/block/mug_${c}.json`, { parent: 'espresso:block/mug_full', textures: { liquid: `espresso:block/mug_${c}` } });
+out('blockstates/placed_mug.json', { variants: Object.fromEntries(
+	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].flatMap(([facing, y]) =>
+		['empty', 'espresso', 'latte', 'mocha'].map(c => [`contents=${c},facing=${facing}`, { model: `espresso:block/mug_${c}`, ...(y ? { y } : {}) }])),
+) });
 // ---------------------------------------------------------------- espresso machine
 // Drawn procedurally: brushed steel with a pressure gauge, dark fittings, a glass bean hopper.
 const STEEL = { a: [150, 155, 162], b: [176, 181, 188], c: [202, 206, 212], e: [112, 116, 124],
 	d: [52, 52, 58], D: [78, 78, 86], w: [236, 232, 220], n: [150, 40, 30], r: [184, 115, 51], R: [214, 150, 80] };
-const grid = (fn) => Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => fn(x, y)).join(''));
 const brushed = (x, y) => (x === 0 || x === 15 || y === 0 || y === 15) ? 'e' : ((y + (x >> 2)) % 3 === 0 ? 'c' : ((x * 7 + y * 3) % 5 === 0 ? 'a' : 'b'));
 png('block/espresso_machine_side', grid((x, y) => {
 	// A small gauge at (7..9, 8..10): copper rim, cream face, red needle.
@@ -248,6 +291,9 @@ out('lang/en_us.json', {
 	'effect.espresso.drowsy': 'Drowsy',
 	'effect.espresso.caffeinated': 'Caffeinated',
 	'block.espresso.espresso_machine': 'Espresso Machine',
+	'item.espresso.mug': 'Mug',
+	'item.espresso.unfired_mug': 'Unfired Mug',
+	'block.espresso.placed_mug': 'Mug',
 	'container.espresso.espresso_machine': 'Espresso Machine',
 	"espresso.options.title": "Espresso Flavoured Settings",
 	"espresso.options.section.home": "Home and Builds",

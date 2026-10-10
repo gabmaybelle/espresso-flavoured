@@ -1,0 +1,6 @@
+{
+  "parent": "espresso:block/mug_full",
+  "textures": {
+    "liquid": "espresso:block/mug_latte"
+  }
+}

@@ -35,7 +35,7 @@ for (const [type, suffix, time] of [['minecraft:smelting', '', 200], ['minecraft
 		ingredient: 'espresso:coffee_cherries', result: { id: 'espresso:roasted_coffee_beans' },
 	});
 }
-// Espresso is only brewed in the espresso machine (beans in, glass bottle for a shot).
+// Espresso is only brewed in the espresso machine (beans on top, mugs below).
 out('data/espresso/recipe/espresso_machine.json', {
 	type: 'minecraft:crafting_shaped', category: 'misc',
 	pattern: ['III', 'IBI', 'SSS'],
@@ -48,15 +48,27 @@ out('data/espresso/loot_table/blocks/espresso_machine.json', {
 		conditions: [{ condition: 'minecraft:survives_explosion' }] }],
 });
 out('data/minecraft/tags/block/mineable/pickaxe.json', { values: ['espresso:espresso_machine'] });
+// Mugs: shape clay, fire it, dye it like leather. Drinks keep the mug they're in.
+out('data/espresso/recipe/unfired_mug.json', {
+	type: 'minecraft:crafting_shaped', category: 'misc',
+	pattern: ['C C', 'CCC'], key: { C: 'minecraft:clay_ball' },
+	result: { id: 'espresso:unfired_mug', count: 2 },
+});
+out('data/espresso/recipe/mug.json', {
+	type: 'minecraft:smelting', category: 'misc', cookingtime: 200, experience: 0.1,
+	ingredient: 'espresso:unfired_mug', result: { id: 'espresso:mug' },
+});
+out('data/espresso/recipe/mug_dyed.json', {
+	type: 'minecraft:crafting_dye', group: 'dyed_mug', target: 'espresso:mug', dye: '#minecraft:dyes', result: { id: 'espresso:mug' },
+});
+// Transmute keeps the mug's colour (and the mug you get back) from espresso to latte to mocha.
 out('data/espresso/recipe/latte.json', {
-	type: 'minecraft:crafting_shapeless', category: 'misc',
-	ingredients: ['espresso:espresso', 'espresso:espresso', 'espresso:espresso', 'minecraft:milk_bucket'],
-	result: { id: 'espresso:latte', count: 3 },
+	type: 'minecraft:crafting_transmute', category: 'misc',
+	input: 'espresso:espresso', material: 'minecraft:milk_bucket', result: { id: 'espresso:latte' },
 });
 out('data/espresso/recipe/mocha_latte.json', {
-	type: 'minecraft:crafting_shapeless', category: 'misc',
-	ingredients: ['espresso:latte', 'minecraft:cocoa_beans'],
-	result: { id: 'espresso:mocha_latte' },
+	type: 'minecraft:crafting_transmute', category: 'misc',
+	input: 'espresso:latte', material: 'minecraft:cocoa_beans', result: { id: 'espresso:mocha_latte' },
 });
 out('data/espresso/tags/item/coffee.json', { values: ['espresso:espresso', 'espresso:latte', 'espresso:mocha_latte'] });
 
