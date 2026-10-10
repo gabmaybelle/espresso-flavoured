@@ -1,0 +1,32 @@
+{
+  "parent": "espresso:guide/first_sip",
+  "criteria": {
+    "sold": {
+      "trigger": "minecraft:villager_trade",
+      "conditions": {
+        "villager": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:wandering_trader"
+          }
+        },
+        "item": {
+          "items": "minecraft:emerald"
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso:roasted_coffee_beans"
+    },
+    "title": "Fair Trade",
+    "description": "Sell roasted coffee beans to the wandering trader"
+  },
+  "requirements": [
+    [
+      "sold"
+    ]
+  ]
+}

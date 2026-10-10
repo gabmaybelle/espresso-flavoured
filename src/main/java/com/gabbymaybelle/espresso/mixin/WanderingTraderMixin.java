@@ -19,13 +19,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * The block merchant: after its usual trades, the wandering trader also offers a few
- * building blocks from the {@code espresso:wandering_trader/building_blocks} trade set.
+ * building blocks and decorations ({@code espresso:wandering_trader/building_blocks} and
+ * {@code .../decor}), and always buys roasted coffee beans ({@code .../fair_trade}).
  */
 @Mixin(WanderingTrader.class)
 public abstract class WanderingTraderMixin extends AbstractVillager {
 	@Unique
-	private static final ResourceKey<TradeSet> ESPRESSO$BUILDING_BLOCKS = ResourceKey.create(Registries.TRADE_SET,
-			Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "wandering_trader/building_blocks"));
+	private static final ResourceKey<TradeSet> ESPRESSO$BUILDING_BLOCKS = espresso$tradeSet("building_blocks");
+	@Unique
+	private static final ResourceKey<TradeSet> ESPRESSO$DECOR = espresso$tradeSet("decor");
+	@Unique
+	private static final ResourceKey<TradeSet> ESPRESSO$FAIR_TRADE = espresso$tradeSet("fair_trade");
+
+	@Unique
+	private static ResourceKey<TradeSet> espresso$tradeSet(String name) {
+		return ResourceKey.create(Registries.TRADE_SET, Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "wandering_trader/" + name));
+	}
 
 	private WanderingTraderMixin(EntityType<? extends AbstractVillager> type, Level level) {
 		super(type, level);
@@ -35,6 +44,8 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
 	private void espresso$addBuildingBlocks(ServerLevel level, CallbackInfo ci) {
 		if (Config.blockMerchant) {
 			addOffersFromTradeSet(level, getOffers(), ESPRESSO$BUILDING_BLOCKS);
+			addOffersFromTradeSet(level, getOffers(), ESPRESSO$DECOR);
 		}
+		addOffersFromTradeSet(level, getOffers(), ESPRESSO$FAIR_TRADE);
 	}
 }

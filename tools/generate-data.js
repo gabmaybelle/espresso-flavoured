@@ -89,11 +89,11 @@ out('data/espresso/worldgen/placed_feature/patch_coffee_bush.json', {
 	],
 });
 
-// The wandering trader sometimes carries coffee cherries too, for worlds far from a jungle.
+// The wandering trader always carries coffee cherries (see fair trade below), so anyone can
+// start a coffee patch, however far they are from a jungle.
 out('data/espresso/villager_trade/wandering_trader/coffee_cherries.json', {
 	gives: { count: 3, id: 'espresso:coffee_cherries' }, max_uses: 8, reputation_discount: 0.05, wants: { id: 'minecraft:emerald' },
 });
-out('data/minecraft/tags/villager_trade/wandering_trader/common.json', { values: ['espresso:wandering_trader/coffee_cherries'] });
 
 // ---------------------------------------------------------------- block merchant
 // [item, how many for one emerald (or for `price` emeralds), price]
@@ -120,6 +120,46 @@ out('data/espresso/trade_set/wandering_trader/building_blocks.json', {
 	amount: 3,
 	random_sequence: 'espresso:trade_set/wandering_trader/building_blocks',
 	trades: '#espresso:wandering_trader/building_blocks',
+});
+
+// Hard-to-find decoration: plants and trimmings from biomes you may not have reached yet.
+// [item, how many, emeralds]
+const DECOR = [
+	['cherry_sapling', 2, 1], ['pale_oak_sapling', 2, 1], ['mangrove_propagule', 2, 1], ['flowering_azalea', 2, 1],
+	['spore_blossom', 1, 2], ['pitcher_plant', 1, 2], ['torchflower', 1, 2], ['open_eyeblossom', 2, 1],
+	['pink_petals', 4, 1], ['wildflowers', 4, 1], ['blue_orchid', 4, 1], ['cactus_flower', 4, 1],
+	['firefly_bush', 2, 1], ['small_dripleaf', 2, 1], ['pale_hanging_moss', 4, 1], ['leaf_litter', 8, 1],
+	['glow_berries', 4, 1], ['sea_pickle', 4, 1], ['lily_pad', 4, 1], ['candle', 4, 1],
+];
+const decorIds = [];
+for (const [item, count, price] of DECOR) {
+	decorIds.push(`espresso:wandering_trader/decor/${item}`);
+	out(`data/espresso/villager_trade/wandering_trader/decor/${item}.json`, {
+		gives: { count, id: `minecraft:${item}` },
+		max_uses: 6,
+		reputation_discount: 0.05,
+		wants: price > 1 ? { count: price, id: 'minecraft:emerald' } : { id: 'minecraft:emerald' },
+	});
+}
+out('data/espresso/tags/villager_trade/wandering_trader/decor.json', { values: decorIds });
+out('data/espresso/trade_set/wandering_trader/decor.json', {
+	amount: 2,
+	random_sequence: 'espresso:trade_set/wandering_trader/decor',
+	trades: '#espresso:wandering_trader/decor',
+});
+
+// Fair trade: the trader always sells coffee cherries to plant, and always buys your roasted
+// beans back at a fair price.
+out('data/espresso/villager_trade/wandering_trader/fair_trade_beans.json', {
+	gives: { id: 'minecraft:emerald' }, max_uses: 16, reputation_discount: 0, wants: { count: 4, id: 'espresso:roasted_coffee_beans' },
+});
+out('data/espresso/tags/villager_trade/wandering_trader/fair_trade.json', {
+	values: ['espresso:wandering_trader/coffee_cherries', 'espresso:wandering_trader/fair_trade_beans'],
+});
+out('data/espresso/trade_set/wandering_trader/fair_trade.json', {
+	amount: 2,
+	random_sequence: 'espresso:trade_set/wandering_trader/fair_trade',
+	trades: '#espresso:wandering_trader/fair_trade',
 });
 
 // ---------------------------------------------------------------- field guide
@@ -182,6 +222,10 @@ adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'B
 
 adv('guide/first_sip', 'guide/root', 'espresso:espresso', 'First Sip', 'Drink a coffee you brewed yourself',
 	{ sipped: { trigger: 'minecraft:consume_item', conditions: { item: { items: '#espresso:coffee' } } } });
+adv('guide/fair_trade', 'guide/first_sip', 'espresso:roasted_coffee_beans', 'Fair Trade', 'Sell roasted coffee beans to the wandering trader',
+	{ sold: { trigger: 'minecraft:villager_trade', conditions: {
+		villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } },
+		item: { items: 'minecraft:emerald' } } } });
 
 // Gives the starter kit once, the first time a player joins.
 out('data/espresso/advancement/starter_kit.json', {
