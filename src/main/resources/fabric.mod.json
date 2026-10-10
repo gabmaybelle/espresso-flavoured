@@ -7,7 +7,10 @@
 	"authors": [
 		"Gabby"
 	],
-	"license": "MIT",
+	"license": [
+		"MIT",
+		"CC-BY-NC-SA-4.0"
+	],
 	"icon": "assets/espresso/icon.png",
 	"environment": "*",
 	"entrypoints": {
