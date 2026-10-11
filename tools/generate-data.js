@@ -213,7 +213,7 @@ for (const [item, count, price = 1] of BLOCKS) {
 }
 out('data/espresso/tags/villager_trade/wandering_trader/building_blocks.json', { values: tradeIds });
 out('data/espresso/trade_set/wandering_trader/building_blocks.json', {
-	amount: 3,
+	amount: 2,
 	random_sequence: 'espresso:trade_set/wandering_trader/building_blocks',
 	trades: '#espresso:wandering_trader/building_blocks',
 });
@@ -301,14 +301,12 @@ const BARISTA_TRADES = {
 		['glow_berries_emerald', ['minecraft:glow_berries', 12], [E, 1], 12, 30],
 		['emerald_vanilla_latte', [E, 5], ['espresso:vanilla_latte', 1], 12, 15],
 		['emerald_name_tag', [E, 20], ['minecraft:name_tag', 1], 6, 15],
-		['emerald_experience_bottle', [E, 3], ['minecraft:experience_bottle', 1], 12, 15],
 		['emerald_cake', [E, 3], ['minecraft:cake', 1], 12, 15],
 		['emerald_painting', [E, 1], ['minecraft:painting', 3], 12, 15],
 	],
 	5: [
 		// Something for the café's corner: the music box version of Creator.
 		['emerald_music_disc', [E, 12], ['minecraft:music_disc_creator_music_box', 1], 2, 30],
-		['emerald_baristas_reserve', [E, 8], ['espresso:baristas_reserve', 1], 6, 30],
 		['emerald_golden_apple', [E, 10], ['minecraft:golden_apple', 1], 4, 30],
 		// Bean Coins (one for each Espresso advancement) buy the Golden Mug and a couple of treats.
 		['bean_coins_golden_mug', ['espresso:bean_coin', 8], ['espresso:golden_mug', 1], 1, 0],
@@ -443,8 +441,10 @@ adv('guide/first_shot', 'guide/root', 'minecraft:oak_door', 'First Shot', 'Place
 	{ door: { trigger: 'minecraft:placed_block', conditions: { location: { type: 'minecraft:match_block', blocks: '#minecraft:doors' } } } });
 adv('guide/safe_haven', 'guide/first_shot', 'minecraft:white_bed', 'Safe Haven', 'Crouch and use a bed with an empty hand to make it your home',
 	{ home: { trigger: 'minecraft:impossible' } });
-adv('guide/pocket_shot', 'guide/root', 'minecraft:bundle', 'Pocket Shot', 'Get a bundle',
-	{ bundle: { trigger: 'minecraft:inventory_changed', conditions: { items: [{ items: 'minecraft:bundle' }] } } });
+// The starter kit already gives a bundle, so this asks for what Espresso's roomier bundles allow.
+adv('guide/pocket_shot', 'guide/root', 'minecraft:bundle', 'Pocket Shot', 'Tuck a pickaxe and an axe into the same bundle',
+	{ bundle: { trigger: 'minecraft:inventory_changed', conditions: { items: [{ items: 'minecraft:bundle', predicates: {
+		'minecraft:bundle_contents': { items: { contains: [{ items: '#minecraft:pickaxes' }, { items: '#minecraft:axes' }] } } } }] } } });
 adv('guide/refill', 'guide/pocket_shot', 'minecraft:shulker_box', 'Refill', 'Craft a shulker box without leaving the Overworld',
 	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:shulker_box_overworld' } } },
 	{ frame: 'goal' });

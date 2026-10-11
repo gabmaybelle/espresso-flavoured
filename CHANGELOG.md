@@ -15,6 +15,11 @@
 - Six new ones, so there are now 20 Bean Coins to earn: **Take a Seat** (sit on a bench or chair), **Scenic Route** (stop at a rest spot in the wild), **Local Favourite** (find a village café and open its supply chest), **Counter Culture** (place a coffee bar), **Stocked Up** (put something in a canister or jar) and **Your Usual** (trade with a barista).
 - **House Blend** now needs a building block or decoration from the wandering trader, not just any trade.
 - **Fair Trade** now needs you to actually sell roasted beans; selling the trader a water bottle no longer counts.
+- **Pocket Shot** was free (the starter kit gives a bundle). Now it asks you to tuck a pickaxe and an axe into the same bundle, which only Espresso's roomier bundles allow.
+
+### Trades
+- The Barista's Reserve and bottles o' enchanting now come only from Bean Coins; the emerald versions are gone, since the coin trades were always the better deal.
+- The wandering trader offers two building blocks instead of three, so its screen is less crowded.
 
 ### Smaller things
 - Canisters and glass jars have their own sounds: a soft rustle as things go in and out, with a ceramic tink (or a glass clink) of the lid.

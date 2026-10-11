@@ -6,7 +6,21 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:bundle"
+            "items": "minecraft:bundle",
+            "predicates": {
+              "minecraft:bundle_contents": {
+                "items": {
+                  "contains": [
+                    {
+                      "items": "#minecraft:pickaxes"
+                    },
+                    {
+                      "items": "#minecraft:axes"
+                    }
+                  ]
+                }
+              }
+            }
           }
         ]
       }
@@ -17,7 +31,7 @@
       "id": "minecraft:bundle"
     },
     "title": "Pocket Shot",
-    "description": "Get a bundle"
+    "description": "Tuck a pickaxe and an axe into the same bundle"
   },
   "requirements": [
     [
