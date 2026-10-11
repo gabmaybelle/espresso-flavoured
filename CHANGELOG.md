@@ -17,6 +17,7 @@
 - **Canisters and glass jars.** They hold four stacks of anything that stacks and show what's inside. Dye the canisters to match your mugs. Fill a jar with honey bottles for a honey jar.
 - **Village cafés.** Villages of every style can have a little café, with an espresso machine on the counter for a barista to claim and a chest of café supplies.
 - **Coffee in chests.** Village houses, jungle temples and shipwrecks sometimes hold coffee cherries or roasted beans, and a jungle temple might even have the Barista's Reserve.
+- **Taller coffee bushes.** A planted cherry starts as a short seedling and grows into a two-block shrub, like a lilac, whose cherries turn yellow and then red. Pick from either half; wild bushes are already tall. Bushes planted before this update grow their top half on their own.
 - **Fair trade.** The wandering trader always sells coffee cherries to plant and buys your roasted beans at a fair price. It also sells a few rare decorations.
 
 ### Looking after yourself

@@ -328,18 +328,47 @@ png('block/coffee_bush_stage1', [
 	'..GhG.gsg.GhG...', '..gGgg.s.ggGg...', '...g.gGsGg.g....', '..GhG.gsg.GhG...',
 	'..gGg..s..gGg...', '....s..s..s.....', '.....s.s.s......', '.......s........',
 ], LEAF);
-png('block/coffee_bush_stage2', [
-	'................', '................', '......G.G.......', '.....GhGhG......',
-	'...G.gGgGg.G....', '..GhG.gsg.GhG...', '..gGguUsgugGg...', '...g.gGsGg.u....',
-	'..GhGuUsgGhG....', '.ugGg.gsg.gGgu..', '.Uu.gGgsgGg.Uu..', '..GhG.gsguGhG...',
-	'..gGg..sUugGg...', '....s..s..s.....', '.....s.s.s......', '.......s........',
-], { ...LEAF, ...UNRIPE });
-png('block/coffee_bush_stage3', [
-	'................', '................', '......G.G.......', '.....GhGhG......',
-	'...G.gGgGg.G....', '..GhG.gsg.GhG...', '..gGgrRsgrgGg...', '...g.gGsGg.r....',
-	'..GhGrRsgGhG....', '.rgGg.gsg.gGgr..', '.Rr.gGgsgGg.Rr..', '..GhG.gsgrGhG...',
-	'..gGg..sRrgGg...', '....s..s..s.....', '.....s.s.s......', '.......s........',
-], { ...LEAF, ...CHERRY });
+// Grown bushes are two blocks tall, like lilac: woody stems below, a leafy crown above, and
+// cherries along the branches (none at stage 2, green at 3, ripe at 4). Drawn as one 16x32
+// picture and split into a bottom and a top half.
+function tallBush(fruit) {
+	const hash = (x, y) => (((x * 73856093) ^ (y * 19349663)) >>> 0);
+	const rows = [];
+	for (let y = 0; y < 32; y++) {
+		let row = '';
+		for (let x = 0; x < 16; x++) {
+			const h = hash(x + 3, y + 7);
+			const d = ((x - 7.5) / 7.2) ** 2 + ((y - 12) / 11) ** 2; // the crown
+			let c = '.';
+			if (d < 1 && y < 27) {
+				if (h % 7 === 0 || (d > 0.75 && h % 2 === 0)) c = '.';
+				else c = h % 5 === 0 ? 'h' : h % 3 === 0 ? 'g' : 'G';
+			}
+			// Three stems from the root, spreading into the crown.
+			const stem = (x0, lean) => y >= 14 && Math.round(x0 + (31 - y) * lean) === x;
+			if (stem(7, 0) || (y >= 18 && (stem(7, -0.18) || stem(8, 0.18)))) c = y > 24 || c === '.' || h % 2 ? 's' : c;
+			row += c;
+		}
+		rows.push(row.split(''));
+	}
+	// Cherry clusters along the branches.
+	if (fruit) {
+		for (const [x, y] of [[3, 9], [10, 6], [6, 14], [12, 12], [4, 18], [9, 20], [7, 4], [13, 17], [2, 14]]) {
+			rows[y][x] = 'R'; rows[y][x + 1] = 'r'; rows[y + 1][x] = 'r';
+		}
+	}
+	const lines = rows.map(r => r.join(''));
+	return [lines.slice(0, 16), lines.slice(16)];
+}
+for (const [age, fruit, colours] of [[2, false, LEAF], [3, true, { ...LEAF, R: [226, 190, 70], r: [184, 148, 48] }], [4, true, { ...LEAF, ...CHERRY }]]) {
+	const [top, bottom] = tallBush(fruit);
+	png(`block/coffee_bush_tall${age}_top`, top, colours);
+	png(`block/coffee_bush_tall${age}_bottom`, bottom, colours);
+}
+for (const stale of ['coffee_bush_stage2', 'coffee_bush_stage3']) {
+	fs.rmSync(path.join(A, 'textures', 'block', stale + '.png'), { force: true });
+	fs.rmSync(path.join(A, 'models', 'block', stale + '.json'), { force: true });
+}
 
 // ---------------------------------------------------------------- effect icons (18x18)
 png('mob_effect/drowsy', [
@@ -380,8 +409,15 @@ png('mob_effect/caffeinated', [
 ], BEAN);
 
 // ---------------------------------------------------------------- models, states, names
-out('blockstates/coffee_bush.json', { variants: Object.fromEntries([0, 1, 2, 3].map(a => [`age=${a}`, { model: `espresso:block/coffee_bush_stage${a}` }])) });
-for (const a of [0, 1, 2, 3]) out(`models/block/coffee_bush_stage${a}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso:block/coffee_bush_stage${a}` } });
+// Stages 0 and 1 are short; from stage 2 the bush has a top half. (A top half never exists below
+// stage 2; those states just borrow the stage 2 top.)
+const bushModel = (age, half) => age < 2 ? `espresso:block/coffee_bush_stage${age}` : `espresso:block/coffee_bush_tall${age}_${half === 'upper' ? 'top' : 'bottom'}`;
+out('blockstates/coffee_bush.json', { variants: Object.fromEntries([0, 1, 2, 3, 4].flatMap(age => ['lower', 'upper'].map(half =>
+	[`age=${age},half=${half}`, { model: bushModel(age < 2 && half === 'upper' ? 2 : age, half) }]))) });
+for (const a of [0, 1]) out(`models/block/coffee_bush_stage${a}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso:block/coffee_bush_stage${a}` } });
+for (const a of [2, 3, 4]) for (const half of ['top', 'bottom']) {
+	out(`models/block/coffee_bush_tall${a}_${half}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso:block/coffee_bush_tall${a}_${half}` } });
+}
 for (const item of ['coffee_cherries', 'roasted_coffee_beans', 'unfired_mug']) {
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });

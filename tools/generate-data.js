@@ -135,19 +135,19 @@ out('data/espresso/loot_table/loyalty_card.json', {
 
 // Breaking a bush with cherries on it drops them, like a sweet berry bush.
 const bushDrop = (age, min, max) => ({
-	condition: { type: 'minecraft:match_block', blocks: 'espresso:coffee_bush', state: { age: String(age) } },
+	condition: { type: 'minecraft:match_block', blocks: 'espresso:coffee_bush', state: { age: String(age), half: 'lower' } },
 	entries: [{ type: 'minecraft:item', name: 'espresso:coffee_cherries' }],
 	modifier: [{ type: 'minecraft:set_count', count: { type: 'minecraft:uniform', min, max } }],
 	rolls: 1,
 });
 out('data/espresso/loot_table/blocks/coffee_bush.json', {
 	type: 'minecraft:block', modifier: { type: 'minecraft:explosion_decay' },
-	pools: [bushDrop(3, 2, 3), bushDrop(2, 1, 2)],
+	pools: [bushDrop(4, 2, 3), bushDrop(3, 1, 2)],
 });
 
-// Wild coffee bushes (added to jungles and savannas by the mod).
+// Wild coffee bushes (added to jungles and savannas by the mod), grown tall and ripe.
 out('data/espresso/worldgen/feature/coffee_bush.json', {
-	type: 'minecraft:simple_block', to_place: { id: 'espresso:coffee_bush', properties: { age: '3' } },
+	type: 'minecraft:simple_block', to_place: { id: 'espresso:coffee_bush', properties: { age: '4', half: 'lower' } },
 });
 out('data/espresso/worldgen/placed_feature/patch_coffee_bush.json', {
 	feature: 'espresso:coffee_bush',

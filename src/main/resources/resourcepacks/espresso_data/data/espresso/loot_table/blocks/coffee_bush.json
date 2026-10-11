@@ -9,7 +9,8 @@
         "type": "minecraft:match_block",
         "blocks": "espresso:coffee_bush",
         "state": {
-          "age": "3"
+          "age": "4",
+          "half": "lower"
         }
       },
       "entries": [
@@ -35,7 +36,8 @@
         "type": "minecraft:match_block",
         "blocks": "espresso:coffee_bush",
         "state": {
-          "age": "2"
+          "age": "3",
+          "half": "lower"
         }
       },
       "entries": [

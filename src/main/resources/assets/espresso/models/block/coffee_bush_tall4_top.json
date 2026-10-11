@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "espresso:block/coffee_bush_stage2"
+    "cross": "espresso:block/coffee_bush_tall4_top"
   }
 }
