@@ -4,8 +4,9 @@
 //
 // The cottage: a front gable facing the street, a covered porch with stone-footed posts, gates, two
 // little tables and hanging lanterns; a stone plinth, log posts and a beam under the eaves, tall
-// windows, and a stone chimney at the back with a campfire on top for smoke. Inside, a counter
-// along the back wall with the espresso machine, two tables by the windows, a rug and a lantern.
+// windows with flower boxes, and a stone chimney at the back with a campfire on top for smoke.
+// Inside, a counter along the back wall with the espresso machine and a cake, a fireplace in the
+// chimney, two tables by the windows, a rug and a lantern.
 //
 // Layout (x is depth from the street, z across, y up): the street joins at x = 0, z = 6; the porch
 // is x 1-3; the house x 4-10, z 2-10; the roof overhangs to x 3-10, z 1-11; the chimney is built into
@@ -17,28 +18,28 @@ const ROOT = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepac
 
 // Each village's materials: plinth, walls, posts and beams (logs), floor and porch deck, roof
 // (stairs, full block and slab), the stone wall for the porch footings and railing, the
-// wood for the counter, door, furniture and fence posts, the chimney, the rug, and two potted plants.
+// wood for the counter, door, furniture and fence posts, the chimney, the rug, two potted plants, and two flowers for the window boxes.
 const STYLES = {
 	plains: { porchWall: 'minecraft:cobblestone_wall', base: 'minecraft:cobblestone', wall: 'minecraft:oak_planks', post: 'minecraft:oak_log', beam: 'minecraft:stripped_oak_log',
 		floor: 'minecraft:spruce_planks', deck: 'minecraft:spruce_planks', roof: 'minecraft:spruce', roofBlock: 'minecraft:spruce_planks', slab: 'minecraft:spruce_slab',
 		wood: 'oak', door: 'minecraft:oak_door', chimney: 'minecraft:cobblestone', carpet: 'minecraft:brown_carpet',
-		plants: ['minecraft:potted_azalea_bush', 'minecraft:potted_red_tulip'] },
+		plants: ['minecraft:potted_azalea_bush', 'minecraft:potted_red_tulip'], flowers: ['minecraft:potted_oxeye_daisy', 'minecraft:potted_red_tulip'] },
 	desert: { porchWall: 'minecraft:sandstone_wall', base: 'minecraft:sandstone', wall: 'minecraft:smooth_sandstone', post: 'minecraft:stripped_jungle_log', beam: 'minecraft:stripped_jungle_log',
 		floor: 'minecraft:smooth_sandstone', deck: 'minecraft:jungle_planks', roof: 'minecraft:smooth_sandstone', roofBlock: 'minecraft:cut_sandstone', slab: 'minecraft:smooth_sandstone_slab',
 		wood: 'jungle', door: 'minecraft:jungle_door', chimney: 'minecraft:sandstone', carpet: 'minecraft:orange_carpet',
-		plants: ['minecraft:potted_cactus', 'minecraft:potted_dead_bush'] },
+		plants: ['minecraft:potted_cactus', 'minecraft:potted_dead_bush'], flowers: ['minecraft:potted_dandelion', 'minecraft:potted_cactus'] },
 	savanna: { porchWall: 'minecraft:mud_brick_wall', base: 'minecraft:terracotta', wall: 'minecraft:acacia_planks', post: 'minecraft:acacia_log', beam: 'minecraft:stripped_acacia_log',
 		floor: 'minecraft:acacia_planks', deck: 'minecraft:acacia_planks', roof: 'minecraft:spruce', roofBlock: 'minecraft:spruce_planks', slab: 'minecraft:spruce_slab',
 		wood: 'acacia', door: 'minecraft:acacia_door', chimney: 'minecraft:cobblestone', carpet: 'minecraft:yellow_carpet',
-		plants: ['minecraft:potted_acacia_sapling', 'minecraft:potted_orange_tulip'] },
+		plants: ['minecraft:potted_acacia_sapling', 'minecraft:potted_orange_tulip'], flowers: ['minecraft:potted_orange_tulip', 'minecraft:potted_dandelion'] },
 	taiga: { porchWall: 'minecraft:mossy_cobblestone_wall', base: 'minecraft:mossy_cobblestone', wall: 'minecraft:spruce_planks', post: 'minecraft:spruce_log', beam: 'minecraft:stripped_spruce_log',
 		floor: 'minecraft:spruce_planks', deck: 'minecraft:spruce_planks', roof: 'minecraft:dark_oak', roofBlock: 'minecraft:dark_oak_planks', slab: 'minecraft:dark_oak_slab',
 		wood: 'spruce', door: 'minecraft:spruce_door', chimney: 'minecraft:cobblestone', carpet: 'minecraft:green_carpet',
-		plants: ['minecraft:potted_fern', 'minecraft:potted_spruce_sapling'] },
+		plants: ['minecraft:potted_fern', 'minecraft:potted_spruce_sapling'], flowers: ['minecraft:potted_cornflower', 'minecraft:potted_lily_of_the_valley'] },
 	snowy: { porchWall: 'minecraft:stone_brick_wall', base: 'minecraft:stone_bricks', wall: 'minecraft:stripped_spruce_wood', post: 'minecraft:spruce_log', beam: 'minecraft:spruce_log',
 		floor: 'minecraft:spruce_planks', deck: 'minecraft:spruce_planks', roof: 'minecraft:spruce', roofBlock: 'minecraft:spruce_planks', slab: 'minecraft:spruce_slab',
 		wood: 'spruce', door: 'minecraft:spruce_door', chimney: 'minecraft:stone_bricks', carpet: 'minecraft:red_carpet',
-		plants: ['minecraft:potted_spruce_sapling', 'minecraft:potted_blue_orchid'] },
+		plants: ['minecraft:potted_spruce_sapling', 'minecraft:potted_blue_orchid'], flowers: ['minecraft:potted_blue_orchid', 'minecraft:potted_white_tulip'] },
 };
 
 const pane = (along) => `minecraft:glass_pane[east=${along === 'x'},west=${along === 'x'},north=${along === 'z'},south=${along === 'z'},waterlogged=false]`;
@@ -131,20 +132,30 @@ function build(biome, s) {
 		set(3, 1, z, chair('east'));
 	}
 
-	// The chimney, built into the back wall, with a campfire on top for a wisp of smoke.
+	// The chimney, built into the back wall, with a campfire on top for a wisp of smoke, and a
+	// fireplace in front of it: a fire under a stone hood up to the ceiling.
 	for (let y = 0; y <= 10; y++) set(10, y, 8, s.chimney);
 	set(10, 11, 8, 'minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false]');
+	set(9, 1, 8, 'minecraft:campfire[facing=west,lit=true,signal_fire=false,waterlogged=false]');
+	for (let y = 2; y <= 4; y++) set(9, y, 8, s.chimney);
 
-	// Inside: the counter along the back wall with a plant, the machine, a mug and canisters of beans
-	// and cherries; the café's chest and a barrel; two tables by the side windows; a rug; lanterns.
-	for (const z of [4, 5, 6, 7, 8]) set(9, 1, z, `espresso:${s.wood}_coffee_bar[facing=west]`);
-	set(9, 2, 4, s.plants[0]);
+	// Flower boxes under the side windows: a shelf with potted flowers.
+	for (const z of [1, 11]) for (const x of [5, 6, 8, 9]) {
+		set(x, 1, z, `${wood}_slab[type=top,waterlogged=false]`);
+		set(x, 2, z, s.flowers[(x + z) % 2]);
+	}
+
+	// Inside: the counter along the back wall with a cake, the machine, a mug and canisters of beans
+	// and cherries (that one on a barrel by the fire); the café's chest; two tables by the side
+	// windows; a rug; lanterns.
+	for (const z of [4, 5, 6, 7]) set(9, 1, z, `espresso:${s.wood}_coffee_bar[facing=west]`);
+	set(9, 2, 4, 'minecraft:cake[bites=0]');
 	set(9, 2, 5, 'espresso:espresso_machine[facing=west,beans=false]');
 	set(9, 2, 6, 'espresso:placed_mug[facing=west,contents=empty,color=0]', { id: 'espresso:placed_mug', Mug: { id: 'espresso:mug', count: 1 } });
 	set(9, 2, 7, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
-	set(9, 2, 8, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
 	set(9, 1, 3, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso:chests/village_cafe' });
 	set(9, 1, 9, 'minecraft:barrel[facing=up,open=false]');
+	set(9, 2, 9, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
 	for (const z of [3, 9]) {
 		table(6, z);
 		set(5, 1, z, chair('west'));
