@@ -99,6 +99,9 @@ public class PlacedMugBlock extends HorizontalDirectionalBlock implements Entity
 	/** Picks the mug back up. */
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+		if (!player.mayBuild()) {
+			return InteractionResult.PASS;
+		}
 		if (!level.isClientSide()) {
 			ItemStack mug = level.getBlockEntity(pos) instanceof PlacedMugBlockEntity entity ? entity.getMug() : ItemStack.EMPTY;
 			level.removeBlock(pos, false);

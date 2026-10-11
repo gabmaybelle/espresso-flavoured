@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
 		"BundleContentsMixin",
+		"CakeBlockMixin",
 		"CreeperMixin",
 		"DeathLootMixin",
 		"EndermanTakeBlockGoalMixin",

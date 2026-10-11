@@ -140,7 +140,8 @@ public final class Mugs {
 					.setValue(PlacedMugBlock.FACING, player.getDirection().getOpposite())
 					.setValue(PlacedMugBlock.CONTENTS, contentsOf(stack))
 					.setValue(PlacedMugBlock.COLOR, colorIndex(stack));
-			if (!level.getBlockState(pos).canBeReplaced() || !state.canSurvive(level, pos)) {
+			if (!level.getBlockState(pos).canBeReplaced() || !state.canSurvive(level, pos)
+					|| !player.mayBuild() || !level.mayInteract(player, pos) || !player.mayUseItemAt(pos, hit.getDirection(), stack)) {
 				return InteractionResult.PASS;
 			}
 			if (!level.isClientSide()) {

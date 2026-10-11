@@ -55,7 +55,8 @@ public final class KeepOnDeath {
 		}
 		Inventory inventory = player.getInventory();
 		for (Map.Entry<String, ItemStack> entry : kept.entrySet()) {
-			int slot = Integer.parseInt(entry.getKey());
+			// Keys are the slot, plus "#n" for items from a second death while these were waiting.
+			int slot = Integer.parseInt(entry.getKey().split("#")[0]);
 			if (inventory.getItem(slot).isEmpty()) {
 				inventory.setItem(slot, entry.getValue());
 			} else if (!inventory.add(entry.getValue())) {
@@ -70,14 +71,19 @@ public final class KeepOnDeath {
 			return;
 		}
 		Inventory inventory = player.getInventory();
-		Map<String, ItemStack> kept = new HashMap<>();
+		// Anything still waiting from a death moments ago stays in the list.
+		Map<String, ItemStack> kept = new HashMap<>(player.getAttachedOrElse(KEPT, Map.of()));
 		for (int slot : KEPT_SLOTS) {
 			ItemStack stack = inventory.getItem(slot);
 			// Curse of Vanishing still vanishes.
 			if (stack.isEmpty() || EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
 				continue;
 			}
-			kept.put(Integer.toString(slot), stack.copy());
+			String key = Integer.toString(slot);
+			for (int n = 1; kept.containsKey(key); n++) {
+				key = slot + "#" + n;
+			}
+			kept.put(key, stack.copy());
 			inventory.setItem(slot, ItemStack.EMPTY);
 		}
 		if (!kept.isEmpty()) {
