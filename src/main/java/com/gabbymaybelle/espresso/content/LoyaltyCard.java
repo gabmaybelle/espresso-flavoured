@@ -9,16 +9,20 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Prediction;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ContainerComponent;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.TooltipDisplay;
 
@@ -26,7 +30,8 @@ import net.minecraft.world.item.component.TooltipDisplay;
  * The café loyalty card. It arrives with the Barista advancement and collects a stamp for
  * each coffee advancement; a full card can be swapped with the wandering trader for the
  * Golden Mug. Stamps are a bitmask in {@link EspressoContent#STAMPS}, kept in step with the
- * holder's advancements every couple of seconds.
+ * holder's advancements every second, wherever the card is: inventory, off-hand, the cursor, an
+ * open chest or ender chest, or tucked inside a bundle or shulker box in any of those.
  */
 public class LoyaltyCard extends Item {
 	/** The stamps, in order: the advancement each one stands for. */
@@ -56,7 +61,7 @@ public class LoyaltyCard extends Item {
 
 	static void register() {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			if (server.getTickCount() % 40 == 0) {
+			if (server.getTickCount() % 20 == 0) {
 				for (ServerPlayer player : server.getPlayerList().getPlayers()) {
 					updateCards(server, player);
 				}
@@ -81,12 +86,52 @@ public class LoyaltyCard extends Item {
 			player.setAttached(HAD_CARD, true);
 		}
 		for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
-			ItemStack stack = inventory.getItem(slot);
-			if (stack.is(EspressoContent.LOYALTY_CARD) && stack.getOrDefault(EspressoContent.STAMPS, 0) != stamps) {
-				stack.set(EspressoContent.STAMPS, stamps);
-				// The card's picture shows how many stamps it has.
-				stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of((float) Integer.bitCount(stamps)), List.of(), List.of(), List.of()));
+			stamp(inventory.getItem(slot), stamps, 0);
+		}
+		stamp(player.containerMenu.getCarried(), stamps, 0);
+		for (Slot slot : player.containerMenu.slots) {
+			if (stamp(slot.getItem(), stamps, 0)) {
+				slot.setChanged();
 			}
 		}
+		Container enderChest = player.getEnderChestInventory();
+		for (int slot = 0; slot < enderChest.getContainerSize(); slot++) {
+			if (stamp(enderChest.getItem(slot), stamps, 0)) {
+				enderChest.setChanged();
+			}
+		}
+	}
+
+	/** Brings a card (or any cards inside a bundle or shulker box) up to date; true if anything changed. */
+	private static boolean stamp(ItemStack stack, int stamps, int depth) {
+		if (stack.is(EspressoContent.LOYALTY_CARD)) {
+			if (stack.getOrDefault(EspressoContent.STAMPS, 0) == stamps) {
+				return false;
+			}
+			stack.set(EspressoContent.STAMPS, stamps);
+			// The card's picture shows how many stamps it has.
+			stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of((float) Integer.bitCount(stamps)), List.of(), List.of(), List.of()));
+			return true;
+		}
+		if (depth >= 4) {
+			return false;
+		}
+		return stampInside(stack, DataComponents.BUNDLE_CONTENTS, stamps, depth) | stampInside(stack, DataComponents.CONTAINER, stamps, depth);
+	}
+
+	private static <T extends ContainerComponent<T>> boolean stampInside(ItemStack stack, DataComponentType<T> type, int stamps, int depth) {
+		T contents = stack.get(type);
+		if (contents == null) {
+			return false;
+		}
+		List<ItemStack> items = contents.itemCopies().toList();
+		boolean changed = false;
+		for (ItemStack item : items) {
+			changed |= stamp(item, stamps, depth + 1);
+		}
+		if (changed) {
+			stack.set(type, contents.copyWithContents(items.stream()));
+		}
+		return changed;
 	}
 }

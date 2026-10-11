@@ -22,6 +22,7 @@ public class Espresso implements ModInitializer {
 		EspressoContent.register();
 		Wellbeing.register();
 		KeepOnDeath.register();
+		ServerSettings.register();
 
 		ModContainer mod = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow();
 		// Recipes, advancements, the starter kit, the field guide and the block merchant's trades.

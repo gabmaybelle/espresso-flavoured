@@ -4,9 +4,13 @@ import com.gabbymaybelle.espresso.content.CanisterBlock;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import com.gabbymaybelle.espresso.content.Mugs;
 import com.gabbymaybelle.espresso.content.PlacedMugBlock;
+import com.gabbymaybelle.espresso.Config;
+import com.gabbymaybelle.espresso.ServerSettings;
 import java.util.List;
 import java.util.Set;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -24,6 +28,13 @@ public class EspressoClient implements ClientModInitializer {
 		BlockEntityRenderers.register(EspressoContent.CANISTER_ENTITY, CanisterRenderer::new);
 		tintByColor(EspressoContent.PLACED_MUG, PlacedMugBlock.COLOR);
 		tintByColor(EspressoContent.CANISTER_BLOCK, CanisterBlock.COLOR);
+		// On someone else's server, use their bundle setting so bundles match for everyone.
+		ClientPlayNetworking.registerGlobalReceiver(ServerSettings.TYPE, (settings, context) -> {
+			if (!context.client().hasSingleplayerServer()) {
+				Config.serverBundleUnstackables = settings.bundleUnstackables();
+			}
+		});
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> Config.serverBundleUnstackables = 0);
 	}
 
 	/** Tints a block's model (tintindex 0) by its colour property: cream, one of the 16 dyes, or gold. */

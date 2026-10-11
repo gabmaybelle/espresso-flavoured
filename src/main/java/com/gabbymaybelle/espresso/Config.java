@@ -28,6 +28,13 @@ public final class Config {
 	public static boolean blockMerchant = true;
 	/** How many tools, armour pieces and other non-stacking items fit in one bundle. 1 is vanilla. */
 	public static int bundleUnstackables = 4;
+	/** The server's bundleUnstackables while playing on one (0 = not on a server, use our own). */
+	public static int serverBundleUnstackables = 0;
+
+	/** Tools per bundle right now: the server's setting when on a server, otherwise this game's. */
+	public static int bundleUnstackables() {
+		return serverBundleUnstackables > 0 ? serverBundleUnstackables : bundleUnstackables;
+	}
 	/** 20-minute days and 10-minute nights (vanilla: 10 and 10). */
 	public static boolean longerDays = true;
 	/** Keep the hotbar, armour and off-hand on death; everything else drops. */

@@ -5,7 +5,7 @@
 ### Coffee
 - **Espresso machine.** The only way to brew espresso now. It has a brewing-stand style menu: beans on top, up to three mugs below, and a ten-second brew. Hoppers work, and comparators read it.
 - **Coffee bars**, in every wood (including poplar). The machine brews only when it sits on one, and a hopper under the bar collects the finished drinks.
-- **Mugs.** Shape them from clay, fire them, and dye them any colour. Coffee keeps its mug from espresso to latte to mocha, and you get the mug back when you drink. Crouch to set a mug down, empty or full.
+- **Mugs.** Shape them from clay, fire them, and dye them any colour. Coffee keeps its mug from espresso to latte to mocha, and you get the mug back when you drink. Crouch to set a mug down, empty or full: it sits on a saucer, and every drink has its own look.
 - **Vanilla latte**, the house special: honey and sugar make vanilla syrup.
 - **Decaf.** Wash roasted beans in water. Decaf makes you **Cozy**: you heal slowly near home, wake up **Well Rested** with two golden hearts, and it softens a caffeine crash.
 - **Ristretto**, brewed from the Barista's Reserve: the only Speed II and Haste II.
@@ -13,7 +13,7 @@
 
 ### The café
 - **Barista villagers** use the espresso machine as their workstation. They trade beans, mugs and drinks, and a master sells name tags, bottles o' enchanting, golden apples and the Barista's Reserve.
-- **Loyalty card.** It comes with the Barista advancement and collects a stamp for each café milestone. Swap a full card with the wandering trader for the **Golden Mug** (coffee lasts longer from it).
+- **Loyalty card.** It comes with the Barista advancement and collects a stamp for each café milestone, wherever it is: in a chest, an ender chest or a bundle. Swap a full card with the wandering trader for the **Golden Mug** (coffee lasts longer from it).
 - **Canisters and glass jars.** They hold four stacks of anything that stacks and show what's inside. Dye the canisters to match your mugs. Fill a jar with honey bottles for a honey jar.
 - **Fair trade.** The wandering trader always sells coffee cherries to plant and buys your roasted beans at a fair price. It also sells a few rare decorations.
 
@@ -27,6 +27,7 @@
 - The field guide has a Coffee Corner page.
 - Sugar cane grows 5 blocks tall, so a few plants keep you in sugar (there's a setting).
 - New settings: "Machine Needs a Coffee Bar", "Caffeine Crash" and "Sugar Cane Height".
+- On a server, everyone's bundles follow the server's "Tools per Bundle" setting.
 - New advancements: Barista, Mug Shot, House Special, Sweet Dreams, and On the House.
 
 ## 0.1.0

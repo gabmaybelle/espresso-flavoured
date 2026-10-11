@@ -86,7 +86,7 @@
   "espresso.options.coffeeBarRequired": "Machine Needs a Coffee Bar",
   "espresso.options.coffeeBarRequired.tooltip": "The espresso machine only brews on top of a coffee bar.",
   "espresso.options.bundleUnstackables": "Tools per Bundle",
-  "espresso.options.bundleUnstackables.tooltip": "How many tools or pieces of armour fit in one bundle (1 is vanilla).",
+  "espresso.options.bundleUnstackables.tooltip": "How many tools or pieces of armour fit in one bundle (1 is vanilla). On a server, the server's setting is used.",
   "espresso.options.blockMerchant": "Block Merchant",
   "espresso.options.blockMerchant.tooltip": "The wandering trader also sells building blocks from far-off biomes."
 }

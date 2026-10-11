@@ -1,11 +1,13 @@
 package com.gabbymaybelle.espresso.client;
 
 import com.gabbymaybelle.espresso.Config;
+import com.gabbymaybelle.espresso.ServerSettings;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -54,6 +56,11 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 	public void removed() {
 		super.removed();
 		Config.save();
+		IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
+		if (server != null) {
+			// Hosting a LAN world: guests use the host's bundle setting.
+			server.execute(() -> ServerSettings.broadcast(server));
+		}
 	}
 
 	private static OptionInstance<Boolean> toggle(String key, boolean value, Consumer<Boolean> set) {
