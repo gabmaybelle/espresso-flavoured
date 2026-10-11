@@ -56,8 +56,9 @@ function build(biome, s) {
 	set(7, 2, 4, pane('z'));
 	set(1, 1, 4, `${s.door}[facing=east,half=lower,hinge=right,open=false,powered=false]`);
 	set(1, 2, 4, `${s.door}[facing=east,half=upper,hinge=right,open=false,powered=false]`);
-	set(1, 3, 3, 'minecraft:wall_torch[facing=west]');
-	set(1, 3, 5, 'minecraft:wall_torch[facing=west]');
+	// Torches either side of the door, on the outside of the wall.
+	set(0, 3, 3, 'minecraft:wall_torch[facing=west]');
+	set(0, 3, 5, 'minecraft:wall_torch[facing=west]');
 
 	// The street joins at the doorstep; a villager joins in the middle of the floor.
 	set(0, 0, 4, 'minecraft:jigsaw[orientation=west_up]', { id: 'minecraft:jigsaw', joint: 'aligned', name: 'minecraft:building_entrance',
