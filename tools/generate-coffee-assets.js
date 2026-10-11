@@ -182,6 +182,15 @@ const sachet = (name, powder, dark) => png(`item/${name}`, grid((x, y) => {
 	return '.';
 }), { f: [214, 196, 160], w: [236, 224, 196], e: [190, 170, 136], p: powder, d: dark });
 sachet('pumpkin_spice', [214, 120, 52], [150, 74, 30]);
+// Cinnamon: three curled quills of bark, tied together.
+png('item/cinnamon', grid((x, y) => {
+	if (y === 8 && x >= 3 && x <= 12) return 't'; // the tie, over the quills
+	for (const [cx, top] of [[5, 2], [8, 1], [11, 3]]) {
+		const dx = x - cx;
+		if (y >= top && y <= top + 11 && dx >= -1 && dx <= 1) return dx === -1 ? 'h' : dx === 1 ? 'd' : 'b';
+	}
+	return '.';
+}), { h: [196, 128, 82], b: [160, 96, 56], d: [112, 62, 34], t: [214, 196, 160] });
 sachet('cocoa_mix', [110, 62, 34], [70, 38, 20]);
 png('block/mug_vanilla', grid((x, y) => ((x - 7.5) ** 2 + (y - 7.5) ** 2 < 14 ? 'T' : ((x * 5 + y * 3) % 13 === 0 ? 'D' : 'L'))),
 	{ L: [214, 178, 120], T: [250, 244, 230], D: [120, 80, 40] });
@@ -415,7 +424,7 @@ out('blockstates/canister.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/canister', ...(y ? { y } : {}) }]),
 ) });
 // Glass jar, the Reserve and Ristretto.
-for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans', 'pumpkin_spice', 'cocoa_mix']) {
+for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans', 'pumpkin_spice', 'cocoa_mix', 'cinnamon']) {
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
@@ -547,6 +556,7 @@ out('lang/en_us.json', {
 	'item.espresso.decaf_coffee_beans': 'Decaf Coffee Beans',
 	'item.espresso.decaf': 'Decaf',
 	'effect.espresso.warm': 'Warm',
+	'item.espresso.cinnamon': 'Cinnamon',
 	'item.espresso.pumpkin_spice': 'Pumpkin Spice',
 	'item.espresso.cocoa_mix': 'Cocoa Mix',
 	'item.espresso.pumpkin_spice_latte': 'Pumpkin Spice Latte',

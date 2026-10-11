@@ -3,7 +3,8 @@
   "category": "misc",
   "ingredients": [
     "minecraft:pumpkin",
-    "minecraft:sugar"
+    "minecraft:sugar",
+    "espresso:cinnamon"
   ],
   "result": {
     "id": "espresso:pumpkin_spice",

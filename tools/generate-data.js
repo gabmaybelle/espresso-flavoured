@@ -45,7 +45,7 @@ out('data/espresso/recipe/espresso_machine.json', {
 out('data/espresso/loot_table/blocks/espresso_machine.json', {
 	type: 'minecraft:block',
 	pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'espresso:espresso_machine' }],
-		conditions: [{ condition: 'minecraft:survives_explosion' }] }],
+		condition: { type: 'minecraft:survives_explosion' } }],
 });
 out('data/minecraft/tags/block/mineable/pickaxe.json', { values: ['espresso:espresso_machine'] });
 // Mugs: shape clay, fire it, dye it like leather. Drinks keep the mug they're in.
@@ -86,11 +86,19 @@ out('data/espresso/recipe/vanilla_latte.json', {
 	type: 'minecraft:crafting_transmute', category: 'misc',
 	input: 'espresso:latte', material: 'espresso:vanilla_syrup', result: { id: 'espresso:vanilla_latte' },
 });
-// More drinks: pumpkin spice (pumpkin and sugar) for a seasonal latte, ice for iced coffee,
+// Cinnamon: stripping a jungle or acacia log sometimes drops some (one in three); the axe
+// transformer that rolls this loot is written by tools/generate-strip.js.
+out('data/espresso/loot_table/strip/cinnamon.json', {
+	type: 'minecraft:block_interact',
+	pools: [{ rolls: 1, condition: { type: 'minecraft:random_chance', chance: 0.33 },
+		entries: [{ type: 'minecraft:item', name: 'espresso:cinnamon' }] }],
+	random_sequence: 'espresso:strip/cinnamon',
+});
+// More drinks: pumpkin spice (pumpkin, sugar and cinnamon) for a seasonal latte, ice for iced coffee,
 // glow berries for a night shift, and cocoa mix that the machine brews into hot chocolate.
 out('data/espresso/recipe/pumpkin_spice.json', {
 	type: 'minecraft:crafting_shapeless', category: 'misc',
-	ingredients: ['minecraft:pumpkin', 'minecraft:sugar'], result: { id: 'espresso:pumpkin_spice', count: 4 },
+	ingredients: ['minecraft:pumpkin', 'minecraft:sugar', 'espresso:cinnamon'], result: { id: 'espresso:pumpkin_spice', count: 4 },
 });
 out('data/espresso/recipe/cocoa_mix.json', {
 	type: 'minecraft:crafting_shapeless', category: 'misc',
@@ -297,7 +305,7 @@ for (const wood of COFFEE_BARS) {
 	});
 	out(`data/espresso/loot_table/blocks/${wood}_coffee_bar.json`, {
 		type: 'minecraft:block',
-		pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: `espresso:${wood}_coffee_bar` }], conditions: [{ condition: 'minecraft:survives_explosion' }] }],
+		pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: `espresso:${wood}_coffee_bar` }], condition: { type: 'minecraft:survives_explosion' } }],
 	});
 }
 out('data/minecraft/tags/block/mineable/axe.json', { values: COFFEE_BARS.map(w => `espresso:${w}_coffee_bar`) });
@@ -327,7 +335,7 @@ unlock('mug_dyed', ['espresso:mug'], ['mug_dyed']);
 unlock('canister_dyed', ['espresso:canister'], ['canister_dyed']);
 unlock('latte', ['espresso:espresso'], ['latte', 'iced_coffee', 'night_shift']);
 unlock('latte_drinks', ['espresso:latte'], ['mocha_latte', 'vanilla_latte', 'pumpkin_spice_latte']);
-unlock('pumpkin_spice', ['minecraft:pumpkin'], ['pumpkin_spice']);
+unlock('pumpkin_spice', ['minecraft:pumpkin', 'espresso:cinnamon'], ['pumpkin_spice']);
 unlock('cocoa_mix', ['minecraft:cocoa_beans'], ['cocoa_mix']);
 unlock('vanilla_syrup', ['minecraft:honey_bottle', 'minecraft:sugar'], ['vanilla_syrup']);
 unlock('glass_jar', ['minecraft:glass'], ['glass_jar']);

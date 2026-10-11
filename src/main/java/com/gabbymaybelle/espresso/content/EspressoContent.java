@@ -152,7 +152,9 @@ public final class EspressoContent {
 			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
 	/** Roasted beans washed in water; the espresso machine brews them into decaf. */
 	public static final Item DECAF_BEANS = registerItem("decaf_coffee_beans", Item::new, new Item.Properties());
-	/** Pumpkin and sugar, for a pumpkin spice latte. */
+	/** Bark from stripping jungle and acacia logs (see tools/generate-strip.js); a spice for the pumpkin spice latte. */
+	public static final Item CINNAMON = registerItem("cinnamon", Item::new, new Item.Properties());
+	/** Pumpkin, sugar and cinnamon, for a pumpkin spice latte. */
 	public static final Item PUMPKIN_SPICE = registerItem("pumpkin_spice", Item::new, new Item.Properties());
 	/** Cocoa, sugar and milk; the espresso machine brews it into hot chocolate. */
 	public static final Item COCOA_MIX = registerItem("cocoa_mix", Item::new, new Item.Properties());
@@ -248,6 +250,7 @@ public final class EspressoContent {
 			output.accept(UNFIRED_CANISTER);
 			output.accept(BARISTAS_RESERVE);
 			output.accept(DECAF_BEANS);
+			output.accept(CINNAMON);
 			output.accept(PUMPKIN_SPICE);
 			output.accept(COCOA_MIX);
 			output.accept(VANILLA_SYRUP);
