@@ -318,6 +318,19 @@ for (let n = 0; n <= 6; n++) {
 	}), { e: [150, 120, 90], c: [246, 236, 214], b: [112, 64, 34], B: [164, 104, 58], l: [190, 170, 140], o: [214, 200, 176], s: [176, 52, 40] });
 }
 
+// Bean Coin: a round brass coin with a coffee bean stamped in the middle.
+png('item/bean_coin', grid((x, y) => {
+	const dx = x - 7.5, dy = y - 7.5, r = Math.sqrt(dx * dx + dy * dy);
+	if (r > 7.1) return '.';
+	if (r > 6.1) return dx + dy > 0 ? 'e' : 'E'; // rim, shaded bottom-right
+	// The bean: an oval leaning to the right, with its S-shaped crease down the middle.
+	const u = (dx + dy) * 0.707, v = (dy - dx) * 0.707;
+	if ((u * u) / 17 + (v * v) / 7 <= 1) return Math.abs(v - 0.6 * Math.sin(u * 0.8)) < 0.5 ? 'k' : (v < 0 ? 'B' : 'b');
+	return dx + dy < -5 ? 'h' : 'c';
+}), { e: [140, 98, 38], E: [176, 130, 52], c: [214, 170, 78], h: [240, 210, 128], b: [112, 64, 34], B: [150, 92, 50], k: [56, 30, 14] });
+out('items/bean_coin.json', { model: { type: 'minecraft:model', model: 'espresso:item/bean_coin' } });
+out('models/item/bean_coin.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/bean_coin' } });
+
 // Canisters: glazed like the mugs (greys, tinted), with a lid and knob.
 png('block/canister', grid((x, y) => (y <= 1 ? 'W' : (y >= 14 ? 'S' : ((x * 7 + y) % 13 === 0 ? 'S' : 'B')))), MUG);
 png('block/canister_top', grid((x, y) => (x <= 1 || x >= 14 || y <= 1 || y >= 14 ? 'S' : 'W')), MUG);
@@ -755,8 +768,9 @@ out('lang/en_us.json', {
 	'item.espresso.vanilla_syrup': 'Vanilla Syrup',
 	'item.espresso.vanilla_latte': 'Vanilla Latte',
 	'item.espresso.golden_mug': 'Golden Mug',
-	'item.espresso.loyalty_card': 'Loyalty Card',
-	'item.espresso.loyalty_card.full': 'Full! Swap it with the wandering trader for the Golden Mug',
+	'item.espresso.loyalty_card': 'Old Loyalty Card',
+	'item.espresso.bean_coin': 'Bean Coin',
+	'item.espresso.bean_coin.desc': 'One for each Espresso advancement. A master barista takes them',
 	'item.espresso.unfired_canister': 'Unfired Canister',
 	'block.espresso.canister': 'Canister',
 	'block.espresso.glass_jar': 'Glass Jar',

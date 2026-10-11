@@ -129,6 +129,15 @@ public class CanisterBlock extends HorizontalDirectionalBlock implements EntityB
 		return InteractionResult.SUCCESS;
 	}
 
+	/** Broken in creative, there are no drops, but what was inside still spills out. */
+	@Override
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+		if (!level.isClientSide() && player.preventsBlockDrops() && level.getBlockEntity(pos) instanceof CanisterBlockEntity canister) {
+			canister.contents().forEach(stack -> popResource(level, pos, stack));
+		}
+		return super.playerWillDestroy(level, pos, state, player);
+	}
+
 	/** The canister itself (in its exact colour) plus everything that was in it. */
 	@Override
 	protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {

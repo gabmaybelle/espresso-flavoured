@@ -150,12 +150,6 @@ out('data/espresso/recipe/canister_dyed.json', {
 	type: 'minecraft:crafting_dye', group: 'dyed_canister', target: 'espresso:canister', dye: '#minecraft:dyes', result: { id: 'espresso:canister' },
 });
 
-// The loyalty card comes with the Barista advancement; a full card buys the Golden Mug.
-out('data/espresso/loot_table/loyalty_card.json', {
-	type: 'minecraft:command',
-	pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'espresso:loyalty_card' }] }],
-});
-
 // Breaking a bush with cherries on it drops them, like a sweet berry bush.
 const bushDrop = (age, min, max) => ({
 	condition: { type: 'minecraft:match_block', blocks: 'espresso:coffee_bush', state: { age: String(age), half: 'lower' } },
@@ -255,15 +249,11 @@ out('data/espresso/trade_set/wandering_trader/decor.json', {
 out('data/espresso/villager_trade/wandering_trader/fair_trade_beans.json', {
 	gives: { id: 'minecraft:emerald' }, max_uses: 16, reputation_discount: 0, wants: { count: 4, id: 'espresso:roasted_coffee_beans' },
 });
-out('data/espresso/villager_trade/wandering_trader/golden_mug.json', {
-	gives: { id: 'espresso:golden_mug' }, max_uses: 1, reputation_discount: 0,
-	wants: { id: 'espresso:loyalty_card', components: { 'espresso:stamps': 63 } },
-});
 out('data/espresso/tags/villager_trade/wandering_trader/fair_trade.json', {
-	values: ['espresso:wandering_trader/coffee_cherries', 'espresso:wandering_trader/fair_trade_beans', 'espresso:wandering_trader/golden_mug'],
+	values: ['espresso:wandering_trader/coffee_cherries', 'espresso:wandering_trader/fair_trade_beans'],
 });
 out('data/espresso/trade_set/wandering_trader/fair_trade.json', {
-	amount: 3,
+	amount: 2,
 	random_sequence: 'espresso:trade_set/wandering_trader/fair_trade',
 	trades: '#espresso:wandering_trader/fair_trade',
 });
@@ -304,20 +294,28 @@ const BARISTA_TRADES = {
 	5: [
 		['emerald_baristas_reserve', [E, 8], ['espresso:baristas_reserve', 1], 6, 30],
 		['emerald_golden_apple', [E, 10], ['minecraft:golden_apple', 1], 4, 30],
+		// Bean Coins (one for each Espresso advancement) buy the Golden Mug and a couple of treats.
+		['bean_coins_golden_mug', ['espresso:bean_coin', 8], ['espresso:golden_mug', 1], 1, 0],
+		['bean_coin_baristas_reserve', ['espresso:bean_coin', 1], ['espresso:baristas_reserve', 3], 4, 0],
+		['bean_coins_experience_bottles', ['espresso:bean_coin', 2], ['minecraft:experience_bottle', 16], 4, 0],
 	],
 };
+// A master shows every trade, so the Bean Coin ones are always there.
+const SHOW_ALL = new Set(['5']);
 const item = ([id, count]) => (count > 1 ? { count, id } : { id });
 for (const [level, trades] of Object.entries(BARISTA_TRADES)) {
 	const ids = [];
 	for (const [name, wants, gives, maxUses, xp] of trades) {
 		ids.push(`espresso:barista/${level}/${name}`);
 		out(`data/espresso/villager_trade/barista/${level}/${name}.json`, {
-			gives: item(gives), max_uses: maxUses, reputation_discount: 0.05, wants: item(wants), xp,
+			// Coin prices stay put; everything else gets cheaper as the barista likes you more.
+			gives: item(gives), max_uses: maxUses, reputation_discount: wants[0] === 'espresso:bean_coin' ? 0 : 0.05, wants: item(wants),
+			...(xp ? { xp } : {}),
 		});
 	}
 	out(`data/espresso/tags/villager_trade/barista/level_${level}.json`, { values: ids });
 	out(`data/espresso/trade_set/barista/level_${level}.json`, {
-		amount: 2, random_sequence: `espresso:trade_set/barista/level_${level}`, trades: `#espresso:barista/level_${level}`,
+		amount: SHOW_ALL.has(level) ? trades.length : 2, random_sequence: `espresso:trade_set/barista/level_${level}`, trades: `#espresso:barista/level_${level}`,
 	});
 }
 
@@ -437,9 +435,8 @@ adv('guide/refill', 'guide/pocket_shot', 'minecraft:shulker_box', 'Refill', 'Cra
 adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'Buy building blocks from the wandering trader',
 	{ traded: { trigger: 'minecraft:villager_trade', conditions: { villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } } } } });
 
-adv('guide/barista', 'guide/root', 'espresso:espresso_machine', 'Barista', 'Craft an espresso machine (and get a loyalty card)',
-	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:espresso_machine' } } },
-	{}, { loot: ['espresso:loyalty_card'] });
+adv('guide/barista', 'guide/root', 'espresso:espresso_machine', 'Barista', 'Craft an espresso machine',
+	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:espresso_machine' } } });
 adv('guide/mug_shot', 'guide/barista', 'espresso:mug', 'Mug Shot', 'Dye a mug',
 	{ dyed: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:mug_dyed' } } });
 adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink your first coffee',
@@ -450,7 +447,7 @@ adv('guide/perfect_pairing', 'guide/first_sip', 'espresso:croissant', 'Perfect P
 	{ paired: { trigger: 'minecraft:impossible' } });
 adv('guide/house_special', 'guide/first_sip', 'espresso:vanilla_latte', 'House Special', 'Make a vanilla latte',
 	{ made: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:vanilla_latte' } } });
-adv('guide/full_card', 'guide/house_special', 'espresso:golden_mug', 'On the House', 'Trade a full loyalty card for the Golden Mug',
+adv('guide/full_card', 'guide/house_special', 'espresso:golden_mug', 'On the House', 'Buy the Golden Mug from a master barista with Bean Coins',
 	{ redeemed: { trigger: 'minecraft:villager_trade', conditions: { item: { items: 'espresso:golden_mug' } } } }, { frame: 'challenge' });
 adv('guide/fair_trade', 'guide/first_sip', 'espresso:roasted_coffee_beans', 'Fair Trade', 'Sell roasted coffee beans to the wandering trader',
 	{ sold: { trigger: 'minecraft:villager_trade', conditions: {

@@ -97,16 +97,20 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 	}
 
 	private boolean canBrew() {
-		ItemStack grounds = items.get(GROUNDS_SLOT);
-		if (items.get(BEAN_SLOT).isEmpty() || !onCoffeeBar() || grounds.getCount() >= grounds.getMaxStackSize()) {
+		ItemStack beans = items.get(BEAN_SLOT);
+		if (beans.isEmpty() || !onCoffeeBar()) {
 			return false;
 		}
+		int shots = 0;
 		for (int i = 0; i < BEAN_SLOT; i++) {
 			if (Mugs.isEmptyMug(items.get(i))) {
-				return true;
+				shots++;
 			}
 		}
-		return false;
+		shots = Math.min(shots, beans.getCount());
+		// Waits until the knock box has room for this brew's grounds (cocoa leaves none).
+		ItemStack grounds = items.get(GROUNDS_SLOT);
+		return shots > 0 && (beans.is(EspressoContent.COCOA_MIX) || grounds.getCount() + shots <= EspressoContent.COFFEE_GROUNDS.getDefaultMaxStackSize());
 	}
 
 	private void brew(ServerLevel level, BlockPos pos, BlockState state) {

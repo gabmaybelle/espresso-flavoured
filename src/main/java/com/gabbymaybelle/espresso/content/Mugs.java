@@ -44,8 +44,8 @@ public final class Mugs {
 	public static ItemStack fill(ItemStack mug, Item drink, boolean decaf) {
 		ItemStack filled = new ItemStack(drink);
 		if (decaf) {
+			// CoffeeItem swaps the caffeine for Cozy when it's drunk.
 			filled.set(EspressoContent.DECAF, true);
-			filled.set(DataComponents.CONSUMABLE, EspressoContent.decafConsumable());
 		}
 		DyedItemColor color = mug.get(DataComponents.DYED_COLOR);
 		if (color != null) {

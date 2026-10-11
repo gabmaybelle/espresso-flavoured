@@ -161,7 +161,7 @@ public final class EspressoContent {
 			props -> new BlockItem(COFFEE_BUSH, props), new Item.Properties().useItemDescriptionPrefix());
 	public static final Item ESPRESSO_MACHINE_ITEM = registerItem("espresso_machine",
 			props -> new BlockItem(ESPRESSO_MACHINE, props), new Item.Properties().useBlockDescriptionPrefix());
-	/** Loyalty card stamps, a bitmask over {@link LoyaltyCard#STAMPS}. */
+	/** The retired loyalty card's stamps; still registered so old cards load. */
 	public static final DataComponentType<Integer> STAMPS = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("stamps"),
 			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
 	/** Marks a drink as decaf; it carries from Espresso to Latte and on, like the mug's colour. */
@@ -186,11 +186,14 @@ public final class EspressoContent {
 	public static final Item BARISTAS_RESERVE = registerItem("baristas_reserve", Item::new, new Item.Properties().rarity(Rarity.RARE));
 	public static final Item UNFIRED_MUG = registerItem("unfired_mug", Item::new, new Item.Properties());
 	public static final Item MUG = registerItem("mug", Item::new, new Item.Properties().stacksTo(16));
-	/** The loyalty card's reward: can't be dyed, shines, and coffee drunk from it lasts longer. */
+	/** Bought with Bean Coins: can't be dyed, shines, and coffee drunk from it lasts longer. */
 	public static final Item GOLDEN_MUG = registerItem("golden_mug", Item::new, new Item.Properties().stacksTo(1)
 			.component(DataComponents.DYED_COLOR, new DyedItemColor(Mugs.GOLD & 0xFFFFFF))
 			.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
-	public static final Item LOYALTY_CARD = registerItem("loyalty_card", LoyaltyCard::new, new Item.Properties().stacksTo(1));
+	/** One for each Espresso advancement; a master barista takes them (see BeanCoin). */
+	public static final Item BEAN_COIN = registerItem("bean_coin", BeanCoin::new, new Item.Properties().rarity(Rarity.UNCOMMON));
+	/** Retired (Bean Coins took over); kept so old cards still load, and taken out of inventories. */
+	public static final Item LOYALTY_CARD = registerItem("loyalty_card", Item::new, new Item.Properties().stacksTo(1));
 	public static final Item VANILLA_SYRUP = registerItem("vanilla_syrup", Item::new, new Item.Properties());
 	public static final Item ROASTED_COFFEE_BEANS = registerItem("roasted_coffee_beans", Item::new, new Item.Properties());
 	public static final Item ESPRESSO = registerItem("espresso", CoffeeItem::new, drink(1800, null));
@@ -267,7 +270,7 @@ public final class EspressoContent {
 	/** Loads the class (registering everything above) and hooks up creative tabs and worldgen. */
 	public static void register() {
 		Mugs.register();
-		LoyaltyCard.register();
+		BeanCoin.register();
 		Seat.register();
 		CoffeeLoot.register();
 		VillageCafe.register();
@@ -299,7 +302,7 @@ public final class EspressoContent {
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {
 			output.accept(MUG);
 			output.accept(GOLDEN_MUG);
-			output.accept(LOYALTY_CARD);
+			output.accept(BEAN_COIN);
 			output.accept(ROASTED_COFFEE_BEANS);
 			output.accept(ESPRESSO);
 			output.accept(LATTE);

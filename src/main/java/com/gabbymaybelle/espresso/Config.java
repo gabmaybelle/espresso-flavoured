@@ -10,8 +10,8 @@ import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * Settings in {@code config/espresso.properties}. Missing keys get their defaults and
- * the file is rewritten with every key, so players can see what exists. Read once at
- * startup; changes need a restart.
+ * the file is rewritten with every key, so players can see what exists. Read at startup;
+ * the settings screen changes them as you play (only longerDays needs a restart).
  */
 public final class Config {
 	private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");

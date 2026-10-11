@@ -55,12 +55,18 @@ public final class Wellbeing {
 	/** For testing only: {@code -Despresso.testDayTicks=600} makes a "day" 30 seconds long. */
 	private static final int TEST_DAY = Integer.getInteger("espresso.testDayTicks", 0);
 
+	/**
+	 * Whether the longer days are on in this game. The setting only changes the day length after a
+	 * restart, so it's read once here (at startup) rather than each time.
+	 */
+	private static boolean longerDays;
+
 	/** One in-game day: 36000 ticks with longer days, 24000 without. */
 	private static int oneDay() {
 		if (TEST_DAY > 0) {
 			return TEST_DAY;
 		}
-		return Config.longerDays ? 36000 : 24000;
+		return longerDays ? 36000 : 24000;
 	}
 
 	private static int twoDays() {
@@ -79,6 +85,7 @@ public final class Wellbeing {
 	}
 
 	static void register() {
+		longerDays = Config.longerDays;
 		if (TEST_DAY > 0) {
 			Espresso.LOGGER.warn("Espresso Flavoured: test mode, wellbeing days are {} ticks long", TEST_DAY);
 		}

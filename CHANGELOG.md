@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Bean Coins
+- **Bean Coins** replace the loyalty card. Every Espresso advancement pays you one, straight into your inventory. A master barista takes them: eight for the **Golden Mug**, one for three Barista's Reserve, two for sixteen bottles o' enchanting. A master always offers these three.
+- Advancements you earned before this update pay out when you next play, and old loyalty cards disappear from your inventory (their stamps are paid for in coins).
+- The wandering trader no longer trades the Golden Mug.
+
+### Fixes
+- Breaking a ripe coffee bush no longer drops its cherries twice.
+- Decaf drinks keep their extras: a decaf pumpkin spice latte still makes you Warm, decaf iced coffee still gives Fire Resistance, and so on. Only the caffeine is swapped for Cozy.
+- The Golden Mug now stretches Cozy too, and hot chocolate calms a caffeine crash like decaf does.
+- Breaking a canister or glass jar in creative mode spills what was inside instead of deleting it.
+- The espresso machine waits until its knock box has room for all of a brew's grounds instead of losing some, and cocoa (which leaves no grounds) brews even when the box is full.
+- Turning Longer Days on or off no longer changes the Drowsy timer until the restart that changes the days.
+
 ## 0.2.0: The Café
 
 ### Coffee

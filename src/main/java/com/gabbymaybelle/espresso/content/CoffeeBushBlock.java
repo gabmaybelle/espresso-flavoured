@@ -2,10 +2,8 @@ package com.gabbymaybelle.espresso.content;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +21,6 @@ import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -110,14 +107,6 @@ public class CoffeeBushBlock extends DoublePlantBlock implements BonemealableBlo
 	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
 			BlockPos neighborPos, BlockState neighborState, RandomSource random) {
 		return state.canSurvive(level, pos) ? state : Blocks.AIR.defaultBlockState();
-	}
-
-	/** Each half drops its own loot (only the bottom has any), since a young bush has no top. */
-	@Override
-	public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack tool) {
-		player.awardStat(Stats.BLOCK_MINED.get(this));
-		player.causeFoodExhaustion(0.005F);
-		dropResources(state, level, pos, blockEntity, player, tool);
 	}
 
 	// ------------------------------------------------------------ growing

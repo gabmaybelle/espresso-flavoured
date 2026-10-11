@@ -23,11 +23,16 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 /**
- * A coffee drink. Drunk from the Golden Mug, its pick-me-up lasts half as long again. A decaf
- * one gives Cozy instead, and calms a caffeine crash.
+ * A coffee drink. Drunk from the Golden Mug, its pick-me-up (or Cozy) lasts half as long again.
+ * A decaf one gives Cozy in place of the caffeine but keeps the drink's own extras (a decaf
+ * pumpkin spice latte still makes you Warm), and anything Cozy calms a caffeine crash.
  */
 public class CoffeeItem extends Item {
-	private static final List<Holder<MobEffect>> PERKS = List.of(MobEffects.SPEED, MobEffects.HASTE, EspressoContent.CAFFEINATED);
+	/** The caffeine: what decaf leaves out. */
+	private static final List<Holder<MobEffect>> CAFFEINE = List.of(MobEffects.SPEED, MobEffects.HASTE, EspressoContent.CAFFEINATED);
+	/** What the Golden Mug stretches. */
+	private static final List<Holder<MobEffect>> PERKS = List.of(MobEffects.SPEED, MobEffects.HASTE, EspressoContent.CAFFEINATED, EspressoContent.COZY);
+	private static final int COZY_TICKS = 3600;
 
 	public CoffeeItem(Properties properties) {
 		super(properties);
@@ -36,10 +41,14 @@ public class CoffeeItem extends Item {
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
 		boolean golden = Mugs.isGolden(stack);
-		boolean decaf = stack.getOrDefault(EspressoContent.DECAF, false);
+		if (stack.getOrDefault(EspressoContent.DECAF, false)) {
+			// Worked out from this drink's own effects, so mixing a decaf espresso into a latte
+			// doesn't carry the espresso's effects along.
+			stack.set(DataComponents.CONSUMABLE, decaf(components().get(DataComponents.CONSUMABLE)));
+		}
 		List<MobEffectInstance> perks = drinkPerks(stack);
 		ItemStack result = super.finishUsingItem(stack, level, entity);
-		if (decaf && entity instanceof ServerPlayer player) {
+		if (entity instanceof ServerPlayer player && perks.stream().anyMatch(perk -> perk.getEffect() == EspressoContent.COZY)) {
 			Wellbeing.calm(player);
 		}
 		if (golden && !level.isClientSide()) {
@@ -52,7 +61,24 @@ public class CoffeeItem extends Item {
 		return result;
 	}
 
-	/** This drink's Speed, Haste and Caffeinated, as it would give them. */
+	/** A drink's effects with the caffeine swapped for Cozy. */
+	private static Consumable decaf(Consumable drink) {
+		List<ConsumeEffect> effects = new ArrayList<>();
+		for (ConsumeEffect effect : drink.onConsumeEffects()) {
+			if (effect instanceof ApplyStatusEffectsConsumeEffect apply) {
+				List<MobEffectInstance> kept = apply.effects().stream().filter(e -> !CAFFEINE.contains(e.getEffect())).toList();
+				if (!kept.isEmpty()) {
+					effects.add(new ApplyStatusEffectsConsumeEffect(kept, apply.probability()));
+				}
+			} else {
+				effects.add(effect);
+			}
+		}
+		effects.add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(EspressoContent.COZY, COZY_TICKS, 0)));
+		return new Consumable(drink.consumeSeconds(), drink.animation(), drink.sound(), drink.hasConsumeParticles(), effects);
+	}
+
+	/** This drink's Speed, Haste, Caffeinated and Cozy, as it would give them. */
 	private static List<MobEffectInstance> drinkPerks(ItemStack stack) {
 		List<MobEffectInstance> perks = new ArrayList<>();
 		Consumable consumable = stack.get(DataComponents.CONSUMABLE);
