@@ -19,7 +19,7 @@
 - **Coffee in chests.** Village houses, jungle temples and shipwrecks sometimes hold coffee cherries or roasted beans, and a jungle temple might even have the Barista's Reserve.
 - **Taller coffee bushes.** A planted cherry starts as a short seedling and grows into a two-block shrub, like a lilac, whose cherries turn yellow and then red. Pick from either half; wild bushes are already tall. Bushes planted before this update grow their top half on their own.
 - **Rest spots.** Now and then in meadows, plains and forests: a bench with a lamp post, under a shady tree or looking over a little pond.
-- **By the water.** More firefly bushes along the banks, and lily pads on rivers and ponds.
+- **Lusher rivers.** Thicker seagrass, with kelp in the deeper stretches; tall grass, ferns, bushes and drifts of cornflowers, bluets and daisies on the banks; more firefly bushes and lily pads; and at the waterline a little moss, clay, mud on low earthy banks, and the odd mossy boulder. It all keeps to the water's edge, so clearing land is no harder.
 - **Fair trade.** The wandering trader always sells coffee cherries to plant and buys your roasted beans at a fair price. It also sells a few rare decorations.
 
 ### Looking after yourself

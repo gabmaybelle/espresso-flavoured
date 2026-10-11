@@ -466,5 +466,7 @@ fs.writeFileSync(path.join(__dirname, '..', 'src', 'main', 'resources', 'espress
 require('./generate-cafe.js');
 // Rest spots in the wild, and waterside plants.
 require('./generate-rest-spots.js');
+// Lusher rivers.
+require('./generate-rivers.js');
 
 console.log('espresso_data written to', ROOT);

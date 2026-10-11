@@ -289,6 +289,22 @@ public final class EspressoContent {
 				ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_firefly_bush")));
 		BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
 				ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_lily_pads")));
+		// Lusher rivers (not frozen ones): seagrass, kelp and clay in the water; plants, flowers, moss, mud
+		// and the odd mossy boulder at the waterline. A river's banks are usually in the neighbouring biome,
+		// so the bank features also go to the temperate land around (they only grow right by water).
+		// See tools/generate-rivers.js.
+		Predicate<BiomeSelectionContext> rivers = BiomeSelectors.tag(BiomeTags.IS_RIVER)
+				.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate())
+				.and(context -> !context.getBiomeKey().equals(Biomes.FROZEN_RIVER));
+		for (String feature : List.of("river_seagrass", "river_kelp", "river_clay")) {
+			BiomeModifications.addFeature(rivers, GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
+		}
+		for (String feature : List.of("waterline_moss", "waterline_mud", "waterline_rock")) {
+			BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.LOCAL_MODIFICATIONS, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
+		}
+		for (String feature : List.of("river_bank_plants", "river_bank_flowers")) {
+			BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
+		}
 	}
 
 	/** MobEffect's constructor is protected. */
