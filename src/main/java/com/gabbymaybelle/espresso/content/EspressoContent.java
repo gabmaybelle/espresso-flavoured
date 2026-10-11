@@ -1,5 +1,7 @@
 package com.gabbymaybelle.espresso.content;
 
+import com.gabbymaybelle.espresso.Config;
+
 import com.gabbymaybelle.espresso.Espresso;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
@@ -280,30 +282,33 @@ public final class EspressoContent {
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.IS_JUNGLE).or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA)),
 				GenerationStep.Decoration.VEGETAL_DECORATION,
 				ResourceKey.create(Registries.PLACED_FEATURE, id("patch_coffee_bush")));
-		// By the water: a few more firefly bushes in temperate biomes, and lily pads on rivers and ponds.
-		Predicate<BiomeSelectionContext> temperate = BiomeSelectors.tag(BiomeTags.IS_FOREST).or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
-				.or(BiomeSelectors.tag(BiomeTags.IS_RIVER)).or(BiomeSelectors.tag(ConventionalBiomeTags.IS_PLAINS))
-				.or(BiomeSelectors.includeByKey(Biomes.MEADOW, Biomes.CHERRY_GROVE))
-				.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate());
-		BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
-				ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_firefly_bush")));
-		BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
-				ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_lily_pads")));
-		// Lusher rivers (not frozen ones): seagrass, kelp and clay in the water; plants, flowers, moss, mud
-		// and the odd mossy boulder at the waterline. A river's banks are usually in the neighbouring biome,
-		// so the bank features also go to the temperate land around (they only grow right by water).
-		// See tools/generate-rivers.js.
-		Predicate<BiomeSelectionContext> rivers = BiomeSelectors.tag(BiomeTags.IS_RIVER)
-				.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate())
-				.and(context -> !context.getBiomeKey().equals(Biomes.FROZEN_RIVER));
-		for (String feature : List.of("river_seagrass", "river_kelp", "river_clay")) {
-			BiomeModifications.addFeature(rivers, GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
-		}
-		for (String feature : List.of("waterline_moss", "waterline_mud", "waterline_rock")) {
-			BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.LOCAL_MODIFICATIONS, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
-		}
-		for (String feature : List.of("river_bank_plants", "river_bank_flowers")) {
-			BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
+		// Lusher rivers and ponds, unless turned off (they are by default alongside Terralith).
+		if (Config.lusherRivers) {
+			// By the water: a few more firefly bushes in temperate biomes, and lily pads on rivers and ponds.
+			Predicate<BiomeSelectionContext> temperate = BiomeSelectors.tag(BiomeTags.IS_FOREST).or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
+					.or(BiomeSelectors.tag(BiomeTags.IS_RIVER)).or(BiomeSelectors.tag(ConventionalBiomeTags.IS_PLAINS))
+					.or(BiomeSelectors.includeByKey(Biomes.MEADOW, Biomes.CHERRY_GROVE))
+					.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate());
+			BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
+					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_firefly_bush")));
+			BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
+					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_lily_pads")));
+			// Lusher rivers (not frozen ones): seagrass, kelp and clay in the water; plants, flowers, moss, mud
+			// and the odd mossy boulder at the waterline. A river's banks are usually in the neighbouring biome,
+			// so the bank features also go to the temperate land around (they only grow right by water).
+			// See tools/generate-rivers.js.
+			Predicate<BiomeSelectionContext> rivers = BiomeSelectors.tag(BiomeTags.IS_RIVER)
+					.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate())
+					.and(context -> !context.getBiomeKey().equals(Biomes.FROZEN_RIVER));
+			for (String feature : List.of("river_seagrass", "river_kelp", "river_clay")) {
+				BiomeModifications.addFeature(rivers, GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
+			}
+			for (String feature : List.of("waterline_moss", "waterline_mud", "waterline_rock")) {
+				BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.LOCAL_MODIFICATIONS, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
+			}
+			for (String feature : List.of("river_bank_plants", "river_bank_flowers")) {
+				BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
+			}
 		}
 	}
 

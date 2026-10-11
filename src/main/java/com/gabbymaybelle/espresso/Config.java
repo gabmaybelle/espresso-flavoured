@@ -51,6 +51,12 @@ public final class Config {
 	public static boolean coffeeBarRequired = true;
 	/** How tall sugar cane grows (vanilla: 3). */
 	public static int sugarCaneHeight = 5;
+	/**
+	 * Lusher rivers and ponds in new land: seagrass and kelp, plants and flowers on the banks, moss and mud
+	 * at the waterline, more firefly bushes and lily pads. Off by default alongside Terralith, which dresses
+	 * the world itself. Read at startup.
+	 */
+	public static boolean lusherRivers = !FabricLoader.getInstance().isModLoaded("terralith");
 
 	private Config() {
 	}
@@ -78,6 +84,7 @@ public final class Config {
 		caffeineCrash = bool(props, "caffeineCrash", caffeineCrash);
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
 		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
+		lusherRivers = bool(props, "lusherRivers", lusherRivers);
 		save();
 	}
 
@@ -98,6 +105,7 @@ public final class Config {
 		props.setProperty("caffeineCrash", Boolean.toString(caffeineCrash));
 		props.setProperty("coffeeBarRequired", Boolean.toString(coffeeBarRequired));
 		props.setProperty("sugarCaneHeight", Integer.toString(sugarCaneHeight));
+		props.setProperty("lusherRivers", Boolean.toString(lusherRivers));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
@@ -107,6 +115,7 @@ public final class Config {
 					+ "blockMerchant: the wandering trader also sells building blocks\n"
 					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
+					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land (off by default with Terralith)\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"

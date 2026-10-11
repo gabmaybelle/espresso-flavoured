@@ -16,6 +16,34 @@
     {
       "id": "#c:is_forest",
       "required": false
+    },
+    {
+      "id": "terralith:shrubland",
+      "required": false
+    },
+    {
+      "id": "terralith:lush_valley",
+      "required": false
+    },
+    {
+      "id": "terralith:valley_clearing",
+      "required": false
+    },
+    {
+      "id": "terralith:blooming_plateau",
+      "required": false
+    },
+    {
+      "id": "terralith:shield_clearing",
+      "required": false
+    },
+    {
+      "id": "terralith:shield",
+      "required": false
+    },
+    {
+      "id": "terralith:forested_highlands",
+      "required": false
     }
   ]
 }

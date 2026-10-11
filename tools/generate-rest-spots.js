@@ -112,6 +112,9 @@ out('espresso/tags/worldgen/biome/has_structure/rest_spot.json', { values: [
 	'minecraft:plains', 'minecraft:sunflower_plains', 'minecraft:meadow', 'minecraft:forest', 'minecraft:flower_forest',
 	'minecraft:birch_forest', 'minecraft:old_growth_birch_forest', 'minecraft:cherry_grove', 'minecraft:taiga',
 	{ id: '#c:is_plains', required: false }, { id: '#c:is_forest', required: false },
+	// Terralith's gentle land that isn't tagged as plains or forest.
+	...['shrubland', 'lush_valley', 'valley_clearing', 'blooming_plateau', 'shield_clearing', 'shield', 'forested_highlands']
+		.map(b => ({ id: `terralith:${b}`, required: false })),
 ] });
 
 // Waterside plants. Firefly bushes beside water (on top of vanilla's few), and lily pads.
