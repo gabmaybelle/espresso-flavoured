@@ -7,6 +7,10 @@
 - Advancements you earned before this update pay out when you next play, and old loyalty cards disappear from your inventory (their stamps are paid for in coins).
 - The wandering trader no longer trades the Golden Mug.
 
+### Baristas
+- Baristas bake and decorate now. They buy wheat, eggs and sugar cane, and sell bread, cookies, pumpkin pie, cake, lanterns, candles, flower pots and paintings. Each barista still offers two trades per level, picked from a bigger mix, so no two cafés are quite the same.
+- A master barista sells a music disc for the café's corner: Creator (Music Box).
+
 ### Fixes
 - Breaking a ripe coffee bush no longer drops its cherries twice.
 - Decaf drinks keep their extras: a decaf pumpkin spice latte still makes you Warm, decaf iced coffee still gives Fire Resistance, and so on. Only the caffeine is swapped for Cozy.

@@ -270,6 +270,10 @@ const BARISTA_TRADES = {
 		['emerald_cherries', [E, 1], ['espresso:coffee_cherries', 3], 12, 1],
 		['emerald_mug', [E, 1], ['espresso:mug', 2], 12, 1],
 		['emerald_biscotti', [E, 1], ['espresso:biscotti', 6], 12, 1],
+		// The café bakes too: it buys flour and eggs, and sells bread.
+		['wheat_emerald', ['minecraft:wheat', 20], [E, 1], 16, 2],
+		['egg_emerald', ['minecraft:egg', 12], [E, 1], 16, 2],
+		['emerald_bread', [E, 1], ['minecraft:bread', 6], 16, 1],
 	],
 	2: [
 		['milk_emerald', ['minecraft:milk_bucket', 1], [E, 1], 12, 10],
@@ -278,20 +282,30 @@ const BARISTA_TRADES = {
 		['emerald_canister', [E, 2], ['espresso:canister', 1], 12, 5],
 		['emerald_croissant', [E, 1], ['espresso:croissant', 3], 12, 5],
 		['emerald_muffin', [E, 1], ['espresso:muffin', 2], 12, 5],
+		['emerald_cookie', [E, 1], ['minecraft:cookie', 8], 16, 5],
+		['emerald_lantern', [E, 1], ['minecraft:lantern', 1], 12, 5],
 	],
 	3: [
 		['honey_emerald', ['minecraft:honey_bottle', 4], [E, 1], 12, 20],
 		['emerald_latte', [E, 3], ['espresso:latte', 1], 12, 10],
 		['emerald_mocha', [E, 4], ['espresso:mocha_latte', 1], 12, 10],
 		['emerald_glass_jar', [E, 2], ['espresso:glass_jar', 1], 12, 10],
+		['sugar_cane_emerald', ['minecraft:sugar_cane', 24], [E, 1], 16, 20],
+		['emerald_pumpkin_pie', [E, 1], ['minecraft:pumpkin_pie', 4], 12, 10],
+		['emerald_candle', [E, 1], ['minecraft:candle', 4], 12, 10],
+		['emerald_flower_pot', [E, 1], ['minecraft:flower_pot', 3], 12, 10],
 	],
 	4: [
 		['glow_berries_emerald', ['minecraft:glow_berries', 12], [E, 1], 12, 30],
 		['emerald_vanilla_latte', [E, 5], ['espresso:vanilla_latte', 1], 12, 15],
 		['emerald_name_tag', [E, 20], ['minecraft:name_tag', 1], 6, 15],
 		['emerald_experience_bottle', [E, 3], ['minecraft:experience_bottle', 1], 12, 15],
+		['emerald_cake', [E, 3], ['minecraft:cake', 1], 12, 15],
+		['emerald_painting', [E, 1], ['minecraft:painting', 3], 12, 15],
 	],
 	5: [
+		// Something for the café's corner: the music box version of Creator.
+		['emerald_music_disc', [E, 12], ['minecraft:music_disc_creator_music_box', 1], 2, 30],
 		['emerald_baristas_reserve', [E, 8], ['espresso:baristas_reserve', 1], 6, 30],
 		['emerald_golden_apple', [E, 10], ['minecraft:golden_apple', 1], 4, 30],
 		// Bean Coins (one for each Espresso advancement) buy the Golden Mug and a couple of treats.
