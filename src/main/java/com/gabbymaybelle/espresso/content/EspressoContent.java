@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
+import java.util.function.Predicate;
+import net.minecraft.world.level.biome.Biomes;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper;
@@ -276,6 +280,15 @@ public final class EspressoContent {
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.IS_JUNGLE).or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA)),
 				GenerationStep.Decoration.VEGETAL_DECORATION,
 				ResourceKey.create(Registries.PLACED_FEATURE, id("patch_coffee_bush")));
+		// By the water: a few more firefly bushes in temperate biomes, and lily pads on rivers and ponds.
+		Predicate<BiomeSelectionContext> temperate = BiomeSelectors.tag(BiomeTags.IS_FOREST).or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
+				.or(BiomeSelectors.tag(BiomeTags.IS_RIVER)).or(BiomeSelectors.tag(ConventionalBiomeTags.IS_PLAINS))
+				.or(BiomeSelectors.includeByKey(Biomes.MEADOW, Biomes.CHERRY_GROVE))
+				.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate());
+		BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
+				ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_firefly_bush")));
+		BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
+				ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_lily_pads")));
 	}
 
 	/** MobEffect's constructor is protected. */

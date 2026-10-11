@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "espresso:rest_spot",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 18,
+    "separation": 6,
+    "salt": 20261010
+  }
+}

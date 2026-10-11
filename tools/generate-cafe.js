@@ -2,9 +2,9 @@
 // the espresso_data pack. The mod adds them to each village's houses pool (see VillageCafe.java).
 // Run by generate-data.js (which clears the pack first); can also be run on its own.
 const fs = require('fs'), path = require('path');
-const { write, list, T } = require('./nbt.js');
+const { T } = require('./nbt.js');
+const { Structure, stairs } = require('./structure.js');
 const ROOT = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data', 'data', 'espresso', 'structure', 'village');
-const DATA_VERSION = 5023; // Minecraft 26.3
 
 // Each style: corner posts, walls, floor, roof stairs and planks, the coffee bar's wood, door, and a table.
 const STYLES = {
@@ -20,18 +20,9 @@ const STYLES = {
 		roof: 'minecraft:spruce', roofBlock: 'minecraft:spruce_planks', wood: 'spruce', door: 'minecraft:spruce_door', fence: 'minecraft:spruce_fence', plate: 'minecraft:spruce_pressure_plate', chair: 'minecraft:spruce_stairs', plant: 'minecraft:potted_spruce_sapling' },
 };
 
-// 'minecraft:oak_stairs[facing=east,half=bottom]' -> { id, properties }
-function parse(state) {
-	const m = /^([^\[]+)(?:\[(.*)\])?$/.exec(state);
-	const properties = m[2] ? Object.fromEntries(m[2].split(',').map(kv => kv.split('='))) : undefined;
-	return properties ? { id: m[1], properties } : { id: m[1] };
-}
-const stairs = (base, facing, shape = 'straight') => `${base}_stairs[facing=${facing},half=bottom,shape=${shape},waterlogged=false]`;
-
 function build(biome, s) {
-	const SIZE = [9, 8, 9];
-	const blocks = new Map(); // "x,y,z" -> { state, nbt }
-	const set = (x, y, z, state, nbt) => blocks.set(`${x},${y},${z}`, { state, nbt });
+	const cafe = new Structure([9, 8, 9]);
+	const set = cafe.set.bind(cafe);
 
 	// Everything inside the footprint starts as air, so terrain is cleared; the edges stay void.
 	for (let x = 1; x <= 7; x++) for (let y = 1; y <= 3; y++) for (let z = 1; z <= 7; z++) set(x, y, z, 'minecraft:air');
@@ -106,24 +97,7 @@ function build(biome, s) {
 		}
 	}
 
-	// Pack into a structure file.
-	const palette = [], index = new Map();
-	const blockList = [];
-	for (const [key, { state, nbt }] of blocks) {
-		if (!index.has(state)) { index.set(state, palette.length); palette.push(state); }
-		const pos = key.split(',').map(Number);
-		const entry = { pos: list(T.INT, pos), state: index.get(state) };
-		if (nbt) entry.nbt = nbt;
-		blockList.push(entry);
-	}
-	const paletteTag = palette.map(p => {
-		const { id, properties } = parse(p);
-		return properties ? { id, properties } : { id };
-	});
-	return write({
-		size: list(T.INT, SIZE), entities: list(T.COMPOUND, []), blocks: list(T.COMPOUND, blockList),
-		palette: list(T.COMPOUND, paletteTag), DataVersion: DATA_VERSION,
-	});
+	return cafe.toNbt();
 }
 
 for (const [biome, style] of Object.entries(STYLES)) {

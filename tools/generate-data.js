@@ -464,5 +464,7 @@ fs.writeFileSync(path.join(__dirname, '..', 'src', 'main', 'resources', 'espress
 
 // The village café buildings.
 require('./generate-cafe.js');
+// Rest spots in the wild, and waterside plants.
+require('./generate-rest-spots.js');
 
 console.log('espresso_data written to', ROOT);
