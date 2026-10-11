@@ -232,6 +232,8 @@ public final class EspressoContent {
 	public static void register() {
 		Mugs.register();
 		LoyaltyCard.register();
+		CoffeeLoot.register();
+		VillageCafe.register();
 		ItemStorage.SIDED.registerForBlockEntity((canister, side) -> canister.storage, CANISTER_ENTITY);
 		// A hopper under a coffee bar takes finished drinks out of the espresso machine on top.
 		ItemStorage.SIDED.registerForBlocks((level, pos, state, entity, side) ->

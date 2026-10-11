@@ -434,4 +434,35 @@ out('data/espresso/advancement/starter_kit.json', {
 	rewards: { function: 'espresso:starter_kit' },
 });
 
+// ---------------------------------------------------------------- coffee out in the world
+// A loot entry: name, weight, and a count range.
+const loot = (name, weight, min = 1, max = min) => ({
+	type: 'minecraft:item', name, weight,
+	...(max > 1 ? { modifier: { type: 'minecraft:set_count', count: { type: 'minecraft:uniform', min, max } } } : {}),
+});
+const nothing = (weight) => ({ type: 'minecraft:empty', weight });
+// The village café's chest: café supplies.
+out('data/espresso/loot_table/chests/village_cafe.json', {
+	type: 'minecraft:chest',
+	pools: [{ rolls: { type: 'minecraft:uniform', min: 3, max: 6 }, entries: [
+		loot('espresso:coffee_cherries', 10, 2, 6), loot('espresso:roasted_coffee_beans', 8, 2, 5), loot('minecraft:sugar', 6, 2, 5),
+		loot('espresso:mug', 4), loot('espresso:decaf_coffee_beans', 3, 1, 3), loot('espresso:cinnamon', 3, 1, 3), loot('espresso:cocoa_mix', 3, 1, 2),
+		loot('espresso:vanilla_syrup', 2), loot('minecraft:milk_bucket', 2), loot('minecraft:emerald', 2, 1, 2),
+	] }],
+	random_sequence: 'espresso:chests/village_cafe',
+});
+// Pools added to vanilla chests (by CoffeeLoot.java), so coffee turns up while exploring.
+// Kept outside the data pack: they're merged into the vanilla tables, not loaded as tables.
+const villageCoffee = [{ rolls: 1, entries: [loot('espresso:coffee_cherries', 2, 1, 4), loot('espresso:roasted_coffee_beans', 1, 1, 3), nothing(4)] }];
+const inject = {
+	...Object.fromEntries(['plains', 'desert', 'savanna', 'taiga', 'snowy'].map(b => [`minecraft:chests/village/village_${b}_house`, villageCoffee])),
+	'minecraft:chests/jungle_temple': [{ rolls: 1, entries: [loot('espresso:coffee_cherries', 4, 3, 8), loot('espresso:roasted_coffee_beans', 2, 2, 5),
+		loot('espresso:baristas_reserve', 1), nothing(3)] }],
+	'minecraft:chests/shipwreck_supply': [{ rolls: 1, entries: [loot('espresso:roasted_coffee_beans', 2, 2, 6), loot('espresso:coffee_cherries', 1, 2, 5), nothing(4)] }],
+};
+fs.writeFileSync(path.join(__dirname, '..', 'src', 'main', 'resources', 'espresso', 'loot_inject.json'), JSON.stringify(inject, null, 2) + '\n');
+
+// The village café buildings.
+require('./generate-cafe.js');
+
 console.log('espresso_data written to', ROOT);

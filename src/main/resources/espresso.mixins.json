@@ -15,6 +15,7 @@
 		"NaturalSpawnerMixin",
 		"PhantomSpawnerMixin",
 		"ServerChunkCacheMixin",
+		"StructureTemplatePoolAccessor",
 		"SugarCaneBlockMixin",
 		"WanderingTraderMixin",
 		"WarmMixin"

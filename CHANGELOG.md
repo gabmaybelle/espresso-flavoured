@@ -15,6 +15,8 @@
 - **Barista villagers** use the espresso machine as their workstation. They trade beans, mugs and drinks, and a master sells name tags, bottles o' enchanting, golden apples and the Barista's Reserve.
 - **Loyalty card.** It comes with the Barista advancement and collects a stamp for each café milestone, wherever it is: in a chest, an ender chest or a bundle. Swap a full card with the wandering trader for the **Golden Mug** (coffee lasts longer from it).
 - **Canisters and glass jars.** They hold four stacks of anything that stacks and show what's inside. Dye the canisters to match your mugs. Fill a jar with honey bottles for a honey jar.
+- **Village cafés.** Villages of every style can have a little café, with an espresso machine on the counter for a barista to claim and a chest of café supplies.
+- **Coffee in chests.** Village houses, jungle temples and shipwrecks sometimes hold coffee cherries or roasted beans, and a jungle temple might even have the Barista's Reserve.
 - **Fair trade.** The wandering trader always sells coffee cherries to plant and buys your roasted beans at a fair price. It also sells a few rare decorations.
 
 ### Looking after yourself
