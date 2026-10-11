@@ -7,7 +7,6 @@ import java.util.UUID;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
@@ -32,7 +31,6 @@ public final class HomeBeds {
 			builder -> builder
 					.persistent(Codec.unboundedMap(UUIDUtil.STRING_CODEC, GlobalPos.CODEC))
 					.initializer(HashMap::new));
-	private static final Identifier SAFE_HAVEN = Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "guide/safe_haven");
 
 	private HomeBeds() {
 	}
@@ -58,10 +56,7 @@ public final class HomeBeds {
 		level.getServer().overworld().setAttached(HOMES, homes);
 		player.sendOverlayMessage(Component.literal("This bed is now your home. Monsters won't spawn within "
 				+ Config.safeHomeRadius + " blocks of it."));
-		AdvancementHolder advancement = level.getServer().getAdvancements().get(SAFE_HAVEN);
-		if (advancement != null) {
-			player.getAdvancements().award(advancement, "home");
-		}
+		EspressoAdvancements.award(player, "guide/safe_haven", "home");
 	}
 
 	/** Homes are stored on the overworld so every dimension shares one list. */

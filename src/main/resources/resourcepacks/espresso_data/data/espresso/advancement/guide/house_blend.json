@@ -10,6 +10,9 @@
           "predicate": {
             "minecraft:entity_type": "minecraft:wandering_trader"
           }
+        },
+        "item": {
+          "items": "#espresso:block_merchant"
         }
       }
     }
@@ -19,7 +22,7 @@
       "id": "minecraft:terracotta"
     },
     "title": "House Blend",
-    "description": "Buy building blocks from the wandering trader"
+    "description": "Buy building blocks or decorations from the wandering trader"
   },
   "requirements": [
     [

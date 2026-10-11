@@ -11,6 +11,14 @@
 - Baristas bake and decorate now. They buy wheat, eggs and sugar cane, and sell bread, cookies, pumpkin pie, cake, lanterns, candles, flower pots and paintings. Each barista still offers two trades per level, picked from a bigger mix, so no two cafés are quite the same.
 - A master barista sells a music disc for the café's corner: Creator (Music Box).
 
+### Advancements
+- Six new ones, so there are now 20 Bean Coins to earn: **Take a Seat** (sit on a bench or chair), **Scenic Route** (stop at a rest spot in the wild), **Local Favourite** (find a village café and open its supply chest), **Counter Culture** (place a coffee bar), **Stocked Up** (put something in a canister or jar) and **Your Usual** (trade with a barista).
+- **House Blend** now needs a building block or decoration from the wandering trader, not just any trade.
+- **Fair Trade** now needs you to actually sell roasted beans; selling the trader a water bottle no longer counts.
+
+### Smaller things
+- Canisters and glass jars have their own sounds: a soft rustle as things go in and out, with a ceramic tink (or a glass clink) of the lid.
+
 ### Fixes
 - Breaking a ripe coffee bush no longer drops its cherries twice.
 - Decaf drinks keep their extras: a decaf pumpkin spice latte still makes you Warm, decaf iced coffee still gives Fire Resistance, and so on. Only the caffeine is swapped for Cozy.

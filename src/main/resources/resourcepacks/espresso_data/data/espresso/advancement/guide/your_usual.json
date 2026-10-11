@@ -1,0 +1,20 @@
+{
+  "parent": "espresso:guide/barista",
+  "criteria": {
+    "traded": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:emerald"
+    },
+    "title": "Your Usual",
+    "description": "Trade with a barista"
+  },
+  "requirements": [
+    [
+      "traded"
+    ]
+  ]
+}

@@ -1,5 +1,6 @@
 package com.gabbymaybelle.espresso.content;
 
+import com.gabbymaybelle.espresso.EspressoAdvancements;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -106,8 +109,22 @@ public class CanisterBlock extends HorizontalDirectionalBlock implements EntityB
 				stack.shrink((int) inserted);
 			}
 		}
-		level.playSound(null, pos, SoundEvents.DECORATED_POT_INSERT, SoundSource.BLOCKS, 1.0F, 1.1F);
+		if (player instanceof ServerPlayer serverPlayer) {
+			EspressoAdvancements.award(serverPlayer, "guide/stocked_up", "stocked");
+		}
+		playSounds(level, pos, SoundEvents.BUNDLE_INSERT);
 		return InteractionResult.SUCCESS;
+	}
+
+	/** A soft rustle of what goes in or comes out, and the lid: a ceramic tink (a glass clink for jars). */
+	private void playSounds(Level level, BlockPos pos, SoundEvent rustle) {
+		level.playSound(null, pos, rustle, SoundSource.BLOCKS, 0.8F, 0.9F + level.getRandom().nextFloat() * 0.2F);
+		level.playSound(null, pos, lidSound(), SoundSource.BLOCKS, 0.5F, 1.8F);
+	}
+
+	/** The lid touching the rim. */
+	protected SoundEvent lidSound() {
+		return SoundEvents.DECORATED_POT_HIT;
 	}
 
 	/** Takes a stack out, or one item when crouching. */
@@ -124,7 +141,7 @@ public class CanisterBlock extends HorizontalDirectionalBlock implements EntityB
 				transaction.commit();
 				Mugs.giveBack(player, InteractionHand.MAIN_HAND, variant.toStack((int) taken));
 			}
-			level.playSound(null, pos, SoundEvents.DECORATED_POT_HIT, SoundSource.BLOCKS, 1.0F, 1.2F);
+			playSounds(level, pos, SoundEvents.BUNDLE_REMOVE_ONE);
 		}
 		return InteractionResult.SUCCESS;
 	}

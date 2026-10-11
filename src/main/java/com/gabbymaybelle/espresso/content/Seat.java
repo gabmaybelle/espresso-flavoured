@@ -1,10 +1,12 @@
 package com.gabbymaybelle.espresso.content;
 
+import com.gabbymaybelle.espresso.EspressoAdvancements;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -53,7 +55,9 @@ public class Seat extends Entity {
 				seat.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5); // on the stair's seat
 				seat.setYRot(state.getValue(StairBlock.FACING).getOpposite().toYRot());
 				level.addFreshEntity(seat);
-				player.startRiding(seat);
+				if (player.startRiding(seat) && player instanceof ServerPlayer serverPlayer) {
+					EspressoAdvancements.award(serverPlayer, "guide/take_a_seat", "sat");
+				}
 			}
 			return InteractionResult.SUCCESS;
 		});

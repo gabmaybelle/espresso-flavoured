@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +39,6 @@ public final class Wellbeing {
 	/** Players who lay down while Cozy; they wake up Well Rested if they sleep the night through. */
 	private static final Set<UUID> COZY_SLEEPERS = new HashSet<>();
 	private static final int WELL_RESTED_TICKS = 6000;
-	private static final Identifier SWEET_DREAMS = Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "guide/sweet_dreams");
 	/** Ticks since the player last ate, counted while they're online. */
 	private static final AttachmentType<Integer> SINCE_MEAL = counter("time_since_meal");
 
@@ -103,10 +101,7 @@ public final class Wellbeing {
 		EntitySleepEvents.STOP_SLEEPING.register((entity, bed) -> {
 			if (entity instanceof ServerPlayer player && COZY_SLEEPERS.remove(player.getUUID()) && player.isSleepingLongEnough()) {
 				player.addEffect(new MobEffectInstance(EspressoContent.WELL_RESTED, WELL_RESTED_TICKS, 0));
-				AdvancementHolder advancement = player.level().getServer().getAdvancements().get(SWEET_DREAMS);
-				if (advancement != null) {
-					player.getAdvancements().award(advancement, "rested");
-				}
+				EspressoAdvancements.award(player, "guide/sweet_dreams", "rested");
 			}
 		});
 

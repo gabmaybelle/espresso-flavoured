@@ -1,0 +1,31 @@
+{
+  "parent": "espresso:guide/take_a_seat",
+  "criteria": {
+    "visited": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "location": {
+              "structures": "espresso:rest_spot"
+            }
+          }
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:lantern"
+    },
+    "title": "Scenic Route",
+    "description": "Stop at a rest spot out in the wild"
+  },
+  "requirements": [
+    [
+      "visited"
+    ]
+  ]
+}

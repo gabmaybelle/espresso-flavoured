@@ -2,19 +2,7 @@
   "parent": "espresso:guide/first_sip",
   "criteria": {
     "sold": {
-      "trigger": "minecraft:villager_trade",
-      "conditions": {
-        "villager": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:entity_type": "minecraft:wandering_trader"
-          }
-        },
-        "item": {
-          "items": "minecraft:emerald"
-        }
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "display": {

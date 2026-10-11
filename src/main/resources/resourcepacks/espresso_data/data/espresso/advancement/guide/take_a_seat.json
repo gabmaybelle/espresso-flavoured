@@ -1,0 +1,20 @@
+{
+  "parent": "espresso:guide/root",
+  "criteria": {
+    "sat": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:oak_stairs"
+    },
+    "title": "Take a Seat",
+    "description": "Sit down on a bench or chair"
+  },
+  "requirements": [
+    [
+      "sat"
+    ]
+  ]
+}

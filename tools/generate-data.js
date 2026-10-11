@@ -238,6 +238,8 @@ for (const [item, count, price] of DECOR) {
 	});
 }
 out('data/espresso/tags/villager_trade/wandering_trader/decor.json', { values: decorIds });
+// Everything the block merchant sells, for House Blend.
+out('data/espresso/tags/item/block_merchant.json', { values: [...BLOCKS, ...DECOR].map(([item]) => `minecraft:${item}`) });
 out('data/espresso/trade_set/wandering_trader/decor.json', {
 	amount: 2,
 	random_sequence: 'espresso:trade_set/wandering_trader/decor',
@@ -446,11 +448,28 @@ adv('guide/pocket_shot', 'guide/root', 'minecraft:bundle', 'Pocket Shot', 'Get a
 adv('guide/refill', 'guide/pocket_shot', 'minecraft:shulker_box', 'Refill', 'Craft a shulker box without leaving the Overworld',
 	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:shulker_box_overworld' } } },
 	{ frame: 'goal' });
-adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'Buy building blocks from the wandering trader',
-	{ traded: { trigger: 'minecraft:villager_trade', conditions: { villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } } } } });
+adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'Buy building blocks or decorations from the wandering trader',
+	{ traded: { trigger: 'minecraft:villager_trade', conditions: {
+		villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } },
+		item: { items: '#espresso:block_merchant' } } } });
+
+// Café life: sitting down, rest spots out in the wild, and village cafés.
+adv('guide/take_a_seat', 'guide/root', 'minecraft:oak_stairs', 'Take a Seat', 'Sit down on a bench or chair',
+	{ sat: { trigger: 'minecraft:impossible' } });
+adv('guide/scenic_route', 'guide/take_a_seat', 'minecraft:lantern', 'Scenic Route', 'Stop at a rest spot out in the wild',
+	{ visited: { trigger: 'minecraft:location', conditions: {
+		player: { type: 'minecraft:entity_properties', entity: 'this', predicate: { location: { structures: 'espresso:rest_spot' } } } } } });
+adv('guide/local_favourite', 'guide/take_a_seat', 'minecraft:chest', 'Local Favourite', 'Find a village café and open its supply chest',
+	{ found: { trigger: 'minecraft:player_generates_container_loot', conditions: { loot_tables: ['espresso:chests/village_cafe'] } } });
 
 adv('guide/barista', 'guide/root', 'espresso:espresso_machine', 'Barista', 'Craft an espresso machine',
 	{ crafted: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:espresso_machine' } } });
+adv('guide/counter_culture', 'guide/barista', 'espresso:oak_coffee_bar', 'Counter Culture', 'Place a coffee bar',
+	{ placed: { trigger: 'minecraft:placed_block', conditions: { location: { type: 'minecraft:match_block', blocks: COFFEE_BARS.map(w => `espresso:${w}_coffee_bar`) } } } });
+adv('guide/stocked_up', 'guide/counter_culture', 'espresso:glass_jar', 'Stocked Up', 'Put something in a canister or glass jar',
+	{ stocked: { trigger: 'minecraft:impossible' } });
+adv('guide/your_usual', 'guide/barista', 'minecraft:emerald', 'Your Usual', 'Trade with a barista',
+	{ traded: { trigger: 'minecraft:impossible' } });
 adv('guide/mug_shot', 'guide/barista', 'espresso:mug', 'Mug Shot', 'Dye a mug',
 	{ dyed: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:mug_dyed' } } });
 adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink your first coffee',
@@ -464,9 +483,8 @@ adv('guide/house_special', 'guide/first_sip', 'espresso:vanilla_latte', 'House S
 adv('guide/full_card', 'guide/house_special', 'espresso:golden_mug', 'On the House', 'Buy the Golden Mug from a master barista with Bean Coins',
 	{ redeemed: { trigger: 'minecraft:villager_trade', conditions: { item: { items: 'espresso:golden_mug' } } } }, { frame: 'challenge' });
 adv('guide/fair_trade', 'guide/first_sip', 'espresso:roasted_coffee_beans', 'Fair Trade', 'Sell roasted coffee beans to the wandering trader',
-	{ sold: { trigger: 'minecraft:villager_trade', conditions: {
-		villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } },
-		item: { items: 'minecraft:emerald' } } } });
+	// Awarded by EspressoAdvancements.traded: the vanilla trigger only sees what you got, not what you sold.
+	{ sold: { trigger: 'minecraft:impossible' } });
 
 // Gives the starter kit once, the first time a player joins.
 out('data/espresso/advancement/starter_kit.json', {

@@ -3,6 +3,8 @@ package com.gabbymaybelle.espresso.content;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -27,6 +29,12 @@ public class JarBlock extends CanisterBlock {
 	@Override
 	protected Item item() {
 		return EspressoContent.GLASS_JAR;
+	}
+
+	/** A glass lid: a little clink. */
+	@Override
+	protected SoundEvent lidSound() {
+		return SoundEvents.GLASS_HIT;
 	}
 
 	@Override

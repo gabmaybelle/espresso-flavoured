@@ -1,9 +1,7 @@
 package com.gabbymaybelle.espresso.content;
 
-import com.gabbymaybelle.espresso.Espresso;
-import net.minecraft.advancements.AdvancementHolder;
+import com.gabbymaybelle.espresso.EspressoAdvancements;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -20,7 +18,6 @@ import net.minecraft.world.level.Level;
 public class PastryItem extends Item {
 	/** Extra saturation for a pairing, on top of the pastry's own. */
 	private static final float PAIRING_SATURATION = 3.0F;
-	private static final Identifier PERFECT_PAIRING = Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "guide/perfect_pairing");
 
 	public PastryItem(Properties properties) {
 		super(properties);
@@ -35,10 +32,7 @@ public class PastryItem extends Item {
 					player.getFoodData().getSaturationLevel() + PAIRING_SATURATION));
 			serverLevel.sendParticles(ParticleTypes.HEART, player.getX(), player.getEyeY() + 0.3, player.getZ(), 3, 0.3, 0.2, 0.3, 0.0);
 			level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.4F, 1.3F);
-			AdvancementHolder advancement = serverLevel.getServer().getAdvancements().get(PERFECT_PAIRING);
-			if (advancement != null) {
-				player.getAdvancements().award(advancement, "paired");
-			}
+			EspressoAdvancements.award(player, "guide/perfect_pairing", "paired");
 		}
 		return result;
 	}
