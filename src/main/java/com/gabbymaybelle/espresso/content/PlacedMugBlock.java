@@ -41,7 +41,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class PlacedMugBlock extends HorizontalDirectionalBlock implements EntityBlock {
 	public enum Contents implements StringRepresentable {
 		EMPTY("empty"), ESPRESSO("espresso"), RISTRETTO("ristretto"), LATTE("latte"), MOCHA("mocha"), VANILLA("vanilla"),
-		PUMPKIN_SPICE("pumpkin_spice"), ICED("iced"), NIGHT_SHIFT("night_shift"), HOT_CHOCOLATE("hot_chocolate");
+		PUMPKIN_SPICE("pumpkin_spice"), ICED("iced"), NIGHT_SHIFT("night_shift"), HOT_CHOCOLATE("hot_chocolate"),
+		HONEY("honey"), CARAMEL("caramel"), COLD_BREW("cold_brew");
 
 		private final String name;
 
@@ -126,7 +127,8 @@ public class PlacedMugBlock extends HorizontalDirectionalBlock implements Entity
 
 	@Override
 	protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+		// The exact mug when it's known here; otherwise (as in the player's game) the drink it shows.
 		return level.getBlockEntity(pos) instanceof PlacedMugBlockEntity mug && !mug.getMug().isEmpty()
-				? mug.getMug() : new ItemStack(EspressoContent.MUG);
+				? mug.getMug() : Mugs.drinkFor(state.getValue(CONTENTS));
 	}
 }

@@ -37,6 +37,8 @@ public final class Config {
 	}
 	/** 20-minute days and 10-minute nights (vanilla: 10 and 10). */
 	public static boolean longerDays = true;
+	/** A day counter and clock in the top-right corner (client side). */
+	public static boolean clock = true;
 	/** Keep the hotbar, armour and off-hand on death; everything else drops. */
 	public static boolean keepHotbarOnDeath = true;
 	/** Slow natural healing only happens while you have saturation (you've eaten recently). */
@@ -77,6 +79,7 @@ public final class Config {
 		blockMerchant = bool(props, "blockMerchant", blockMerchant);
 		bundleUnstackables = Math.max(1, integer(props, "bundleUnstackables", bundleUnstackables));
 		longerDays = bool(props, "longerDays", longerDays);
+		clock = bool(props, "clock", clock);
 		keepHotbarOnDeath = bool(props, "keepHotbarOnDeath", keepHotbarOnDeath);
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
 		toughNights = bool(props, "toughNights", toughNights);
@@ -98,6 +101,7 @@ public final class Config {
 		props.setProperty("blockMerchant", Boolean.toString(blockMerchant));
 		props.setProperty("bundleUnstackables", Integer.toString(bundleUnstackables));
 		props.setProperty("longerDays", Boolean.toString(longerDays));
+		props.setProperty("clock", Boolean.toString(clock));
 		props.setProperty("keepHotbarOnDeath", Boolean.toString(keepHotbarOnDeath));
 		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
 		props.setProperty("toughNights", Boolean.toString(toughNights));
@@ -115,6 +119,7 @@ public final class Config {
 					+ "blockMerchant: the wandering trader also sells building blocks\n"
 					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
+					+ "clock: a day counter and clock in the top-right corner\n"
 					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land (off by default with Terralith)\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"

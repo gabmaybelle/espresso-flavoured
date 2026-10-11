@@ -82,16 +82,29 @@ public final class Mugs {
 	 * use: EspressoContent reads Mugs.GOLD while its items are still being registered.
 	 */
 	private static final class Looks {
-		static final Map<Item, PlacedMugBlock.Contents> CONTENTS = Map.of(
-			EspressoContent.ESPRESSO, PlacedMugBlock.Contents.ESPRESSO,
-			EspressoContent.RISTRETTO, PlacedMugBlock.Contents.RISTRETTO,
-			EspressoContent.LATTE, PlacedMugBlock.Contents.LATTE,
-			EspressoContent.MOCHA_LATTE, PlacedMugBlock.Contents.MOCHA,
-			EspressoContent.VANILLA_LATTE, PlacedMugBlock.Contents.VANILLA,
-			EspressoContent.PUMPKIN_SPICE_LATTE, PlacedMugBlock.Contents.PUMPKIN_SPICE,
-			EspressoContent.ICED_COFFEE, PlacedMugBlock.Contents.ICED,
-			EspressoContent.NIGHT_SHIFT, PlacedMugBlock.Contents.NIGHT_SHIFT,
-			EspressoContent.HOT_CHOCOLATE, PlacedMugBlock.Contents.HOT_CHOCOLATE);
+		static final Map<Item, PlacedMugBlock.Contents> CONTENTS = Map.ofEntries(
+			Map.entry(EspressoContent.ESPRESSO, PlacedMugBlock.Contents.ESPRESSO),
+			Map.entry(EspressoContent.RISTRETTO, PlacedMugBlock.Contents.RISTRETTO),
+			Map.entry(EspressoContent.LATTE, PlacedMugBlock.Contents.LATTE),
+			Map.entry(EspressoContent.MOCHA_LATTE, PlacedMugBlock.Contents.MOCHA),
+			Map.entry(EspressoContent.VANILLA_LATTE, PlacedMugBlock.Contents.VANILLA),
+			Map.entry(EspressoContent.PUMPKIN_SPICE_LATTE, PlacedMugBlock.Contents.PUMPKIN_SPICE),
+			Map.entry(EspressoContent.ICED_COFFEE, PlacedMugBlock.Contents.ICED),
+			Map.entry(EspressoContent.NIGHT_SHIFT, PlacedMugBlock.Contents.NIGHT_SHIFT),
+			Map.entry(EspressoContent.HOT_CHOCOLATE, PlacedMugBlock.Contents.HOT_CHOCOLATE),
+			Map.entry(EspressoContent.HONEY_LATTE, PlacedMugBlock.Contents.HONEY),
+			Map.entry(EspressoContent.CARAMEL_MACCHIATO, PlacedMugBlock.Contents.CARAMEL),
+			Map.entry(EspressoContent.COLD_BREW, PlacedMugBlock.Contents.COLD_BREW));
+	}
+
+	/** A plain mug of the drink a placed mug shows (for its name, and picking it in creative). */
+	public static ItemStack drinkFor(PlacedMugBlock.Contents contents) {
+		for (Map.Entry<Item, PlacedMugBlock.Contents> entry : Looks.CONTENTS.entrySet()) {
+			if (entry.getValue() == contents) {
+				return new ItemStack(entry.getKey());
+			}
+		}
+		return new ItemStack(EspressoContent.MUG);
 	}
 
 	/** What's in a mug item; EMPTY for an empty mug (or anything that isn't a mug). */

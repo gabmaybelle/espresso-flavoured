@@ -164,10 +164,107 @@ function build(biome, s) {
 	return cafe.toNbt();
 }
 
+// A teahouse café for Towns and Towers' Japanese villages, in their spruce, white plaster and
+// cobblestone: a wooden veranda (engawa) with a lantern on a stone post either side, spruce posts
+// and beams over white walls and paper screens, a pale floor, and a
+// wide, low hipped roof of dark tiles with flared corners. Inside, low tables with cushions, a
+// paper lantern, and the same counter and machine, in calm spruce, birch and tea green.
+// Layout: the street joins at x = 0, z = 5; the veranda is x 1-2; the house x 3-9, z 1-9;
+// the roof covers x 1-10, z 0-10.
+function buildTeahouse() {
+	const tea = new Structure([11, 10, 11]);
+	const set = tea.set.bind(tea);
+	const post = 'minecraft:stripped_spruce_log[axis=y]';
+	const beam = (axis) => `minecraft:stripped_spruce_log[axis=${axis}]`;
+	const roof = 'minecraft:deepslate_tile';
+	const stair = (facing, half = 'bottom', shape = 'straight') => `${roof}_stairs[facing=${facing},half=${half},shape=${shape},waterlogged=false]`;
+	const lantern = (hanging) => `minecraft:lantern[hanging=${hanging},waterlogged=false]`;
+	// Paper screens: white glass, soft like shōji paper.
+	const paper = (along) => `minecraft:white_stained_glass_pane[east=${along === 'x'},west=${along === 'x'},north=${along === 'z'},south=${along === 'z'},waterlogged=false]`;
+
+	for (let x = 1; x <= 9; x++) for (let y = 1; y <= 3; y++) for (let z = 1; z <= 9; z++) set(x, y, z, 'minecraft:air');
+	// Ground: the veranda's boards, and the house on a stone footing with a pale floor, like tatami.
+	for (let z = 1; z <= 9; z++) for (const x of [1, 2]) set(x, 0, z, 'minecraft:spruce_planks');
+	for (let x = 3; x <= 9; x++) for (let z = 1; z <= 9; z++) {
+		set(x, 0, z, x === 3 || x === 9 || z === 1 || z === 9 ? 'minecraft:cobblestone' : 'minecraft:birch_planks');
+	}
+
+	// Walls: dark panelling, pale walls above, a beam under the eaves, posts every few blocks.
+	const isPost = (x, z) => ((x === 3 || x === 9) && (z === 1 || z === 9)) || (x === 3 && (z === 4 || z === 6))
+		|| ((z === 1 || z === 9) && x === 6) || (x === 9 && z === 5);
+	for (let y = 1; y <= 3; y++) {
+		for (let x = 3; x <= 9; x++) for (let z = 1; z <= 9; z++) {
+			if (x !== 3 && x !== 9 && z !== 1 && z !== 9) continue;
+			const along = z === 1 || z === 9 ? 'x' : 'z';
+			set(x, y, z, isPost(x, z) ? post : y === 1 ? 'minecraft:spruce_planks' : y === 3 ? beam(along) : 'minecraft:calcite');
+		}
+	}
+	for (const z of [2, 3, 7, 8]) set(3, 2, z, paper('z'));
+	for (const x of [4, 5, 7, 8]) { set(x, 2, 1, paper('x')); set(x, 2, 9, paper('x')); }
+	for (const z of [3, 7]) set(9, 2, z, paper('z'));
+	// A birch door: its little panes look like a paper door.
+	set(3, 1, 5, 'minecraft:birch_door[facing=east,half=lower,hinge=right,open=false,powered=false]');
+	set(3, 2, 5, 'minecraft:birch_door[facing=east,half=upper,hinge=right,open=false,powered=false]');
+
+	// The veranda: posts holding up the roof's edge, framing the steps; out on the ground in front,
+	// a lantern on a stone post either side; and a potted cherry sapling.
+	for (const z of [1, 3, 7, 9]) for (let y = 1; y <= 3; y++) set(1, y, z, post);
+	for (const z of [2, 8]) {
+		set(0, 0, z, 'minecraft:mossy_cobblestone');
+		set(0, 1, z, 'minecraft:stone_brick_wall[east=none,north=none,south=none,west=none,up=true,waterlogged=false]');
+		set(0, 2, z, lantern(false));
+	}
+	set(2, 1, 8, 'minecraft:potted_cherry_sapling');
+
+	// A wide, low hipped roof, overhanging the veranda, with the corners flared up.
+	for (let k = 0; k <= 4; k++) {
+		const y = 4 + k, x0 = 1 + k, x1 = 10 - k, z0 = k, z1 = 10 - k;
+		if (x0 > x1) break;
+		for (let x = x0; x <= x1; x++) for (let z = z0; z <= z1; z++) {
+			const onX = x === x0 || x === x1, onZ = z === z0 || z === z1;
+			if (!onX && !onZ) {
+				if (k === 0) set(x, y, z, 'minecraft:spruce_planks'); // the ceiling
+				continue;
+			}
+			if (onX && onZ) {
+				const facing = x === x0 ? (z === z0 ? 'south' : 'east') : (z === z0 ? 'west' : 'north');
+				set(x, y, z, k === 0 ? stair(facing, 'top', 'outer_left') : stair(facing, 'bottom', 'outer_left'));
+			} else {
+				set(x, y, z, stair(z === z0 ? 'south' : z === z1 ? 'north' : x === x0 ? 'east' : 'west'));
+			}
+		}
+	}
+	for (let z = 4; z <= 6; z++) for (let x = 5; x <= 6; x++) set(x, 9, z, `${roof}_slab[type=bottom,waterlogged=false]`);
+
+	// Inside: the counter along the back, two low tables with cushions, and a paper lantern.
+	for (const z of [3, 4, 5, 6, 7]) set(8, 1, z, 'espresso:spruce_coffee_bar[facing=west]');
+	set(8, 2, 3, 'minecraft:potted_bamboo');
+	set(8, 2, 4, 'espresso:espresso_machine[facing=west,beans=false]');
+	set(8, 2, 5, 'espresso:placed_mug[facing=west,contents=empty,color=0]', { id: 'espresso:placed_mug', Mug: { id: 'espresso:mug', count: 1 } });
+	set(8, 2, 6, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
+	set(8, 2, 7, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
+	set(8, 1, 2, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso:chests/village_cafe' });
+	set(8, 1, 8, 'minecraft:barrel[facing=up,open=false]');
+	for (const z of [3, 7]) {
+		set(5, 1, z, 'minecraft:spruce_slab[type=bottom,waterlogged=false]');
+		set(4, 1, z, 'minecraft:green_carpet');
+		set(6, 1, z, 'minecraft:green_carpet');
+	}
+	set(5, 3, 5, lantern(true));
+
+	set(0, 0, 5, 'minecraft:jigsaw[orientation=west_up]', { id: 'minecraft:jigsaw', joint: 'aligned', name: 'minecraft:building_entrance',
+		target: 'minecraft:building_entrance', pool: 'minecraft:empty', final_state: 'minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]' });
+	set(7, 0, 5, 'minecraft:jigsaw[orientation=up_north]', { id: 'minecraft:jigsaw', joint: 'rollable', name: 'minecraft:bottom',
+		target: 'minecraft:bottom', pool: 'minecraft:village/plains/villagers', final_state: 'minecraft:birch_planks' });
+	return tea.toNbt();
+}
+
 for (const [biome, style] of Object.entries(STYLES)) {
 	const f = path.join(ROOT, biome, 'cafe.nbt');
 	fs.mkdirSync(path.dirname(f), { recursive: true });
 	fs.writeFileSync(f, build(biome, style));
 }
+fs.mkdirSync(path.join(ROOT, 'japanese'), { recursive: true });
+fs.writeFileSync(path.join(ROOT, 'japanese', 'cafe.nbt'), buildTeahouse());
 console.log('village cafés written to', ROOT);
 module.exports = { STYLES };

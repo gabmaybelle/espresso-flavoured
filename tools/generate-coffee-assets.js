@@ -159,6 +159,9 @@ const SURFACES = {
 	iced: [[58, 30, 14], [140, 90, 60], [44, 22, 10]],
 	night_shift: [[36, 24, 18], [70, 46, 24], [252, 222, 96]],
 	hot_chocolate: [[92, 50, 28], [120, 68, 40], [64, 34, 18]],
+	honey: [[196, 142, 82], [246, 234, 204], [222, 164, 40]],
+	caramel: [[176, 116, 66], [246, 236, 214], [196, 120, 44]],
+	cold_brew: [[30, 18, 10], [62, 38, 20], [22, 12, 6]],
 };
 for (const [name, [liquid, top, detail]] of Object.entries(SURFACES)) {
 	png(`block/mug_${name}`, grid((x, y) => {
@@ -177,6 +180,8 @@ png('block/mug_marshmallow', grid((x, y) => (y >= 12 ? 'p' : (x + y) % 9 === 0 ?
 png('block/mug_gold', grid((x, y) => ((x + y) % 4 === 0 ? 'h' : 'g')), { g: [232, 184, 58], h: [252, 222, 120] });
 png('block/mug_pod', grid((x, y) => ((x + y) % 3 ? 'p' : 'd')), { p: [96, 58, 32], d: [62, 36, 20] });
 png('block/mug_drizzle', grid((x, y) => ((x + y) % 4 === 0 ? 'l' : 'c')), { c: [92, 48, 26], l: [124, 70, 40] });
+png('block/mug_honey', grid((x, y) => ((x + y) % 4 === 0 ? 'l' : 'c')), { c: [226, 162, 36], l: [250, 204, 84] });
+png('block/mug_caramel', grid((x, y) => ((x + y) % 4 === 0 ? 'l' : 'c')), { c: [186, 112, 40], l: [222, 150, 70] });
 
 // ---------------------------------------------------------------- café extras
 // Vanilla latte: foam with a vanilla pod standing in it.
@@ -202,6 +207,61 @@ drinkLayer('night_shift', [36, 24, 18], [250, 214, 90], [70, 46, 24],
 drinkLayer('hot_chocolate', [92, 50, 28], [250, 248, 244], [64, 34, 18],
 	(x, y) => ((x >= 5 && x <= 6 && y === 3) || (x >= 8 && x <= 9 && y >= 3 && y <= 4) || (x === 7 && y === 4) ? (x === 6 || x === 9 ? 'm' : 'M') : null),
 	{ M: WHITE, m: [244, 210, 214] });
+// Honey latte: foam with honey dripping over the rim.
+drinkLayer('honey_latte', [196, 142, 82], [246, 234, 204], [160, 112, 72],
+	(x, y) => ((x === 5 && y >= 3 && y <= 6) || (x === 9 && y >= 3 && y <= 5) || (y === 2 && x >= 6 && x <= 8) ? 'H'
+		: foam(x, y) ? 'F' : null), { F: WHITE, H: [236, 172, 40] }, false);
+// Caramel macchiato: foam with caramel criss-crossed over the top.
+drinkLayer('caramel_macchiato', [176, 116, 66], [246, 236, 214], [140, 92, 52],
+	(x, y) => (foam(x, y) ? ((x + y) % 3 === 0 ? 'K' : 'F') : null), { F: WHITE, K: [196, 120, 44] }, false);
+// Cold brew: very dark, no steam, and beads of cold on the mug.
+drinkLayer('cold_brew', [30, 18, 10], [62, 38, 20], [22, 12, 6],
+	(x, y) => ((x === 3 && y === 7) || (x === 11 && y === 9) || (x === 5 && y === 11) || (x === 9 && y === 6) ? 'd' : null),
+	{ d: [200, 228, 246] }, false);
+// Coffee grounds: a crumbly dark heap.
+png('item/coffee_grounds', grid((x, y) => {
+	const inside = (x - 7.5) ** 2 / 36 + (y - 12) ** 2 / 25 < 1 && y <= 13;
+	if (!inside) return '.';
+	return (x * 7 + y * 3) % 5 === 0 ? 'l' : (x + y * 2) % 3 === 0 ? 'd' : 'g';
+}), { g: [70, 44, 26], d: [44, 26, 14], l: [104, 70, 44] });
+// Caramel: a glossy amber square.
+png('item/caramel', grid((x, y) => {
+	if (x < 4 || x > 11 || y < 5 || y > 12) return '.';
+	if (x === 4 || y === 12 || x === 11) return 'd';
+	return (x === 5 && y <= 7) || (y === 5 && x <= 7) ? 'h' : 'c';
+}), { c: [206, 128, 44], d: [150, 84, 26], h: [246, 196, 120] });
+// Pastries. A croissant: a golden crescent with its folds showing.
+png('item/croissant', grid((x, y) => {
+	const body = (x - 7.5) ** 2 / 42 + (y - 8.5) ** 2 / 16 < 1;
+	const bite = (x - 7.5) ** 2 / 10 + (y - 13) ** 2 / 9 < 1;
+	if (!body || bite) return '.';
+	if ((x - 7.5) ** 2 / 42 + (y - 7.5) ** 2 / 16 >= 1) return 'h'; // the glossy top edge
+	return x % 3 === 0 ? 'd' : 'c';
+}), { c: [214, 150, 70], d: [166, 102, 40], h: [242, 198, 120] });
+// Biscotti: two slanted slices, speckled with nuts.
+png('item/biscotti', grid((x, y) => {
+	for (const shift of [0, 5]) {
+		const lo = Math.floor(x / 2) + 1 + shift, hi = lo + 3;
+		if (x >= 2 && x <= 13 && y >= lo && y <= hi) {
+			if (y === lo || x === 2 || x === 13) return 'k'; // crust
+			return (x * 3 + y * 5) % 7 === 0 ? 'n' : 'b';
+		}
+	}
+	return '.';
+}), { b: [226, 192, 134], k: [176, 128, 72], n: [140, 96, 56] });
+// A berry muffin: a domed top dotted with berries, in a striped paper cup.
+png('item/muffin', grid((x, y) => {
+	if (y >= 9 && y <= 14) {
+		const inset = Math.floor((y - 9) / 3);
+		if (x < 4 + inset || x > 11 - inset) return '.';
+		return x % 2 ? 'w' : 'p'; // the paper cup's folds
+	}
+	if ((x - 7.5) ** 2 / 30 + (y - 8.5) ** 2 / 25 < 1 && y <= 8) {
+		if ((x === 5 && y === 6) || (x === 9 && y === 5) || (x === 7 && y === 8) || (x === 10 && y === 7)) return 'r';
+		return y <= 5 && x <= 7 ? 'h' : 'm';
+	}
+	return '.';
+}), { m: [176, 112, 60], h: [206, 146, 86], r: [150, 34, 70], p: [236, 226, 210], w: [204, 186, 160] });
 // Pumpkin spice and cocoa mix: little paper sachets of powder.
 const sachet = (name, powder, dark) => png(`item/${name}`, grid((x, y) => {
 	if (y === 3 && x >= 5 && x <= 10) return 'f'; // folded top
@@ -468,8 +528,12 @@ const DRINKS = {
 	iced: [0, [box([6, 6.5, 6], [7.5, 7.5, 7.5], '#ice'), box([8.25, 6.5, 8], [9.5, 7.25, 9.25], '#ice'), box([9.25, 6.5, 6.25], [9.75, 10, 6.75], '#straw')]],
 	night_shift: [12, []],
 	hot_chocolate: [0, [box([6.25, 6.5, 6.25], [7.25, 7.25, 7.25], '#marshmallow'), box([8.5, 6.5, 7.75], [9.5, 7.25, 8.75], '#marshmallow'), box([7, 6.5, 8.6], [8, 7, 9.6], '#marshmallow')]],
+	// Honey running down the side from the foam; caramel criss-crossed over it; a lone ice cube in cold brew.
+	honey: [0, [...foamDome(6.9), box([6.5, 4, 4.55], [7.25, 6.25, 4.55], '#honey', ['north']), box([9, 4.75, 4.55], [9.75, 6.25, 4.55], '#honey', ['north'])]],
+	caramel: [0, [...foamDome(6.9), box([6.5, 6.9, 7.6], [9.5, 6.92, 8.1], '#caramel', ['up']), box([7.6, 6.9, 6.5], [8.1, 6.92, 9.5], '#caramel', ['up'])]],
+	cold_brew: [0, [box([6.75, 6.5, 7], [8, 7.25, 8.25], '#ice')]],
 };
-const TOPPINGS = ['foam', 'sleeve', 'ice', 'straw', 'marshmallow', 'gold', 'pod', 'drizzle'];
+const TOPPINGS = ['foam', 'sleeve', 'ice', 'straw', 'marshmallow', 'gold', 'pod', 'drizzle', 'honey', 'caramel'];
 const mugTextures = {
 	particle: 'espresso:block/mug_glaze', glaze: 'espresso:block/mug_glaze', rim: 'espresso:block/mug_rim', saucer: 'espresso:block/saucer',
 	...Object.fromEntries(TOPPINGS.map(t => [t, `espresso:block/mug_${t}`])),
@@ -491,7 +555,7 @@ for (const item of ['vanilla_syrup', 'unfired_canister']) {
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
 out('items/vanilla_latte.json', dyed('espresso:item/vanilla_latte'));
-for (const drink of ['pumpkin_spice_latte', 'iced_coffee', 'night_shift', 'hot_chocolate']) {
+for (const drink of ['pumpkin_spice_latte', 'iced_coffee', 'night_shift', 'hot_chocolate', 'honey_latte', 'caramel_macchiato', 'cold_brew']) {
 	out(`items/${drink}.json`, dyed(`espresso:item/${drink}`));
 	out(`models/item/${drink}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: `espresso:item/${drink}_fill` } });
 }
@@ -523,7 +587,7 @@ out('blockstates/canister.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/canister', ...(y ? { y } : {}) }]),
 ) });
 // Glass jar, the Reserve and Ristretto.
-for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans', 'pumpkin_spice', 'cocoa_mix', 'cinnamon']) {
+for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans', 'pumpkin_spice', 'cocoa_mix', 'cinnamon', 'caramel', 'croissant', 'biscotti', 'muffin', 'coffee_grounds']) {
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
 }
@@ -627,7 +691,7 @@ out('blockstates/espresso_machine.json', { variants: Object.fromEntries(
 	rect(3, 3, 170, 160, 'P');
 	for (const [x, y] of [[0, 0], [1, 0], [0, 1], [175, 0], [174, 0], [175, 1], [0, 165], [1, 165], [0, 164], [175, 165], [174, 165], [175, 164]]) px[y][x] = '.';
 	const slot = (x, y) => { rect(x - 1, y - 1, 18, 18, 'D'); rect(x, y, 17, 17, 'W'); rect(x, y, 16, 16, 'M'); };
-	for (const [x, y] of [[56, 51], [79, 58], [102, 51], [79, 17]]) slot(x, y);
+	for (const [x, y] of [[56, 51], [79, 58], [102, 51], [79, 17], [17, 17]]) slot(x, y); // the last is the knock box
 	for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) slot(8 + c * 18, 84 + r * 18);
 	for (let c = 0; c < 9; c++) slot(8 + c * 18, 142);
 	// The drip channel from the beans down to the middle bottle, and little pipes to the side bottles.
@@ -661,6 +725,26 @@ out('lang/en_us.json', {
 	'item.espresso.pumpkin_spice_latte': 'Pumpkin Spice Latte',
 	'item.espresso.iced_coffee': 'Iced Coffee',
 	'item.espresso.night_shift': 'Night Shift',
+	'item.espresso.honey_latte': 'Honey Latte',
+	'item.espresso.caramel_macchiato': 'Caramel Macchiato',
+	'item.espresso.cold_brew': 'Cold Brew',
+	'item.espresso.caramel': 'Caramel',
+	'item.espresso.coffee_grounds': 'Coffee Grounds',
+	'jade.espresso.coffee_bush.0': 'Seedling',
+	'jade.espresso.coffee_bush.1': 'Young',
+	'jade.espresso.coffee_bush.2': 'Grown',
+	'jade.espresso.coffee_bush.3': 'Turning',
+	'jade.espresso.coffee_bush.4': 'Ripe: ready to pick',
+	'jade.espresso.espresso_machine.brewing': 'Brewing: %s%%',
+	'jade.espresso.espresso_machine.idle': 'Waiting for beans and a mug',
+	'jade.espresso.espresso_machine.no_bar': 'Needs a coffee bar underneath',
+	'config.jade.plugin_espresso.placed_mug': 'Placed mug drink names',
+	'config.jade.plugin_espresso.coffee_bush': 'Coffee bush growth',
+	'config.jade.plugin_espresso.espresso_machine': 'Espresso machine brewing',
+	'entity.espresso.seat': 'Seat',
+	'item.espresso.croissant': 'Croissant',
+	'item.espresso.biscotti': 'Biscotti',
+	'item.espresso.muffin': 'Berry Muffin',
 	'item.espresso.hot_chocolate': 'Hot Chocolate',
 	'espresso.options.sugarCaneHeight': 'Sugar Cane Height',
 	'espresso.options.sugarCaneHeight.tooltip': 'How tall sugar cane grows. Vanilla is 3.',
@@ -701,6 +785,8 @@ out('lang/en_us.json', {
 	"espresso.options.creeperGriefing.tooltip": "Off: creeper explosions still hurt, but leave your builds alone.",
 	"espresso.options.endermanGriefing": "Endermen Take Blocks",
 	"espresso.options.endermanGriefing.tooltip": "Off: endermen leave blocks where they are.",
+	"espresso.options.clock": "Clock",
+	"espresso.options.clock.tooltip": "A day counter and clock in the top-right corner, right for the longer days. It turns gold in the hour before night.",
 	"espresso.options.longerDays": "Longer Days",
 	"espresso.options.longerDays.tooltip": "20-minute days and 10-minute nights. Takes effect after restarting the game.",
 	"espresso.options.toughNights": "Tougher Nights",

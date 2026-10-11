@@ -27,15 +27,18 @@ import net.minecraft.world.level.storage.ValueOutput;
  * only brews while it sits on a coffee bar.
  * While there are beans and at least one empty mug, it brews for ten seconds, then fills
  * each mug with an Espresso (keeping its colour), one bean per mug. Hoppers put beans in
- * from above, mugs in from the sides, and take Espresso out from below.
+ * from above, mugs in from the sides, and take Espresso out from below. Each shot of coffee leaves
+ * its used grounds in the knock box (cocoa leaves none); hoppers below take those out too, and the
+ * machine waits while the knock box is full.
  */
 public class EspressoMachineBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
 	public static final int BEAN_SLOT = 3;
-	public static final int SLOT_COUNT = 4;
+	public static final int GROUNDS_SLOT = 4;
+	public static final int SLOT_COUNT = 5;
 	public static final int BREW_TIME = 200;
 	private static final int[] SLOTS_FOR_UP = { BEAN_SLOT };
 	private static final int[] SLOTS_FOR_SIDES = { 0, 1, 2 };
-	private static final int[] SLOTS_FOR_DOWN = { 0, 1, 2 };
+	private static final int[] SLOTS_FOR_DOWN = { 0, 1, 2, GROUNDS_SLOT };
 
 	private NonNullList<ItemStack> items = NonNullList.withSize(SLOT_COUNT, ItemStack.EMPTY);
 	/** Ticks left on the current brew; 0 when idle. */
@@ -83,13 +86,19 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 	}
 
 	/** The machine only works on a coffee bar (unless that's turned off in the settings). */
+	/** Ticks left on the current brew; 0 when idle. */
+	public int brewTime() {
+		return brewTime;
+	}
+
 	public boolean onCoffeeBar() {
 		return !Config.coffeeBarRequired
 				|| level != null && level.getBlockState(worldPosition.below()).getBlock() instanceof CoffeeBarBlock;
 	}
 
 	private boolean canBrew() {
-		if (items.get(BEAN_SLOT).isEmpty() || !onCoffeeBar()) {
+		ItemStack grounds = items.get(GROUNDS_SLOT);
+		if (items.get(BEAN_SLOT).isEmpty() || !onCoffeeBar() || grounds.getCount() >= grounds.getMaxStackSize()) {
 			return false;
 		}
 		for (int i = 0; i < BEAN_SLOT; i++) {
@@ -105,10 +114,21 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 		Item drink = beans.is(EspressoContent.BARISTAS_RESERVE) ? EspressoContent.RISTRETTO
 				: beans.is(EspressoContent.COCOA_MIX) ? EspressoContent.HOT_CHOCOLATE : EspressoContent.ESPRESSO;
 		boolean decaf = beans.is(EspressoContent.DECAF_BEANS);
+		boolean leavesGrounds = drink != EspressoContent.HOT_CHOCOLATE;
+		int shots = 0;
 		for (int i = 0; i < BEAN_SLOT && !beans.isEmpty(); i++) {
 			if (Mugs.isEmptyMug(items.get(i))) {
 				items.set(i, Mugs.fill(items.get(i), drink, decaf));
 				beans.shrink(1);
+				shots++;
+			}
+		}
+		if (leavesGrounds) {
+			ItemStack grounds = items.get(GROUNDS_SLOT);
+			if (grounds.isEmpty()) {
+				items.set(GROUNDS_SLOT, new ItemStack(EspressoContent.COFFEE_GROUNDS, shots));
+			} else {
+				grounds.setCount(Math.min(grounds.getMaxStackSize(), grounds.getCount() + shots));
 			}
 		}
 		level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.4F, 1.6F);
@@ -170,6 +190,9 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 		if (slot == BEAN_SLOT) {
 			return isBeans(stack);
 		}
+		if (slot == GROUNDS_SLOT) {
+			return false;
+		}
 		return Mugs.isEmptyMug(stack) && items.get(slot).isEmpty();
 	}
 
@@ -185,7 +208,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 
 	@Override
 	public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
-		// Finished drinks come out; empty mugs stay in to be filled.
-		return side == Direction.DOWN && slot < BEAN_SLOT && !Mugs.isEmptyMug(stack);
+		// Finished drinks and used grounds come out; empty mugs stay in to be filled.
+		return side == Direction.DOWN && (slot == GROUNDS_SLOT || slot < BEAN_SLOT && !Mugs.isEmptyMug(stack));
 	}
 }

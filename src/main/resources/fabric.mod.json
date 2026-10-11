@@ -22,6 +22,9 @@
 		],
 		"modmenu": [
 			"com.gabbymaybelle.espresso.client.ModMenuIntegration"
+		],
+		"jade": [
+			"com.gabbymaybelle.espresso.compat.EspressoJadePlugin"
 		]
 	},
 	"mixins": [

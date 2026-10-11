@@ -10,6 +10,7 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 	maven { url = 'https://maven.terraformersmc.com/releases/' }
+	maven { url = 'https://api.modrinth.com/maven' }
 }
 
 loom {
@@ -28,6 +29,8 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 	// Mod Menu: only for the Config button; not bundled or required.
 	compileOnly "com.terraformersmc:modmenu:21.0.0"
+	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
+	compileOnly "maven.modrinth:jade:26.3.5+fabric"
 
 }
 

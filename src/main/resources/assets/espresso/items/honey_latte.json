@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "espresso:item/honey_latte",
+    "tints": [
+      {
+        "type": "minecraft:dye",
+        "default": -990001
+      }
+    ]
+  }
+}

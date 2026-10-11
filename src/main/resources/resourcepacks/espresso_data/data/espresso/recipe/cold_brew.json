@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_transmute",
+  "category": "misc",
+  "input": "espresso:espresso",
+  "material": "minecraft:packed_ice",
+  "result": {
+    "id": "espresso:cold_brew"
+  }
+}

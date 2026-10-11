@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "espresso:item/caramel_macchiato",
+    "tints": [
+      {
+        "type": "minecraft:dye",
+        "default": -990001
+      }
+    ]
+  }
+}

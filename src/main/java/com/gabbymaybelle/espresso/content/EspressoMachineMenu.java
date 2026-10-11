@@ -38,6 +38,13 @@ public class EspressoMachineMenu extends AbstractContainerMenu {
 				return EspressoMachineBlockEntity.isBeans(stack);
 			}
 		});
+		// The knock box, where used grounds collect: take-only.
+		addSlot(new Slot(machine, EspressoMachineBlockEntity.GROUNDS_SLOT, 17, 17) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return false;
+			}
+		});
 		addDataSlots(data);
 		addStandardInventorySlots(inventory, 8, 84);
 	}

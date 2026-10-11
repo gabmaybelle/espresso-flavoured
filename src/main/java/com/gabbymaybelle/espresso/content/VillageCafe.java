@@ -33,11 +33,13 @@ public final class VillageCafe {
 			POOLS.put("minecraft:village/" + style + "/houses", style);
 		}
 		// Towns and Towers: oak-and-spruce villages get the plains café, and so on. Styles a cosy
-		// wooden café would look out of place in (Japanese, tribal, tipi, fantasy...) are left out.
+		// wooden café would look out of place in (tribal, tipi, fantasy...) are left out.
 		for (String village : List.of("exclusives/classic", "exclusives/tudor", "exclusives/rustic", "meadow_swiss",
 				"birch_forest_romanian", "swamp_boat")) {
 			POOLS.put("kaisyn:village/" + village + "/houses", "plains");
 		}
+		// Japanese villages get a teahouse of their own.
+		POOLS.put("kaisyn:village/flower_forest_japanese/houses", "japanese");
 		POOLS.put("kaisyn:village/exclusives/swedish/houses", "taiga");
 		POOLS.put("kaisyn:village/old_growth_taiga_polish/houses", "taiga");
 		POOLS.put("kaisyn:village/snowy_taiga_viking/houses", "snowy");

@@ -38,6 +38,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
@@ -115,6 +118,14 @@ public final class EspressoContent {
 
 	// ---------------------------------------------------------------- the barista
 	/** The espresso machine is the barista's workstation. */
+	/**
+	 * The invisible seat you ride when sitting on stairs (see Seat). It has to be savable to be ridden;
+	 * an empty one removes itself straight away.
+	 */
+	public static final ResourceKey<EntityType<?>> SEAT_KEY = ResourceKey.create(Registries.ENTITY_TYPE, id("seat"));
+	public static final EntityType<Seat> SEAT = Registry.register(BuiltInRegistries.ENTITY_TYPE, SEAT_KEY,
+			EntityType.Builder.<Seat>of(Seat::new, MobCategory.MISC).sized(0.001F, 0.001F).noSummon().clientTrackingRange(10).build(SEAT_KEY));
+
 	public static final ResourceKey<PoiType> BARISTA_POI = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id("barista"));
 	static {
 		PoiHelper.register(BARISTA_POI.identifier(), 1, 1, ESPRESSO_MACHINE);
@@ -199,8 +210,27 @@ public final class EspressoContent {
 	/** No coffee at all: a warm cocoa that makes you Cozy, like decaf. */
 	public static final Item HOT_CHOCOLATE = registerItem("hot_chocolate", CoffeeItem::new, new Item.Properties().stacksTo(16)
 			.usingConvertsTo(MUG).food(new FoodProperties(4, 0.4F, true), decafConsumable()));
-	/** The house special: lasts longest and fills you up the most. */
+	/** The house special: lasts a good while and fills you up the most. */
 	public static final Item VANILLA_LATTE = registerItem("vanilla_latte", CoffeeItem::new, drink(4800, new FoodProperties(4, 0.6F, true)));
+	/** What's left in the espresso machine's knock box: feeds crops and goes in the composter. */
+	public static final Item COFFEE_GROUNDS = registerItem("coffee_grounds", CoffeeGroundsItem::new,
+			new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_MEDIUM_HIGH));
+	/** Smelted sugar, for a caramel macchiato. */
+	public static final Item CARAMEL = registerItem("caramel", Item::new, new Item.Properties());
+	/** A latte sweetened with honey: a moment of Regeneration with the coffee. */
+	public static final Item HONEY_LATTE = registerItem("honey_latte", CoffeeItem::new,
+			drink(3600, 0, new FoodProperties(3, 0.3F, true), new MobEffectInstance(MobEffects.REGENERATION, 100, 0)));
+	/** Caramel over foam: a minute of Absorption (golden hearts) with the coffee. */
+	public static final Item CARAMEL_MACCHIATO = registerItem("caramel_macchiato", CoffeeItem::new,
+			drink(3600, 0, new FoodProperties(4, 0.4F, true), new MobEffectInstance(MobEffects.ABSORPTION, 1200, 0)));
+	/** Pastries: good food on their own, and a pairing with a coffee or a cocoa (see PastryItem). */
+	public static final Item CROISSANT = registerItem("croissant", PastryItem::new, new Item.Properties().food(new FoodProperties(5, 0.6F, false)));
+	/** Biscotti: a small, crunchy bite, quick to eat. */
+	public static final Item BISCOTTI = registerItem("biscotti", PastryItem::new, new Item.Properties()
+			.food(new FoodProperties(3, 0.5F, false), Consumables.defaultFood().consumeSeconds(0.8F).build()));
+	public static final Item MUFFIN = registerItem("muffin", PastryItem::new, new Item.Properties().food(new FoodProperties(6, 0.6F, false)));
+	/** Coffee steeped cold: no extras, but the pick-me-up lasts longest of all. */
+	public static final Item COLD_BREW = registerItem("cold_brew", CoffeeItem::new, drink(6000, null));
 
 	/** A coffee drink: Speed I, Haste I and Caffeinated for {@code ticks}, served in a mug (which you get back). */
 	private static Item.Properties drink(int ticks, FoodProperties food) {
@@ -238,6 +268,7 @@ public final class EspressoContent {
 	public static void register() {
 		Mugs.register();
 		LoyaltyCard.register();
+		Seat.register();
 		CoffeeLoot.register();
 		VillageCafe.register();
 		ItemStorage.SIDED.registerForBlockEntity((canister, side) -> canister.storage, CANISTER_ENTITY);
@@ -261,6 +292,8 @@ public final class EspressoContent {
 			output.accept(CINNAMON);
 			output.accept(PUMPKIN_SPICE);
 			output.accept(COCOA_MIX);
+			output.accept(CARAMEL);
+			output.accept(COFFEE_GROUNDS);
 			output.accept(VANILLA_SYRUP);
 		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> {
@@ -277,6 +310,12 @@ public final class EspressoContent {
 			output.accept(ICED_COFFEE);
 			output.accept(NIGHT_SHIFT);
 			output.accept(HOT_CHOCOLATE);
+			output.accept(HONEY_LATTE);
+			output.accept(CARAMEL_MACCHIATO);
+			output.accept(COLD_BREW);
+			output.accept(CROISSANT);
+			output.accept(BISCOTTI);
+			output.accept(MUFFIN);
 		});
 		// Wild coffee bushes in jungles and savannas.
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.IS_JUNGLE).or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA)),

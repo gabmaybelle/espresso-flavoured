@@ -28,7 +28,9 @@
     "recipes": [
       "espresso:mocha_latte",
       "espresso:vanilla_latte",
-      "espresso:pumpkin_spice_latte"
+      "espresso:pumpkin_spice_latte",
+      "espresso:honey_latte",
+      "espresso:caramel_macchiato"
     ]
   }
 }

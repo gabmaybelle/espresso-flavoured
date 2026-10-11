@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:wheat",
+    "minecraft:wheat",
+    "minecraft:sugar",
+    "#minecraft:eggs"
+  ],
+  "result": {
+    "id": "espresso:biscotti",
+    "count": 6
+  }
+}

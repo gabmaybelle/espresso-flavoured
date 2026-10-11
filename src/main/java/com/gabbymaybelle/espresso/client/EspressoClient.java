@@ -15,6 +15,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -26,6 +28,8 @@ public class EspressoClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		MenuScreens.register(EspressoContent.ESPRESSO_MACHINE_MENU, EspressoMachineScreen::new);
 		BlockEntityRenderers.register(EspressoContent.CANISTER_ENTITY, CanisterRenderer::new);
+		EntityRenderers.register(EspressoContent.SEAT, NoopRenderer::new);
+		EspressoClock.register();
 		tintByColor(EspressoContent.PLACED_MUG, PlacedMugBlock.COLOR);
 		tintByColor(EspressoContent.CANISTER_BLOCK, CanisterBlock.COLOR);
 		// On someone else's server, use their bundle setting so bundles match for everyone.

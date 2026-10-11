@@ -105,13 +105,36 @@ out('data/espresso/recipe/cocoa_mix.json', {
 	ingredients: ['minecraft:cocoa_beans', 'minecraft:sugar', 'minecraft:milk_bucket'], result: { id: 'espresso:cocoa_mix', count: 4 },
 });
 for (const [name, input, material] of [['pumpkin_spice_latte', 'espresso:latte', 'espresso:pumpkin_spice'],
-	['iced_coffee', 'espresso:espresso', 'minecraft:ice'], ['night_shift', 'espresso:espresso', 'minecraft:glow_berries']]) {
+	['iced_coffee', 'espresso:espresso', 'minecraft:ice'], ['night_shift', 'espresso:espresso', 'minecraft:glow_berries'],
+	['honey_latte', 'espresso:latte', 'minecraft:honey_bottle'], ['caramel_macchiato', 'espresso:latte', 'espresso:caramel'],
+	['cold_brew', 'espresso:espresso', 'minecraft:packed_ice']]) {
 	out(`data/espresso/recipe/${name}.json`, {
 		type: 'minecraft:crafting_transmute', category: 'misc', input, material, result: { id: `espresso:${name}` },
 	});
 }
 out('data/espresso/tags/item/coffee.json', { values: ['espresso:espresso', 'espresso:latte', 'espresso:mocha_latte', 'espresso:vanilla_latte',
-	'espresso:pumpkin_spice_latte', 'espresso:iced_coffee', 'espresso:night_shift'] });
+	'espresso:pumpkin_spice_latte', 'espresso:iced_coffee', 'espresso:night_shift', 'espresso:honey_latte', 'espresso:caramel_macchiato',
+	'espresso:cold_brew'] });
+// Pastries: a croissant (flaky with butter, so milk), biscotti (twice-baked, small) and a berry muffin.
+out('data/espresso/recipe/croissant.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['minecraft:wheat', 'minecraft:wheat', 'minecraft:wheat', '#minecraft:eggs', 'minecraft:milk_bucket'], result: { id: 'espresso:croissant', count: 4 },
+});
+out('data/espresso/recipe/biscotti.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['minecraft:wheat', 'minecraft:wheat', 'minecraft:sugar', '#minecraft:eggs'], result: { id: 'espresso:biscotti', count: 6 },
+});
+out('data/espresso/recipe/muffin.json', {
+	type: 'minecraft:crafting_shapeless', category: 'misc',
+	ingredients: ['minecraft:wheat', 'minecraft:sugar', '#minecraft:eggs', 'minecraft:sweet_berries'], result: { id: 'espresso:muffin', count: 2 },
+});
+// Caramel: sugar, smelted (or quicker in a smoker).
+out('data/espresso/recipe/caramel.json', {
+	type: 'minecraft:smelting', category: 'food', cookingtime: 200, experience: 0.1, ingredient: 'minecraft:sugar', result: { id: 'espresso:caramel' },
+});
+out('data/espresso/recipe/caramel_from_smoking.json', {
+	type: 'minecraft:smoking', category: 'food', cookingtime: 100, experience: 0.1, ingredient: 'minecraft:sugar', result: { id: 'espresso:caramel' },
+});
 
 // Canisters: clay, fired, dyeable, like mugs.
 out('data/espresso/recipe/unfired_canister.json', {
@@ -256,12 +279,15 @@ const BARISTA_TRADES = {
 		['sugar_emerald', ['minecraft:sugar', 20], [E, 1], 16, 2],
 		['emerald_cherries', [E, 1], ['espresso:coffee_cherries', 3], 12, 1],
 		['emerald_mug', [E, 1], ['espresso:mug', 2], 12, 1],
+		['emerald_biscotti', [E, 1], ['espresso:biscotti', 6], 12, 1],
 	],
 	2: [
 		['milk_emerald', ['minecraft:milk_bucket', 1], [E, 1], 12, 10],
 		['cocoa_emerald', ['minecraft:cocoa_beans', 10], [E, 1], 16, 10],
 		['emerald_espresso', [E, 2], ['espresso:espresso', 1], 12, 5],
 		['emerald_canister', [E, 2], ['espresso:canister', 1], 12, 5],
+		['emerald_croissant', [E, 1], ['espresso:croissant', 3], 12, 5],
+		['emerald_muffin', [E, 1], ['espresso:muffin', 2], 12, 5],
 	],
 	3: [
 		['honey_emerald', ['minecraft:honey_bottle', 4], [E, 1], 12, 20],
@@ -333,8 +359,10 @@ unlock('mug', ['espresso:unfired_mug'], ['mug']);
 unlock('canister', ['espresso:unfired_canister'], ['canister']);
 unlock('mug_dyed', ['espresso:mug'], ['mug_dyed']);
 unlock('canister_dyed', ['espresso:canister'], ['canister_dyed']);
-unlock('latte', ['espresso:espresso'], ['latte', 'iced_coffee', 'night_shift']);
-unlock('latte_drinks', ['espresso:latte'], ['mocha_latte', 'vanilla_latte', 'pumpkin_spice_latte']);
+unlock('latte', ['espresso:espresso'], ['latte', 'iced_coffee', 'night_shift', 'cold_brew']);
+unlock('latte_drinks', ['espresso:latte'], ['mocha_latte', 'vanilla_latte', 'pumpkin_spice_latte', 'honey_latte', 'caramel_macchiato']);
+unlock('caramel', ['minecraft:sugar'], ['caramel', 'caramel_from_smoking']);
+unlock('pastries', ['minecraft:wheat', 'minecraft:sugar'], ['croissant', 'biscotti', 'muffin']);
 unlock('pumpkin_spice', ['minecraft:pumpkin', 'espresso:cinnamon'], ['pumpkin_spice']);
 unlock('cocoa_mix', ['minecraft:cocoa_beans'], ['cocoa_mix']);
 unlock('vanilla_syrup', ['minecraft:honey_bottle', 'minecraft:sugar'], ['vanilla_syrup']);
@@ -418,6 +446,8 @@ adv('guide/first_sip', 'guide/barista', 'espresso:espresso', 'First Sip', 'Drink
 	{ sipped: { trigger: 'minecraft:consume_item', conditions: { item: { items: '#espresso:coffee' } } } });
 adv('guide/sweet_dreams', 'guide/first_sip', 'minecraft:white_bed', 'Sweet Dreams', 'Sleep after a decaf and wake up Well Rested',
 	{ rested: { trigger: 'minecraft:impossible' } });
+adv('guide/perfect_pairing', 'guide/first_sip', 'espresso:croissant', 'Perfect Pairing', 'Eat a pastry with your coffee (or cocoa)',
+	{ paired: { trigger: 'minecraft:impossible' } });
 adv('guide/house_special', 'guide/first_sip', 'espresso:vanilla_latte', 'House Special', 'Make a vanilla latte',
 	{ made: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:vanilla_latte' } } });
 adv('guide/full_card', 'guide/house_special', 'espresso:golden_mug', 'On the House', 'Trade a full loyalty card for the Golden Mug',
@@ -448,6 +478,7 @@ out('data/espresso/loot_table/chests/village_cafe.json', {
 		loot('espresso:coffee_cherries', 10, 2, 6), loot('espresso:roasted_coffee_beans', 8, 2, 5), loot('minecraft:sugar', 6, 2, 5),
 		loot('espresso:mug', 4), loot('espresso:decaf_coffee_beans', 3, 1, 3), loot('espresso:cinnamon', 3, 1, 3), loot('espresso:cocoa_mix', 3, 1, 2),
 		loot('espresso:vanilla_syrup', 2), loot('minecraft:milk_bucket', 2), loot('minecraft:emerald', 2, 1, 2),
+		loot('espresso:croissant', 4, 1, 3), loot('espresso:muffin', 3, 1, 2), loot('espresso:biscotti', 3, 2, 6), loot('espresso:caramel', 2, 1, 3),
 	] }],
 	random_sequence: 'espresso:chests/village_cafe',
 });

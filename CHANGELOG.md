@@ -10,12 +10,15 @@
 - **Decaf.** Wash roasted beans in water. Decaf makes you **Cozy**: you heal slowly near home, wake up **Well Rested** with two golden hearts, and it softens a caffeine crash.
 - **Ristretto**, brewed from the Barista's Reserve: the only Speed II and Haste II.
 - **More drinks:** a Pumpkin Spice Latte (pumpkin spice is pumpkin, sugar and cinnamon, which you get by stripping jungle and acacia logs) that makes you **Warm**, so powder snow can't freeze you; Iced Coffee with a little Fire Resistance; Night Shift, a glow berry cold brew with Night Vision; and Hot Chocolate, brewed from cocoa mix, with no coffee at all, just Cozy.
+- **Café favourites:** a Honey Latte (a moment of Regeneration), a Caramel Macchiato (caramel is smelted sugar; a minute of golden hearts) and Cold Brew (espresso over packed ice: no extras, but it lasts longest).
+- **Pastries:** croissants, biscotti and berry muffins. Eat one with a coffee (or a cocoa) for a **pairing**: a little extra saturation and a puff of hearts. Baristas sell them, and café chests have them.
+- **Coffee grounds.** Each shot leaves its used grounds in the machine's knock box (a hopper below takes them out too). Like the gardener's trick, they help crops, stems and bushes grow, and they compost.
 
 ### The café
 - **Barista villagers** use the espresso machine as their workstation. They trade beans, mugs and drinks, and a master sells name tags, bottles o' enchanting, golden apples and the Barista's Reserve.
 - **Loyalty card.** It comes with the Barista advancement and collects a stamp for each café milestone, wherever it is: in a chest, an ender chest or a bundle. Swap a full card with the wandering trader for the **Golden Mug** (coffee lasts longer from it).
 - **Canisters and glass jars.** They hold four stacks of anything that stacks and show what's inside. Dye the canisters to match your mugs. Fill a jar with honey bottles for a honey jar.
-- **Village cafés.** A cottage café can turn up in villages, built in the village's own woods and stone: a covered porch with little tables and lanterns, a chimney with a wisp of smoke, and inside, an espresso machine on the counter for a barista to claim and a chest of café supplies. With Towns and Towers, its villages get them too.
+- **Village cafés.** A cottage café can turn up in villages, built in the village's own woods and stone: a covered porch with little tables and lanterns, a chimney with a wisp of smoke, and inside, an espresso machine on the counter for a barista to claim and a chest of café supplies. With Towns and Towers, its villages get them too, and its Japanese villages get a teahouse café instead.
 - **Coffee in chests.** Village houses, jungle temples and shipwrecks sometimes hold coffee cherries or roasted beans, and a jungle temple might even have the Barista's Reserve.
 - **Taller coffee bushes.** A planted cherry starts as a short seedling and grows into a two-block shrub, like a lilac, whose cherries turn yellow and then red. Pick from either half; wild bushes are already tall. Bushes planted before this update grow their top half on their own.
 - **Rest spots.** Now and then in meadows, plains and forests: a bench with a lamp post, under a shady tree or looking over a little pond.
@@ -28,12 +31,16 @@
 - Drowsy has no screen effects any more.
 
 ### Smaller things
+- **Sit down** on any bench or chair (upright stairs) by using it with an empty hand; crouch to stand.
+- **A clock** in the top-right corner ("Day 4 · 2:35 PM"), right for the longer days; it turns gold in the hour before night (there's a setting).
+- With shaders (Iris), the sky now keeps time with the longer days instead of running ahead.
+- With **Jade**: placed mugs show their drink, coffee bushes how ripe they are, and the espresso machine how its brew is going.
 - New recipes appear in the recipe book as you pick up their ingredients.
 - The field guide has a Coffee Corner page.
 - Sugar cane grows 5 blocks tall, so a few plants keep you in sugar (there's a setting).
-- New settings: "Machine Needs a Coffee Bar", "Caffeine Crash", "Sugar Cane Height" and "Lusher Rivers".
+- New settings: "Machine Needs a Coffee Bar", "Caffeine Crash", "Sugar Cane Height", "Lusher Rivers" and "Clock".
 - On a server, everyone's bundles follow the server's "Tools per Bundle" setting.
-- New advancements: Barista, Mug Shot, House Special, Sweet Dreams, and On the House.
+- New advancements: Barista, Mug Shot, House Special, Sweet Dreams, Perfect Pairing, and On the House.
 
 ## 0.1.0
 

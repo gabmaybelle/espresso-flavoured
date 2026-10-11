@@ -30,6 +30,15 @@
     "contents=hot_chocolate,facing=north": {
       "model": "espresso:block/mug_hot_chocolate"
     },
+    "contents=honey,facing=north": {
+      "model": "espresso:block/mug_honey"
+    },
+    "contents=caramel,facing=north": {
+      "model": "espresso:block/mug_caramel"
+    },
+    "contents=cold_brew,facing=north": {
+      "model": "espresso:block/mug_cold_brew"
+    },
     "contents=empty,facing=east": {
       "model": "espresso:block/mug_empty",
       "y": 90
@@ -68,6 +77,18 @@
     },
     "contents=hot_chocolate,facing=east": {
       "model": "espresso:block/mug_hot_chocolate",
+      "y": 90
+    },
+    "contents=honey,facing=east": {
+      "model": "espresso:block/mug_honey",
+      "y": 90
+    },
+    "contents=caramel,facing=east": {
+      "model": "espresso:block/mug_caramel",
+      "y": 90
+    },
+    "contents=cold_brew,facing=east": {
+      "model": "espresso:block/mug_cold_brew",
       "y": 90
     },
     "contents=empty,facing=south": {
@@ -110,6 +131,18 @@
       "model": "espresso:block/mug_hot_chocolate",
       "y": 180
     },
+    "contents=honey,facing=south": {
+      "model": "espresso:block/mug_honey",
+      "y": 180
+    },
+    "contents=caramel,facing=south": {
+      "model": "espresso:block/mug_caramel",
+      "y": 180
+    },
+    "contents=cold_brew,facing=south": {
+      "model": "espresso:block/mug_cold_brew",
+      "y": 180
+    },
     "contents=empty,facing=west": {
       "model": "espresso:block/mug_empty",
       "y": 270
@@ -148,6 +181,18 @@
     },
     "contents=hot_chocolate,facing=west": {
       "model": "espresso:block/mug_hot_chocolate",
+      "y": 270
+    },
+    "contents=honey,facing=west": {
+      "model": "espresso:block/mug_honey",
+      "y": 270
+    },
+    "contents=caramel,facing=west": {
+      "model": "espresso:block/mug_caramel",
+      "y": 270
+    },
+    "contents=cold_brew,facing=west": {
+      "model": "espresso:block/mug_cold_brew",
       "y": 270
     }
   }

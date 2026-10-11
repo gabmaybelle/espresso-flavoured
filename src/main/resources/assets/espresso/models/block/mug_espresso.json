@@ -13,6 +13,8 @@
     "gold": "espresso:block/mug_gold",
     "pod": "espresso:block/mug_pod",
     "drizzle": "espresso:block/mug_drizzle",
+    "honey": "espresso:block/mug_honey",
+    "caramel": "espresso:block/mug_caramel",
     "liquid": "espresso:block/mug_espresso"
   },
   "elements": [

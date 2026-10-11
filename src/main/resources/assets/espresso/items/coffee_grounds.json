@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "espresso:item/coffee_grounds"
+  }
+}
