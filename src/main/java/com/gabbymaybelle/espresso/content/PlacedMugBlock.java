@@ -40,7 +40,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class PlacedMugBlock extends HorizontalDirectionalBlock implements EntityBlock {
 	public enum Contents implements StringRepresentable {
-		EMPTY("empty"), ESPRESSO("espresso"), LATTE("latte"), MOCHA("mocha"), VANILLA("vanilla");
+		EMPTY("empty"), ESPRESSO("espresso"), RISTRETTO("ristretto"), LATTE("latte"), MOCHA("mocha"), VANILLA("vanilla"),
+		PUMPKIN_SPICE("pumpkin_spice"), ICED("iced"), NIGHT_SHIFT("night_shift"), HOT_CHOCOLATE("hot_chocolate");
 
 		private final String name;
 
@@ -57,9 +58,9 @@ public class PlacedMugBlock extends HorizontalDirectionalBlock implements Entity
 	public static final EnumProperty<Contents> CONTENTS = EnumProperty.create("contents", Contents.class);
 	/** 0 = undyed, 1..16 = the nearest dye colour (id + 1), 17 = the Golden Mug. */
 	public static final IntegerProperty COLOR = IntegerProperty.create("color", 0, Mugs.GOLD_INDEX);
-	/** Mug and handle, handle to the east when facing north; rotated for the other sides. */
+	/** Saucer, mug and handle, handle to the east when facing north; rotated for the other sides. */
 	private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Shapes.or(
-			Block.box(5, 0, 5, 11, 6, 11), Block.box(11, 1, 7, 13, 5, 9)));
+			Block.box(3.5, 0, 3.5, 12.5, 0.5, 12.5), Block.box(4.5, 0, 4.5, 11.5, 6.5, 11.5), Block.box(11.5, 1.75, 7.5, 13.5, 5.25, 8.5)));
 
 	public PlacedMugBlock(Properties properties) {
 		super(properties);

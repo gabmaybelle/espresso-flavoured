@@ -1,5 +1,6 @@
 package com.gabbymaybelle.espresso.content;
 
+import java.util.Map;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -76,22 +77,26 @@ public final class Mugs {
 		return remainder != null && remainder.convertInto().typeHolder().value() == EspressoContent.GOLDEN_MUG;
 	}
 
+	/**
+	 * How each drink looks when its mug is set down. In its own class so the map is built on first
+	 * use: EspressoContent reads Mugs.GOLD while its items are still being registered.
+	 */
+	private static final class Looks {
+		static final Map<Item, PlacedMugBlock.Contents> CONTENTS = Map.of(
+			EspressoContent.ESPRESSO, PlacedMugBlock.Contents.ESPRESSO,
+			EspressoContent.RISTRETTO, PlacedMugBlock.Contents.RISTRETTO,
+			EspressoContent.LATTE, PlacedMugBlock.Contents.LATTE,
+			EspressoContent.MOCHA_LATTE, PlacedMugBlock.Contents.MOCHA,
+			EspressoContent.VANILLA_LATTE, PlacedMugBlock.Contents.VANILLA,
+			EspressoContent.PUMPKIN_SPICE_LATTE, PlacedMugBlock.Contents.PUMPKIN_SPICE,
+			EspressoContent.ICED_COFFEE, PlacedMugBlock.Contents.ICED,
+			EspressoContent.NIGHT_SHIFT, PlacedMugBlock.Contents.NIGHT_SHIFT,
+			EspressoContent.HOT_CHOCOLATE, PlacedMugBlock.Contents.HOT_CHOCOLATE);
+	}
+
 	/** What's in a mug item; EMPTY for an empty mug (or anything that isn't a mug). */
 	public static PlacedMugBlock.Contents contentsOf(ItemStack stack) {
-		if (stack.is(EspressoContent.ESPRESSO) || stack.is(EspressoContent.RISTRETTO) || stack.is(EspressoContent.ICED_COFFEE)
-				|| stack.is(EspressoContent.NIGHT_SHIFT)) {
-			return PlacedMugBlock.Contents.ESPRESSO;
-		}
-		if (stack.is(EspressoContent.LATTE) || stack.is(EspressoContent.PUMPKIN_SPICE_LATTE)) {
-			return PlacedMugBlock.Contents.LATTE;
-		}
-		if (stack.is(EspressoContent.MOCHA_LATTE) || stack.is(EspressoContent.HOT_CHOCOLATE)) {
-			return PlacedMugBlock.Contents.MOCHA;
-		}
-		if (stack.is(EspressoContent.VANILLA_LATTE)) {
-			return PlacedMugBlock.Contents.VANILLA;
-		}
-		return PlacedMugBlock.Contents.EMPTY;
+		return Looks.CONTENTS.getOrDefault(stack.getItem(), PlacedMugBlock.Contents.EMPTY);
 	}
 
 	/** Placed mugs show the nearest of the 16 dye colours (0 = undyed); the exact colour is kept for when it's picked up. */

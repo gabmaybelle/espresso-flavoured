@@ -140,13 +140,43 @@ drinkLayer('mocha_latte', [104, 58, 32], [250, 246, 238], [70, 36, 18],
 		: (y === 3 && x >= 5 && x <= 9) || (y === 2 && x >= 6 && x <= 8) ? 'F' : null), { F: WHITE, C: [92, 48, 26] }, false);
 for (const old of ['espresso', 'latte', 'mocha_latte']) fs.rmSync(path.join(A, 'textures', 'item', old + '.png'), { force: true });
 
-// Placed mugs: glazed sides, a rim, and the drink's surface.
-png('block/mug', grid((x, y) => (y === 0 ? 'W' : (y >= 14 ? 'S' : ((x + y * 3) % 11 === 0 ? 'S' : 'B')))), MUG);
-png('block/mug_inside', grid((x, y) => (x <= 1 || x >= 14 || y <= 1 || y >= 14 ? 'W' : 'i')), MUG);
-for (const [name, liquid, top] of [['espresso', [58, 30, 14], [196, 136, 78]], ['latte', [178, 128, 84], [246, 238, 222]], ['mocha', [104, 58, 32], [250, 246, 238]]]) {
-	// A round of crema or foam in the middle.
-	png(`block/mug_${name}`, grid((x, y) => ((x - 7.5) ** 2 + (y - 7.5) ** 2 < 14 ? 'T' : 'L')), { L: liquid, T: top });
+// Placed mugs: a rounded glazed mug on a matching saucer (both tinted to the mug's colour),
+// with each drink's own surface and toppings.
+png('block/mug_glaze', grid((x, y) => (y <= 9 ? 'W' : y >= 15 ? 'S' : 'B')), MUG);
+png('block/mug_rim', grid((x, y) => (x <= 1 || x >= 14 || y <= 1 || y >= 14 ? 'W' : 'i')), MUG);
+png('block/saucer', grid((x, y) => {
+	const d = Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5));
+	return d > 6.5 ? 'S' : d > 5.5 ? 'W' : d < 3.5 ? 'S' : 'B';
+}), MUG);
+// Each drink's surface: liquid, with a round of crema or foam (T) and the odd detail (D).
+const SURFACES = {
+	espresso: [[58, 30, 14], [196, 136, 78], [44, 22, 10]],
+	ristretto: [[36, 18, 8], [214, 150, 80], [24, 12, 6]],
+	latte: [[178, 128, 84], [246, 238, 222], [160, 112, 72]],
+	mocha: [[104, 58, 32], [250, 246, 238], [70, 36, 18]],
+	vanilla: [[214, 178, 120], [250, 244, 230], [120, 80, 40]],
+	pumpkin_spice: [[196, 120, 60], [246, 214, 170], [150, 82, 40]],
+	iced: [[58, 30, 14], [140, 90, 60], [44, 22, 10]],
+	night_shift: [[36, 24, 18], [70, 46, 24], [252, 222, 96]],
+	hot_chocolate: [[92, 50, 28], [120, 68, 40], [64, 34, 18]],
+};
+for (const [name, [liquid, top, detail]] of Object.entries(SURFACES)) {
+	png(`block/mug_${name}`, grid((x, y) => {
+		const r2 = (x - 7.5) ** 2 + (y - 7.5) ** 2;
+		if (name === 'night_shift' && (x <= 1 || x >= 14 || y <= 1 || y >= 14)) return 'D'; // the glowing edge
+		if ((x * 5 + y * 3) % 17 === 0) return 'D';
+		return r2 < 14 ? 'T' : 'L';
+	}), { L: liquid, T: top, D: detail });
 }
+// Toppings and trims (not tinted).
+png('block/mug_foam', grid((x, y) => ((x + y * 2) % 7 === 0 ? 'c' : 'w')), { w: [252, 250, 246], c: [236, 226, 210] });
+png('block/mug_sleeve', grid((x, y) => (y % 5 === 0 ? 'd' : (x + y) % 6 === 0 ? 'l' : 'o')), { o: [226, 120, 44], d: [180, 88, 30], l: [244, 160, 90] });
+png('block/mug_ice', grid((x, y) => (x === 0 || y === 0 ? 'h' : (x + y) % 5 === 0 ? 'h' : 'i')), { i: [176, 214, 238], h: [228, 244, 252] });
+png('block/mug_straw', grid((x, y) => ((y >> 1) % 2 ? 'r' : 'w')), { r: [210, 56, 56], w: [250, 250, 250] });
+png('block/mug_marshmallow', grid((x, y) => (y >= 12 ? 'p' : (x + y) % 9 === 0 ? 'p' : 'w')), { w: [252, 250, 246], p: [244, 208, 214] });
+png('block/mug_gold', grid((x, y) => ((x + y) % 4 === 0 ? 'h' : 'g')), { g: [232, 184, 58], h: [252, 222, 120] });
+png('block/mug_pod', grid((x, y) => ((x + y) % 3 ? 'p' : 'd')), { p: [96, 58, 32], d: [62, 36, 20] });
+png('block/mug_drizzle', grid((x, y) => ((x + y) % 4 === 0 ? 'l' : 'c')), { c: [92, 48, 26], l: [124, 70, 40] });
 
 // ---------------------------------------------------------------- café extras
 // Vanilla latte: foam with a vanilla pod standing in it.
@@ -192,8 +222,6 @@ png('item/cinnamon', grid((x, y) => {
 	return '.';
 }), { h: [196, 128, 82], b: [160, 96, 56], d: [112, 62, 34], t: [214, 196, 160] });
 sachet('cocoa_mix', [110, 62, 34], [70, 38, 20]);
-png('block/mug_vanilla', grid((x, y) => ((x - 7.5) ** 2 + (y - 7.5) ** 2 < 14 ? 'T' : ((x * 5 + y * 3) % 13 === 0 ? 'D' : 'L'))),
-	{ L: [214, 178, 120], T: [250, 244, 230], D: [120, 80, 40] });
 // Vanilla syrup: a little jar of golden syrup with a vanilla pod.
 png('item/vanilla_syrup', [
 	'................',
@@ -367,23 +395,59 @@ for (const item of ['espresso', 'latte', 'mocha_latte']) {
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: `espresso:item/${item}_fill` } });
 }
 
-// Placed mug: tinted body and handle (tintindex 0), rim on top, and the drink's surface.
+// Placed mug: a saucer, a rounded mug (a body with gentle bulges on each side), a curved
+// handle, the drink's surface, and the drink's own toppings. Mug and saucer are tinted
+// (tintindex 0); toppings keep their own colours. Handle to the east when facing north.
 const tinted = (faces) => Object.fromEntries(Object.entries(faces).map(([f, t]) => [f, { texture: t, tintindex: 0 }]));
 const sides = (t) => ({ north: t, south: t, east: t, west: t });
+const plain = (faces) => Object.fromEntries(Object.entries(faces).map(([f, t]) => [f, { texture: t }]));
+const box = (from, to, texture, faces = ['north', 'south', 'east', 'west', 'up', 'down']) =>
+	({ from, to, faces: plain(Object.fromEntries(faces.map(f => [f, texture]))) });
+const full = (e) => { for (const f of e.uvFull || []) e.faces[f].uv = [0, 0, 16, 16]; delete e.uvFull; return e; };
 const mugElements = [
-	{ from: [5, 0, 5], to: [11, 6, 11], faces: tinted({ ...sides('#mug'), down: '#mug', up: '#inside' }) },
-	{ from: [11, 4, 7.5], to: [12.5, 5, 8.5], faces: tinted({ ...sides('#mug'), up: '#mug', down: '#mug' }) },
-	{ from: [11, 1, 7.5], to: [12.5, 2, 8.5], faces: tinted({ ...sides('#mug'), up: '#mug', down: '#mug' }) },
-	{ from: [12.5, 1, 7.5], to: [13.5, 5, 8.5], faces: tinted({ ...sides('#mug'), up: '#mug', down: '#mug' }) },
-];
-const mugTextures = { particle: 'espresso:block/mug', mug: 'espresso:block/mug', inside: 'espresso:block/mug_inside' };
+	// The saucer.
+	{ from: [3.5, 0, 3.5], to: [12.5, 0.5, 12.5], faces: tinted({ ...sides('#glaze'), up: '#saucer', down: '#saucer' }), uvFull: ['up', 'down'] },
+	// The body, and a bulge on each side so it reads as round.
+	{ from: [5, 0.5, 5], to: [11, 6.5, 11], faces: tinted({ ...sides('#glaze'), up: '#rim' }), uvFull: ['up'] },
+	{ from: [5.5, 0.5, 4.6], to: [10.5, 6.25, 5], faces: tinted({ north: '#glaze', east: '#glaze', west: '#glaze', up: '#glaze' }) },
+	{ from: [5.5, 0.5, 11], to: [10.5, 6.25, 11.4], faces: tinted({ south: '#glaze', east: '#glaze', west: '#glaze', up: '#glaze' }) },
+	{ from: [4.6, 0.5, 5.5], to: [5, 6.25, 10.5], faces: tinted({ west: '#glaze', north: '#glaze', south: '#glaze', up: '#glaze' }) },
+	{ from: [11, 0.5, 5.5], to: [11.4, 6.25, 10.5], faces: tinted({ east: '#glaze', north: '#glaze', south: '#glaze', up: '#glaze' }) },
+	// A curved handle: top, outer and bottom pieces.
+	{ from: [11.4, 4.5, 7.5], to: [12.6, 5.25, 8.5], faces: tinted({ ...sides('#glaze'), up: '#glaze', down: '#glaze' }) },
+	{ from: [12.6, 2, 7.5], to: [13.35, 5, 8.5], faces: tinted({ ...sides('#glaze'), up: '#glaze', down: '#glaze' }) },
+	{ from: [11.4, 1.75, 7.5], to: [12.6, 2.5, 8.5], faces: tinted({ ...sides('#glaze'), up: '#glaze', down: '#glaze' }) },
+].map(full);
+const surface = (light = 0) => ({ from: [5.75, 6.51, 5.75], to: [10.25, 6.51, 10.25], faces: { up: { texture: '#liquid', uv: [0, 0, 16, 16] } }, ...(light ? { light_emission: light } : {}) });
+const foamDome = (h = 7) => [box([6.5, 6.5, 6.5], [9.5, h, 9.5], '#foam', ['north', 'south', 'east', 'west', 'up'])];
+const band = (y0, y1, texture) => box([4.55, y0, 4.55], [11.45, y1, 11.45], texture, ['north', 'south', 'east', 'west']);
+// Each drink: its surface texture, a glow (0 = none), and its toppings.
+const DRINKS = {
+	espresso: [0, []],
+	ristretto: [0, [band(2, 2.75, '#gold')]],
+	latte: [0, foamDome(7)],
+	mocha: [0, [...foamDome(6.9), box([6, 3.5, 4.55], [7, 6.25, 4.55], '#drizzle', ['north']), box([8.5, 4.5, 4.55], [9.25, 6.25, 4.55], '#drizzle', ['north'])]],
+	vanilla: [0, [...foamDome(6.9), box([8.75, 6.5, 7.75], [9.25, 9.5, 8.25], '#pod')]],
+	pumpkin_spice: [0, [band(2.5, 4, '#sleeve'), box([6.25, 6.5, 6.25], [9.75, 7.25, 9.75], '#foam', ['north', 'south', 'east', 'west', 'up']), box([7, 7.25, 7], [9, 7.75, 9], '#foam', ['north', 'south', 'east', 'west', 'up'])]],
+	iced: [0, [box([6, 6.5, 6], [7.5, 7.5, 7.5], '#ice'), box([8.25, 6.5, 8], [9.5, 7.25, 9.25], '#ice'), box([9.25, 6.5, 6.25], [9.75, 10, 6.75], '#straw')]],
+	night_shift: [12, []],
+	hot_chocolate: [0, [box([6.25, 6.5, 6.25], [7.25, 7.25, 7.25], '#marshmallow'), box([8.5, 6.5, 7.75], [9.5, 7.25, 8.75], '#marshmallow'), box([7, 6.5, 8.6], [8, 7, 9.6], '#marshmallow')]],
+};
+const TOPPINGS = ['foam', 'sleeve', 'ice', 'straw', 'marshmallow', 'gold', 'pod', 'drizzle'];
+const mugTextures = {
+	particle: 'espresso:block/mug_glaze', glaze: 'espresso:block/mug_glaze', rim: 'espresso:block/mug_rim', saucer: 'espresso:block/saucer',
+	...Object.fromEntries(TOPPINGS.map(t => [t, `espresso:block/mug_${t}`])),
+};
 out('models/block/mug_empty.json', { parent: 'minecraft:block/block', textures: mugTextures, elements: mugElements });
-out('models/block/mug_full.json', { parent: 'minecraft:block/block', textures: mugTextures,
-	elements: [...mugElements, { from: [6, 6.01, 6], to: [10, 6.01, 10], faces: { up: { texture: '#liquid' } } }] });
-for (const c of ['espresso', 'latte', 'mocha']) out(`models/block/mug_${c}.json`, { parent: 'espresso:block/mug_full', textures: { liquid: `espresso:block/mug_${c}` } });
+for (const [name, [glow, toppings]] of Object.entries(DRINKS)) {
+	out(`models/block/mug_${name}.json`, { parent: 'minecraft:block/block', textures: { ...mugTextures, liquid: `espresso:block/mug_${name}` },
+		elements: [...mugElements, surface(glow), ...toppings] });
+}
+for (const stale of ['mug_full']) fs.rmSync(path.join(A, 'models', 'block', stale + '.json'), { force: true });
+for (const stale of ['mug', 'mug_inside']) fs.rmSync(path.join(A, 'textures', 'block', stale + '.png'), { force: true });
 out('blockstates/placed_mug.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].flatMap(([facing, y]) =>
-		['empty', 'espresso', 'latte', 'mocha', 'vanilla'].map(c => [`contents=${c},facing=${facing}`, { model: `espresso:block/mug_${c}`, ...(y ? { y } : {}) }])),
+		['empty', ...Object.keys(DRINKS)].map(c => [`contents=${c},facing=${facing}`, { model: `espresso:block/mug_${c}`, ...(y ? { y } : {}) }])),
 ) });
 // Vanilla, the golden mug, the loyalty card and canisters.
 for (const item of ['vanilla_syrup', 'unfired_canister']) {
@@ -396,7 +460,6 @@ for (const drink of ['pumpkin_spice_latte', 'iced_coffee', 'night_shift', 'hot_c
 	out(`models/item/${drink}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: `espresso:item/${drink}_fill` } });
 }
 out('models/item/vanilla_latte.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: 'espresso:item/vanilla_latte_fill' } });
-out('models/block/mug_vanilla.json', { parent: 'espresso:block/mug_full', textures: { liquid: 'espresso:block/mug_vanilla' } });
 // The golden mug carries its gold colour as a dye, so it shares the mug's tinted model.
 out('items/golden_mug.json', dyed('espresso:item/mug'));
 for (let n = 0; n <= 6; n++) {

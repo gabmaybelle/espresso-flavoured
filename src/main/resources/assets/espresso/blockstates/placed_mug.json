@@ -6,6 +6,9 @@
     "contents=espresso,facing=north": {
       "model": "espresso:block/mug_espresso"
     },
+    "contents=ristretto,facing=north": {
+      "model": "espresso:block/mug_ristretto"
+    },
     "contents=latte,facing=north": {
       "model": "espresso:block/mug_latte"
     },
@@ -15,12 +18,28 @@
     "contents=vanilla,facing=north": {
       "model": "espresso:block/mug_vanilla"
     },
+    "contents=pumpkin_spice,facing=north": {
+      "model": "espresso:block/mug_pumpkin_spice"
+    },
+    "contents=iced,facing=north": {
+      "model": "espresso:block/mug_iced"
+    },
+    "contents=night_shift,facing=north": {
+      "model": "espresso:block/mug_night_shift"
+    },
+    "contents=hot_chocolate,facing=north": {
+      "model": "espresso:block/mug_hot_chocolate"
+    },
     "contents=empty,facing=east": {
       "model": "espresso:block/mug_empty",
       "y": 90
     },
     "contents=espresso,facing=east": {
       "model": "espresso:block/mug_espresso",
+      "y": 90
+    },
+    "contents=ristretto,facing=east": {
+      "model": "espresso:block/mug_ristretto",
       "y": 90
     },
     "contents=latte,facing=east": {
@@ -35,12 +54,32 @@
       "model": "espresso:block/mug_vanilla",
       "y": 90
     },
+    "contents=pumpkin_spice,facing=east": {
+      "model": "espresso:block/mug_pumpkin_spice",
+      "y": 90
+    },
+    "contents=iced,facing=east": {
+      "model": "espresso:block/mug_iced",
+      "y": 90
+    },
+    "contents=night_shift,facing=east": {
+      "model": "espresso:block/mug_night_shift",
+      "y": 90
+    },
+    "contents=hot_chocolate,facing=east": {
+      "model": "espresso:block/mug_hot_chocolate",
+      "y": 90
+    },
     "contents=empty,facing=south": {
       "model": "espresso:block/mug_empty",
       "y": 180
     },
     "contents=espresso,facing=south": {
       "model": "espresso:block/mug_espresso",
+      "y": 180
+    },
+    "contents=ristretto,facing=south": {
+      "model": "espresso:block/mug_ristretto",
       "y": 180
     },
     "contents=latte,facing=south": {
@@ -55,12 +94,32 @@
       "model": "espresso:block/mug_vanilla",
       "y": 180
     },
+    "contents=pumpkin_spice,facing=south": {
+      "model": "espresso:block/mug_pumpkin_spice",
+      "y": 180
+    },
+    "contents=iced,facing=south": {
+      "model": "espresso:block/mug_iced",
+      "y": 180
+    },
+    "contents=night_shift,facing=south": {
+      "model": "espresso:block/mug_night_shift",
+      "y": 180
+    },
+    "contents=hot_chocolate,facing=south": {
+      "model": "espresso:block/mug_hot_chocolate",
+      "y": 180
+    },
     "contents=empty,facing=west": {
       "model": "espresso:block/mug_empty",
       "y": 270
     },
     "contents=espresso,facing=west": {
       "model": "espresso:block/mug_espresso",
+      "y": 270
+    },
+    "contents=ristretto,facing=west": {
+      "model": "espresso:block/mug_ristretto",
       "y": 270
     },
     "contents=latte,facing=west": {
@@ -73,6 +132,22 @@
     },
     "contents=vanilla,facing=west": {
       "model": "espresso:block/mug_vanilla",
+      "y": 270
+    },
+    "contents=pumpkin_spice,facing=west": {
+      "model": "espresso:block/mug_pumpkin_spice",
+      "y": 270
+    },
+    "contents=iced,facing=west": {
+      "model": "espresso:block/mug_iced",
+      "y": 270
+    },
+    "contents=night_shift,facing=west": {
+      "model": "espresso:block/mug_night_shift",
+      "y": 270
+    },
+    "contents=hot_chocolate,facing=west": {
+      "model": "espresso:block/mug_hot_chocolate",
       "y": 270
     }
   }
