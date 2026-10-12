@@ -104,6 +104,7 @@
   "espresso_flavoured.options.section.days": "Days and Nights",
   "espresso_flavoured.options.section.wellbeing": "Looking After Yourself",
   "espresso_flavoured.options.section.storage": "Storage and Trading",
+  "espresso_flavoured.options.on_server": "On a server, the greyed-out settings are the server's.",
   "espresso_flavoured.options.safeHomeRadius": "Safe Home Radius",
   "espresso_flavoured.options.safeHomeRadius.tooltip": "No monsters spawn naturally within this many blocks of your home bed (crouch and use a bed with an empty hand to set it).",
   "espresso_flavoured.options.keepHotbarOnDeath": "Keep Hotbar on Death",

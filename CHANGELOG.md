@@ -57,6 +57,8 @@
 - The espresso machine waits until its knock box has room for all of a brew's grounds instead of losing some, and cocoa (which leaves no grounds) brews even when the box is full.
 - Turning Longer Days on or off no longer changes the Drowsy timer until the restart that changes the days.
 - Without Iris, the log no longer shows an "Error loading class" line for the shader time fix: the mod only applies it when Iris is there.
+- On someone else's server, the settings screen greys out the settings that are the server's to decide and says so; only the clock and the dusk warning (which are yours) can be changed there.
+- Mod Menu's Website button now works (it opens the GitHub page).
 - With Trinkets, the charms you're wearing now stay with you on death, like your hotbar and armour (Curse of Vanishing still vanishes them). They go back into their slots when you respawn.
 - Bean Coin payouts check only Espresso's own advancements each second, picked out once when the server starts or reloads, instead of scanning every advancement for every player.
 
