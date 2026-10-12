@@ -16,6 +16,7 @@
 		"NightNaturalSpawnerMixin",
 		"PistonBaseBlockMixin",
 		"PowderSnowMixin",
+		"RestSpotMixin",
 		"SpawnStateMixin",
 		"SugarCaneBlockMixin",
 		"TamperMixin",

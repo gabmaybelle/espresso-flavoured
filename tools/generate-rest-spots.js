@@ -144,25 +144,29 @@ out('espresso_flavoured/worldgen/placed_feature/waterside_firefly_bush.json', {
 });
 out('espresso_flavoured/worldgen/placed_feature/waterside_lily_pads.json', {
 	feature: 'minecraft:waterlily',
+	// A small cluster in about one chunk in three, so the water stays easy to get about on
+	// (ten tries in every chunk carpeted lakes and rivers).
 	placement: [
-		{ type: 'minecraft:in_square' },
-		{ type: 'minecraft:heightmap', heightmap: 'WORLD_SURFACE_WG' },
-		{ type: 'minecraft:biome' },
-		{ type: 'minecraft:count', count: 10 },
-		scatter(6),
-		{ type: 'minecraft:block_predicate_filter', predicate: { type: 'minecraft:matching_block_tag', tag: 'minecraft:air' } },
-	],
-});
-// Water lilies (lily pads in bloom) among them: about one for every two or three lily pads.
-out('espresso_flavoured/worldgen/feature/waterside_water_lily.json', { type: 'minecraft:simple_block', to_place: { id: 'espresso_flavoured:water_lily' } });
-out('espresso_flavoured/worldgen/placed_feature/waterside_water_lilies.json', {
-	feature: 'espresso_flavoured:waterside_water_lily',
-	placement: [
+		{ type: 'minecraft:rarity_filter', chance: 3 },
 		{ type: 'minecraft:in_square' },
 		{ type: 'minecraft:heightmap', heightmap: 'WORLD_SURFACE_WG' },
 		{ type: 'minecraft:biome' },
 		{ type: 'minecraft:count', count: 4 },
-		scatter(6),
+		scatter(4),
+		{ type: 'minecraft:block_predicate_filter', predicate: { type: 'minecraft:matching_block_tag', tag: 'minecraft:air' } },
+	],
+});
+// Water lilies (lily pads in bloom), rarer still: about one for every four or five lily pads.
+out('espresso_flavoured/worldgen/feature/waterside_water_lily.json', { type: 'minecraft:simple_block', to_place: { id: 'espresso_flavoured:water_lily' } });
+out('espresso_flavoured/worldgen/placed_feature/waterside_water_lilies.json', {
+	feature: 'espresso_flavoured:waterside_water_lily',
+	placement: [
+		{ type: 'minecraft:rarity_filter', chance: 6 },
+		{ type: 'minecraft:in_square' },
+		{ type: 'minecraft:heightmap', heightmap: 'WORLD_SURFACE_WG' },
+		{ type: 'minecraft:biome' },
+		{ type: 'minecraft:count', count: 2 },
+		scatter(4),
 		{ type: 'minecraft:block_predicate_filter', predicate: { type: 'minecraft:all_of', predicates: [
 			{ type: 'minecraft:matching_block_tag', tag: 'minecraft:air' },
 			{ type: 'minecraft:would_survive', state: 'espresso_flavoured:water_lily' },
