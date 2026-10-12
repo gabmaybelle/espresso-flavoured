@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:crafting_transmute",
-  "category": "misc",
-  "input": "espresso:latte",
-  "material": "minecraft:cocoa_beans",
-  "result": {
-    "id": "espresso:mocha_latte"
-  }
-}

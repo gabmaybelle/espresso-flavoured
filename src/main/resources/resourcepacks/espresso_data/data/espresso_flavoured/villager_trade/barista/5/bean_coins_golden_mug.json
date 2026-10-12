@@ -1,0 +1,11 @@
+{
+  "gives": {
+    "id": "espresso_flavoured:golden_mug"
+  },
+  "max_uses": 1,
+  "reputation_discount": 0,
+  "wants": {
+    "count": 8,
+    "id": "espresso_flavoured:bean_coin"
+  }
+}

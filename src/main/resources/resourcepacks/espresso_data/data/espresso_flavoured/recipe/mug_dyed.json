@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_dye",
+  "group": "dyed_mug",
+  "target": "espresso_flavoured:mug",
+  "dye": "#minecraft:dyes",
+  "result": {
+    "id": "espresso_flavoured:mug"
+  }
+}

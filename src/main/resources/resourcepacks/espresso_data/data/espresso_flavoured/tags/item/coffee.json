@@ -1,0 +1,14 @@
+{
+  "values": [
+    "espresso_flavoured:espresso",
+    "espresso_flavoured:latte",
+    "espresso_flavoured:mocha_latte",
+    "espresso_flavoured:vanilla_latte",
+    "espresso_flavoured:pumpkin_spice_latte",
+    "espresso_flavoured:iced_coffee",
+    "espresso_flavoured:night_shift",
+    "espresso_flavoured:honey_latte",
+    "espresso_flavoured:caramel_macchiato",
+    "espresso_flavoured:cold_brew"
+  ]
+}

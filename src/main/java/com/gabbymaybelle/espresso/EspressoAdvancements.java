@@ -18,7 +18,7 @@ public final class EspressoAdvancements {
 	private EspressoAdvancements() {
 	}
 
-	/** Grants one criterion of {@code espresso:<path>}, if the advancement is loaded. */
+	/** Grants one criterion of {@code espresso_flavoured:<path>}, if the advancement is loaded. */
 	public static void award(ServerPlayer player, String path, String criterion) {
 		AdvancementHolder advancement = player.level().getServer().getAdvancements()
 				.get(Identifier.fromNamespaceAndPath(Espresso.MOD_ID, path));

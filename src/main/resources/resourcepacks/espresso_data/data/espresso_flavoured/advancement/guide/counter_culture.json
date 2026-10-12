@@ -1,0 +1,40 @@
+{
+  "parent": "espresso_flavoured:guide/barista",
+  "criteria": {
+    "placed": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": [
+            "espresso_flavoured:oak_coffee_bar",
+            "espresso_flavoured:spruce_coffee_bar",
+            "espresso_flavoured:birch_coffee_bar",
+            "espresso_flavoured:jungle_coffee_bar",
+            "espresso_flavoured:acacia_coffee_bar",
+            "espresso_flavoured:dark_oak_coffee_bar",
+            "espresso_flavoured:mangrove_coffee_bar",
+            "espresso_flavoured:cherry_coffee_bar",
+            "espresso_flavoured:pale_oak_coffee_bar",
+            "espresso_flavoured:poplar_coffee_bar",
+            "espresso_flavoured:bamboo_coffee_bar",
+            "espresso_flavoured:crimson_coffee_bar",
+            "espresso_flavoured:warped_coffee_bar"
+          ]
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso_flavoured:oak_coffee_bar"
+    },
+    "title": "Counter Culture",
+    "description": "Place a coffee bar"
+  },
+  "requirements": [
+    [
+      "placed"
+    ]
+  ]
+}

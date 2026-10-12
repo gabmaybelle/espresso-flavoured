@@ -1,0 +1,23 @@
+{
+  "parent": "espresso_flavoured:guide/first_sip",
+  "criteria": {
+    "made": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipes": "espresso_flavoured:vanilla_latte"
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso_flavoured:vanilla_latte"
+    },
+    "title": "House Special",
+    "description": "Make a vanilla latte"
+  },
+  "requirements": [
+    [
+      "made"
+    ]
+  ]
+}

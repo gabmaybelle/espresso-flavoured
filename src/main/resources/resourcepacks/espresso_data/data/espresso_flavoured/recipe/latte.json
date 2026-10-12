@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_transmute",
+  "category": "misc",
+  "input": "espresso_flavoured:espresso",
+  "material": "minecraft:milk_bucket",
+  "result": {
+    "id": "espresso_flavoured:latte"
+  }
+}

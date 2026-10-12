@@ -41,7 +41,7 @@ public class BeanCoin extends Item {
 
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
-		tooltip.accept(Component.translatable("item.espresso.bean_coin.desc").withStyle(ChatFormatting.GRAY));
+		tooltip.accept(Component.translatable("item.espresso_flavoured.bean_coin.desc").withStyle(ChatFormatting.GRAY));
 	}
 
 	static void register() {

@@ -42,9 +42,9 @@ public final class CoffeeLoot {
 
 	private static Map<Identifier, JsonElement> load() {
 		Map<Identifier, JsonElement> extras = new HashMap<>();
-		try (InputStream in = CoffeeLoot.class.getResourceAsStream("/espresso/loot_inject.json")) {
+		try (InputStream in = CoffeeLoot.class.getResourceAsStream("/espresso_flavoured/loot_inject.json")) {
 			if (in == null) {
-				Espresso.LOGGER.warn("espresso/loot_inject.json is missing; no coffee in chests");
+				Espresso.LOGGER.warn("espresso_flavoured/loot_inject.json is missing; no coffee in chests");
 				return extras;
 			}
 			JsonObject root = JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject();

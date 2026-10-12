@@ -6,7 +6,7 @@
 // neighbouring biome), which also dresses the edges of lakes and ponds.
 // Run by generate-data.js (which clears the pack first).
 const fs = require('fs'), path = require('path');
-const DATA = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data', 'data', 'espresso', 'worldgen');
+const DATA = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data', 'data', 'espresso_flavoured', 'worldgen');
 const out = (rel, obj) => {
 	const f = path.join(DATA, ...rel.split('/'));
 	fs.mkdirSync(path.dirname(f), { recursive: true });
@@ -59,7 +59,7 @@ out('feature/river_bank_plants.json', {
 		{ data: 'minecraft:bush', weight: 2 },
 	] },
 });
-out('placed_feature/river_bank_plants.json', { feature: 'espresso:river_bank_plants', placement: bankClump('minecraft:short_grass', 6, 14, 3) });
+out('placed_feature/river_bank_plants.json', { feature: 'espresso_flavoured:river_bank_plants', placement: bankClump('minecraft:short_grass', 6, 14, 3) });
 
 // ---- 3. Drifts of flowers by the water
 out('feature/river_bank_flowers.json', {
@@ -68,7 +68,7 @@ out('feature/river_bank_flowers.json', {
 		{ data: 'minecraft:cornflower', weight: 3 }, { data: 'minecraft:azure_bluet', weight: 3 }, { data: 'minecraft:oxeye_daisy', weight: 2 },
 	] },
 });
-out('placed_feature/river_bank_flowers.json', { feature: 'espresso:river_bank_flowers', placement: bankClump('minecraft:cornflower', 4, 10, 3) });
+out('placed_feature/river_bank_flowers.json', { feature: 'espresso_flavoured:river_bank_flowers', placement: bankClump('minecraft:cornflower', 4, 10, 3) });
 
 // ---- 4. Mossy banks: moss carpet with the odd azalea bush (flowering or not), like a lush cave
 // come up for air. Placed after the waterline moss below, so carpets often sit on the moss.
@@ -82,7 +82,7 @@ out('feature/river_bank_moss.json', {
 const onGround = { type: 'minecraft:has_sturdy_face', direction: 'up', offset: [0, -1, 0] };
 // Plenty of tries for a spot by the water (most land elsewhere), and generous clumps that reach a
 // little wider and higher up the bank.
-out('placed_feature/river_bank_moss.json', { feature: 'espresso:river_bank_moss', placement: [
+out('placed_feature/river_bank_moss.json', { feature: 'espresso_flavoured:river_bank_moss', placement: [
 	count(12), square, surface, inBiome, filter(air, survives('minecraft:moss_carpet'), byWater),
 	count(16), scatter(4, 3), filter(air, survives('minecraft:moss_carpet'), onGround)] });
 
@@ -99,7 +99,7 @@ const disk = (block, min, max, targets) => ({
 	state_provider: { id: block }, target: { type: 'minecraft:matching_blocks', blocks: targets },
 });
 out('feature/waterline_moss.json', disk('minecraft:moss_block', 1, 3, ['minecraft:grass_block', 'minecraft:dirt']));
-out('placed_feature/waterline_moss.json', { feature: 'espresso:waterline_moss', placement: [count(5), square, surface, inBiome, filter(air, atWaterline)] });
+out('placed_feature/waterline_moss.json', { feature: 'espresso_flavoured:waterline_moss', placement: [count(5), square, surface, inBiome, filter(air, atWaterline)] });
 // Muddy banks, only where there's clay in the water nearby, and only on earthy banks (never sand or
 // gravel). Three patches fade from the water outward, each painted over the last: a wide fringe of
 // coarse and rooted dirt among the grass, then patchy mud with packed mud and rooted dirt, then soft
@@ -114,7 +114,7 @@ const earthy = ['minecraft:grass_block', 'minecraft:dirt', 'minecraft:coarse_dir
 const muddy = [...earthy, 'minecraft:rooted_dirt', 'minecraft:mud', 'minecraft:packed_mud', 'minecraft:moss_block'];
 const muddyBank = (name, feature) => {
 	out(`feature/${name}.json`, feature);
-	out(`placed_feature/${name}.json`, { feature: `espresso:${name}`, placement: [count(6), square, surface, inBiome, filter(air, atWaterline, nearClay)] });
+	out(`placed_feature/${name}.json`, { feature: `espresso_flavoured:${name}`, placement: [count(6), square, surface, inBiome, filter(air, atWaterline, nearClay)] });
 };
 muddyBank('muddy_bank_fringe', mixDisk([['minecraft:grass_block', 4], ['minecraft:coarse_dirt', 2], ['minecraft:rooted_dirt', 2]], 3, 5, earthy));
 muddyBank('muddy_bank_mix', mixDisk([['minecraft:mud', 4], ['minecraft:packed_mud', 1], ['minecraft:rooted_dirt', 2]], 2, 3, muddy));

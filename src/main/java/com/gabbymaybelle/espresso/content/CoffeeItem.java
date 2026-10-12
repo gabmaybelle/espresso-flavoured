@@ -102,7 +102,7 @@ public class CoffeeItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
 		if (stack.getOrDefault(EspressoContent.DECAF, false)) {
-			tooltip.accept(Component.translatable("item.espresso.decaf").withStyle(ChatFormatting.GRAY));
+			tooltip.accept(Component.translatable("item.espresso_flavoured.decaf").withStyle(ChatFormatting.GRAY));
 		}
 	}
 }

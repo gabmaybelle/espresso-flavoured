@@ -1,0 +1,21 @@
+{
+  "gives": {
+    "id": "espresso_flavoured:ember_glove"
+  },
+  "max_uses": 1,
+  "reputation_discount": 0,
+  "wants": {
+    "count": 3,
+    "id": "espresso_flavoured:bean_coin"
+  },
+  "given_item_modifier": [
+    {
+      "type": "minecraft:set_item",
+      "item": "espresso_flavoured:copper_tamper",
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.5
+      }
+    }
+  ]
+}

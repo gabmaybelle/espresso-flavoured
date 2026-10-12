@@ -4,7 +4,7 @@
 // 26.3 axes strip logs through the data-driven block transformer in
 // data/minecraft/block_transformer/axe.json, which can also drop loot. This reads vanilla's
 // file from the jar and writes a copy with one extra transform at the front: the jungle and
-// acacia rules, plus the espresso:strip/cinnamon loot. The first transform that matches a
+// acacia rules, plus the espresso_flavoured:strip/cinnamon loot. The first transform that matches a
 // block wins, so everything else strips exactly as in vanilla.
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
 const JAR = process.argv[2];
@@ -40,7 +40,7 @@ const cinnamon = {
 	block_state_provider: { type: 'minecraft:rule_based', rules },
 	drop_strategy: 'clicked_face',
 	item_damage_per_use: strip.item_damage_per_use,
-	loot: 'espresso:strip/cinnamon',
+	loot: 'espresso_flavoured:strip/cinnamon',
 	sound: strip.sound,
 };
 fs.mkdirSync(path.dirname(OUT), { recursive: true });

@@ -151,7 +151,7 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 
 	@Override
 	protected Component getDefaultName() {
-		return Component.translatable("container.espresso.espresso_machine");
+		return Component.translatable("container.espresso_flavoured.espresso_machine");
 	}
 
 	@Override

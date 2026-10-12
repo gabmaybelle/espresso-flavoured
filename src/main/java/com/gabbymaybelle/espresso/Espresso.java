@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Espresso implements ModInitializer {
-	public static final String MOD_ID = "espresso";
+	public static final String MOD_ID = "espresso_flavoured";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override

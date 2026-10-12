@@ -89,24 +89,24 @@ function treeSpot(wood) {
 const elements = [];
 for (const wood of WOODS) {
 	for (const [name, build] of [['pond', pondSpot], ['tree', treeSpot]]) {
-		out(`espresso/structure/rest_spot/${name}_${wood}.nbt`, build(wood));
-		elements.push({ weight: 1, element: { element_type: 'minecraft:single_pool_element', location: `espresso:rest_spot/${name}_${wood}`,
+		out(`espresso_flavoured/structure/rest_spot/${name}_${wood}.nbt`, build(wood));
+		elements.push({ weight: 1, element: { element_type: 'minecraft:single_pool_element', location: `espresso_flavoured:rest_spot/${name}_${wood}`,
 			processors: 'minecraft:empty', projection: 'rigid' } });
 	}
 }
-out('espresso/worldgen/template_pool/rest_spot.json', { fallback: 'minecraft:empty', elements });
-out('espresso/worldgen/structure/rest_spot.json', {
-	type: 'minecraft:jigsaw', biomes: '#espresso:has_structure/rest_spot', step: 'surface_structures',
-	terrain_adaptation: 'beard_thin', spawn_overrides: {}, start_pool: 'espresso:rest_spot', size: 1,
+out('espresso_flavoured/worldgen/template_pool/rest_spot.json', { fallback: 'minecraft:empty', elements });
+out('espresso_flavoured/worldgen/structure/rest_spot.json', {
+	type: 'minecraft:jigsaw', biomes: '#espresso_flavoured:has_structure/rest_spot', step: 'surface_structures',
+	terrain_adaptation: 'beard_thin', spawn_overrides: {}, start_pool: 'espresso_flavoured:rest_spot', size: 1,
 	// The lawn replaces the top layer of ground.
 	start_height: { absolute: -1 }, project_start_to_heightmap: 'WORLD_SURFACE_WG', max_distance_from_center: 16, use_expansion_hack: false,
 });
 // About one per 18 x 18 chunks, roughly every 300 blocks (where the biome suits).
-out('espresso/worldgen/structure_set/rest_spots.json', {
-	structures: [{ structure: 'espresso:rest_spot', weight: 1 }],
+out('espresso_flavoured/worldgen/structure_set/rest_spots.json', {
+	structures: [{ structure: 'espresso_flavoured:rest_spot', weight: 1 }],
 	placement: { type: 'minecraft:random_spread', spacing: 18, separation: 6, salt: 20261010 },
 });
-out('espresso/tags/worldgen/biome/has_structure/rest_spot.json', { values: [
+out('espresso_flavoured/tags/worldgen/biome/has_structure/rest_spot.json', { values: [
 	'minecraft:plains', 'minecraft:sunflower_plains', 'minecraft:meadow', 'minecraft:forest', 'minecraft:flower_forest',
 	'minecraft:birch_forest', 'minecraft:old_growth_birch_forest', 'minecraft:cherry_grove', 'minecraft:taiga',
 	{ id: '#c:is_plains', required: false }, { id: '#c:is_forest', required: false },
@@ -122,7 +122,7 @@ const scatter = (r) => ({ type: 'minecraft:offset',
 	x: { type: 'minecraft:trapezoid', max: r, min: -r, plateau: 0 },
 	y: { type: 'minecraft:trapezoid', max: 3, min: -3, plateau: 0 },
 	z: { type: 'minecraft:trapezoid', max: r, min: -r, plateau: 0 } });
-out('espresso/worldgen/placed_feature/waterside_firefly_bush.json', {
+out('espresso_flavoured/worldgen/placed_feature/waterside_firefly_bush.json', {
 	feature: 'minecraft:firefly_bush',
 	placement: [
 		{ type: 'minecraft:count', count: 3 },
@@ -142,7 +142,7 @@ out('espresso/worldgen/placed_feature/waterside_firefly_bush.json', {
 		] } },
 	],
 });
-out('espresso/worldgen/placed_feature/waterside_lily_pads.json', {
+out('espresso_flavoured/worldgen/placed_feature/waterside_lily_pads.json', {
 	feature: 'minecraft:waterlily',
 	placement: [
 		{ type: 'minecraft:in_square' },
@@ -154,9 +154,9 @@ out('espresso/worldgen/placed_feature/waterside_lily_pads.json', {
 	],
 });
 // Water lilies (lily pads in bloom) among them: about one for every two or three lily pads.
-out('espresso/worldgen/feature/waterside_water_lily.json', { type: 'minecraft:simple_block', to_place: { id: 'espresso:water_lily' } });
-out('espresso/worldgen/placed_feature/waterside_water_lilies.json', {
-	feature: 'espresso:waterside_water_lily',
+out('espresso_flavoured/worldgen/feature/waterside_water_lily.json', { type: 'minecraft:simple_block', to_place: { id: 'espresso_flavoured:water_lily' } });
+out('espresso_flavoured/worldgen/placed_feature/waterside_water_lilies.json', {
+	feature: 'espresso_flavoured:waterside_water_lily',
 	placement: [
 		{ type: 'minecraft:in_square' },
 		{ type: 'minecraft:heightmap', heightmap: 'WORLD_SURFACE_WG' },
@@ -165,7 +165,7 @@ out('espresso/worldgen/placed_feature/waterside_water_lilies.json', {
 		scatter(6),
 		{ type: 'minecraft:block_predicate_filter', predicate: { type: 'minecraft:all_of', predicates: [
 			{ type: 'minecraft:matching_block_tag', tag: 'minecraft:air' },
-			{ type: 'minecraft:would_survive', state: 'espresso:water_lily' },
+			{ type: 'minecraft:would_survive', state: 'espresso_flavoured:water_lily' },
 		] } },
 	],
 });

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:cocoa_beans",
+    "minecraft:sugar",
+    "minecraft:milk_bucket"
+  ],
+  "result": {
+    "id": "espresso_flavoured:cocoa_mix",
+    "count": 4
+  }
+}

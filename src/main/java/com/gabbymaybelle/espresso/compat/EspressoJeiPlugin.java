@@ -50,7 +50,7 @@ public class EspressoJeiPlugin implements IModPlugin {
 				new Brew(new ItemStack(EspressoContent.DECAF_BEANS), Mugs.fill(mug, EspressoContent.ESPRESSO, true), true),
 				new Brew(new ItemStack(EspressoContent.BARISTAS_RESERVE), Mugs.fill(mug, EspressoContent.RISTRETTO), true),
 				new Brew(new ItemStack(EspressoContent.COCOA_MIX), Mugs.fill(mug, EspressoContent.HOT_CHOCOLATE), false)));
-		registration.addIngredientInfo(EspressoContent.WATER_LILY_ITEM, Component.translatable("jei.espresso.water_lily.info"));
+		registration.addIngredientInfo(EspressoContent.WATER_LILY_ITEM, Component.translatable("jei.espresso_flavoured.water_lily.info"));
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class EspressoJeiPlugin implements IModPlugin {
 
 		@Override
 		public Component getTitle() {
-			return Component.translatable("block.espresso.espresso_machine");
+			return Component.translatable("block.espresso_flavoured.espresso_machine");
 		}
 
 		@Override
@@ -105,7 +105,7 @@ public class EspressoJeiPlugin implements IModPlugin {
 		@Override
 		public void createRecipeExtras(IRecipeExtrasBuilder builder, Brew brew, IFocusGroup focuses) {
 			builder.addAnimatedRecipeArrowWidget(200).setPosition(27, 11);
-			builder.addText(Component.translatable("jei.espresso.espresso_machine.needs_bar").withStyle(ChatFormatting.GRAY), 116, 10)
+			builder.addText(Component.translatable("jei.espresso_flavoured.espresso_machine.needs_bar").withStyle(ChatFormatting.GRAY), 116, 10)
 					.setPosition(0, 41);
 		}
 	}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "food",
+  "cookingtime": 600,
+  "experience": 0.35,
+  "ingredient": "espresso_flavoured:coffee_cherries",
+  "result": {
+    "id": "espresso_flavoured:roasted_coffee_beans"
+  }
+}

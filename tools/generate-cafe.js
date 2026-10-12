@@ -14,7 +14,7 @@
 const fs = require('fs'), path = require('path');
 const { T } = require('./nbt.js');
 const { Structure, stairs, fence } = require('./structure.js');
-const ROOT = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data', 'data', 'espresso', 'structure', 'village');
+const ROOT = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data', 'data', 'espresso_flavoured', 'structure', 'village');
 
 // Each village's materials: plinth, walls, posts and beams (logs), floor and porch deck, roof
 // (stairs, full block and slab), the stone wall for the porch footings and railing, the
@@ -148,15 +148,15 @@ function build(biome, s) {
 	// Inside: the counter along the back wall with a cake, the machine, a mug and canisters of beans
 	// and cherries (that one on a barrel by the fire); the café's chest; two tables by the side
 	// windows; a rug; lanterns.
-	for (const z of [4, 5, 6, 7]) set(9, 1, z, `espresso:${s.wood}_coffee_bar[facing=west]`);
+	for (const z of [4, 5, 6, 7]) set(9, 1, z, `espresso_flavoured:${s.wood}_coffee_bar[facing=west]`);
 	set(9, 2, 4, 'minecraft:cake[bites=0]');
-	set(9, 2, 5, 'espresso:espresso_machine[facing=west,beans=false]');
-	set(9, 2, 6, 'espresso:placed_mug[facing=west,contents=empty,color=0]', { id: 'espresso:placed_mug', Mug: { id: 'espresso:mug', count: 1 } });
-	set(9, 2, 7, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
-	set(9, 1, 3, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso:chests/village_cafe' });
+	set(9, 2, 5, 'espresso_flavoured:espresso_machine[facing=west,beans=false]');
+	set(9, 2, 6, 'espresso_flavoured:placed_mug[facing=west,contents=empty,color=0]', { id: 'espresso_flavoured:placed_mug', Mug: { id: 'espresso_flavoured:mug', count: 1 } });
+	set(9, 2, 7, 'espresso_flavoured:canister[facing=west]', { id: 'espresso_flavoured:canister', variant: { item: 'espresso_flavoured:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
+	set(9, 1, 3, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso_flavoured:chests/village_cafe' });
 	set(9, 2, 3, 'minecraft:potted_cactus'); // a little cactus on the chest, by the cake
 	set(9, 1, 9, 'minecraft:barrel[facing=up,open=false]');
-	set(9, 2, 9, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
+	set(9, 2, 9, 'espresso_flavoured:canister[facing=west]', { id: 'espresso_flavoured:canister', variant: { item: 'espresso_flavoured:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
 	for (const z of [3, 9]) {
 		table(6, z);
 		set(5, 1, z, chair('west'));
@@ -249,13 +249,13 @@ function buildTeahouse() {
 	for (let z = 4; z <= 6; z++) for (let x = 5; x <= 6; x++) set(x, 9, z, `${roof}_slab[type=bottom,waterlogged=false]`);
 
 	// Inside: the counter along the back, two low tables with cushions, and a paper lantern.
-	for (const z of [3, 4, 5, 6, 7]) set(8, 1, z, 'espresso:spruce_coffee_bar[facing=west]');
+	for (const z of [3, 4, 5, 6, 7]) set(8, 1, z, 'espresso_flavoured:spruce_coffee_bar[facing=west]');
 	set(8, 2, 3, 'minecraft:potted_bamboo');
-	set(8, 2, 4, 'espresso:espresso_machine[facing=west,beans=false]');
-	set(8, 2, 5, 'espresso:placed_mug[facing=west,contents=empty,color=0]', { id: 'espresso:placed_mug', Mug: { id: 'espresso:mug', count: 1 } });
-	set(8, 2, 6, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
-	set(8, 2, 7, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
-	set(8, 1, 2, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso:chests/village_cafe' });
+	set(8, 2, 4, 'espresso_flavoured:espresso_machine[facing=west,beans=false]');
+	set(8, 2, 5, 'espresso_flavoured:placed_mug[facing=west,contents=empty,color=0]', { id: 'espresso_flavoured:placed_mug', Mug: { id: 'espresso_flavoured:mug', count: 1 } });
+	set(8, 2, 6, 'espresso_flavoured:canister[facing=west]', { id: 'espresso_flavoured:canister', variant: { item: 'espresso_flavoured:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
+	set(8, 2, 7, 'espresso_flavoured:canister[facing=west]', { id: 'espresso_flavoured:canister', variant: { item: 'espresso_flavoured:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
+	set(8, 1, 2, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso_flavoured:chests/village_cafe' });
 	set(8, 2, 2, 'minecraft:potted_cactus'); // a little cactus on the chest
 	set(8, 1, 8, 'minecraft:barrel[facing=up,open=false]');
 	for (const z of [3, 7]) {

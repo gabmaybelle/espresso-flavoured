@@ -1,0 +1,41 @@
+{
+  "parent": "espresso_flavoured:guide/root",
+  "criteria": {
+    "bundle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bundle",
+            "predicates": {
+              "minecraft:bundle_contents": {
+                "items": {
+                  "contains": [
+                    {
+                      "items": "#minecraft:pickaxes"
+                    },
+                    {
+                      "items": "#minecraft:axes"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:bundle"
+    },
+    "title": "Pocket Shot",
+    "description": "Tuck a pickaxe and an axe into the same bundle"
+  },
+  "requirements": [
+    [
+      "bundle"
+    ]
+  ]
+}

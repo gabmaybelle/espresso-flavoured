@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "espresso",
+	"id": "espresso_flavoured",
 	"version": "${version}",
 	"name": "Espresso Flavoured",
 	"description": "A shot of espresso for your survival world: a safe home radius, builds creepers can't wreck, longer days, shorter but sharper nights, graves-friendly deaths that keep your hotbar, Overworld shulker boxes, roomier bundles, a block merchant, and coffee to keep you going.",
@@ -11,7 +11,7 @@
 		"MIT",
 		"CC-BY-NC-SA-4.0"
 	],
-	"icon": "assets/espresso/icon.png",
+	"icon": "assets/espresso_flavoured/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
@@ -31,8 +31,8 @@
 		]
 	},
 	"mixins": [
-		"espresso.mixins.json",
-		"espresso.client.mixins.json"
+		"espresso_flavoured.mixins.json",
+		"espresso_flavoured.client.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

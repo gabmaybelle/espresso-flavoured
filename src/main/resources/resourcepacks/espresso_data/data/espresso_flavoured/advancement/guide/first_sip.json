@@ -1,0 +1,25 @@
+{
+  "parent": "espresso_flavoured:guide/barista",
+  "criteria": {
+    "sipped": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "#espresso_flavoured:coffee"
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso_flavoured:espresso"
+    },
+    "title": "First Sip",
+    "description": "Drink your first coffee"
+  },
+  "requirements": [
+    [
+      "sipped"
+    ]
+  ]
+}

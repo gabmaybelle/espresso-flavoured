@@ -125,7 +125,7 @@ public final class SpawnGazebo {
 
 	/**
 	 * The starter kit is in the chest in the railing (a loot chest, so Lootr can give every player
-	 * their own copy). The starter kit function reads storage {@code espresso:spawn} to know that,
+	 * their own copy). The starter kit function reads storage {@code espresso_flavoured:spawn} to know that,
 	 * and whether Lootr is here to share the chest out.
 	 */
 	private static void kitChest(ServerLevel level, BlockPos origin, Rotation rotation) {

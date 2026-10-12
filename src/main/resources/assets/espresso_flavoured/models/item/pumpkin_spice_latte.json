@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "espresso_flavoured:item/mug",
+    "layer1": "espresso_flavoured:item/pumpkin_spice_latte_fill"
+  }
+}

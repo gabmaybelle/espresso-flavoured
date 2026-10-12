@@ -2,7 +2,7 @@
 // their models, block states, item definitions and English names.
 //   node tools/generate-coffee-assets.js
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
-const A = path.join(__dirname, '..', 'src', 'main', 'resources', 'assets', 'espresso');
+const A = path.join(__dirname, '..', 'src', 'main', 'resources', 'assets', 'espresso_flavoured');
 const out = (rel, obj) => {
 	const f = path.join(A, ...rel.split('/'));
 	fs.mkdirSync(path.dirname(f), { recursive: true });
@@ -455,24 +455,24 @@ png('mob_effect/caffeinated', [
 // ---------------------------------------------------------------- models, states, names
 // Stages 0 and 1 are short; from stage 2 the bush has a top half. (A top half never exists below
 // stage 2; those states just borrow the stage 2 top.)
-const bushModel = (age, half) => age < 2 ? `espresso:block/coffee_bush_stage${age}` : `espresso:block/coffee_bush_tall${age}_${half === 'upper' ? 'top' : 'bottom'}`;
+const bushModel = (age, half) => age < 2 ? `espresso_flavoured:block/coffee_bush_stage${age}` : `espresso_flavoured:block/coffee_bush_tall${age}_${half === 'upper' ? 'top' : 'bottom'}`;
 out('blockstates/coffee_bush.json', { variants: Object.fromEntries([0, 1, 2, 3, 4].flatMap(age => ['lower', 'upper'].map(half =>
 	[`age=${age},half=${half}`, { model: bushModel(age < 2 && half === 'upper' ? 2 : age, half) }]))) });
-for (const a of [0, 1]) out(`models/block/coffee_bush_stage${a}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso:block/coffee_bush_stage${a}` } });
+for (const a of [0, 1]) out(`models/block/coffee_bush_stage${a}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso_flavoured:block/coffee_bush_stage${a}` } });
 for (const a of [2, 3, 4]) for (const half of ['top', 'bottom']) {
-	out(`models/block/coffee_bush_tall${a}_${half}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso:block/coffee_bush_tall${a}_${half}` } });
+	out(`models/block/coffee_bush_tall${a}_${half}.json`, { parent: 'minecraft:block/cross', textures: { cross: `espresso_flavoured:block/coffee_bush_tall${a}_${half}` } });
 }
 for (const item of ['coffee_cherries', 'roasted_coffee_beans', 'unfired_mug']) {
-	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
-	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
+	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso_flavoured:item/${item}` } });
+	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso_flavoured:item/${item}` } });
 }
 const PLAIN_MUG = 0xF0E4CF - 0x1000000; // Mugs.PLAIN as a signed ARGB int
 const dyed = (model) => ({ model: { type: 'minecraft:model', model, tints: [{ type: 'minecraft:dye', default: PLAIN_MUG }] } });
-out('items/mug.json', dyed('espresso:item/mug'));
-out('models/item/mug.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug' } });
+out('items/mug.json', dyed('espresso_flavoured:item/mug'));
+out('models/item/mug.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso_flavoured:item/mug' } });
 for (const item of ['espresso', 'latte', 'mocha_latte']) {
-	out(`items/${item}.json`, dyed(`espresso:item/${item}`));
-	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: `espresso:item/${item}_fill` } });
+	out(`items/${item}.json`, dyed(`espresso_flavoured:item/${item}`));
+	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso_flavoured:item/mug', layer1: `espresso_flavoured:item/${item}_fill` } });
 }
 
 // Placed mug: a saucer, a rounded mug (a body with gentle bulges on each side), a curved
@@ -519,34 +519,34 @@ const DRINKS = {
 };
 const TOPPINGS = ['foam', 'sleeve', 'ice', 'straw', 'marshmallow', 'gold', 'pod', 'drizzle', 'honey', 'caramel'];
 const mugTextures = {
-	particle: 'espresso:block/mug_glaze', glaze: 'espresso:block/mug_glaze', rim: 'espresso:block/mug_rim', saucer: 'espresso:block/saucer',
-	...Object.fromEntries(TOPPINGS.map(t => [t, `espresso:block/mug_${t}`])),
+	particle: 'espresso_flavoured:block/mug_glaze', glaze: 'espresso_flavoured:block/mug_glaze', rim: 'espresso_flavoured:block/mug_rim', saucer: 'espresso_flavoured:block/saucer',
+	...Object.fromEntries(TOPPINGS.map(t => [t, `espresso_flavoured:block/mug_${t}`])),
 };
 out('models/block/mug_empty.json', { parent: 'minecraft:block/block', textures: mugTextures, elements: mugElements });
 for (const [name, [glow, toppings]] of Object.entries(DRINKS)) {
-	out(`models/block/mug_${name}.json`, { parent: 'minecraft:block/block', textures: { ...mugTextures, liquid: `espresso:block/mug_${name}` },
+	out(`models/block/mug_${name}.json`, { parent: 'minecraft:block/block', textures: { ...mugTextures, liquid: `espresso_flavoured:block/mug_${name}` },
 		elements: [...mugElements, surface(glow), ...toppings] });
 }
 for (const stale of ['mug_full']) fs.rmSync(path.join(A, 'models', 'block', stale + '.json'), { force: true });
 for (const stale of ['mug', 'mug_inside']) fs.rmSync(path.join(A, 'textures', 'block', stale + '.png'), { force: true });
 out('blockstates/placed_mug.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].flatMap(([facing, y]) =>
-		['empty', ...Object.keys(DRINKS)].map(c => [`contents=${c},facing=${facing}`, { model: `espresso:block/mug_${c}`, ...(y ? { y } : {}) }])),
+		['empty', ...Object.keys(DRINKS)].map(c => [`contents=${c},facing=${facing}`, { model: `espresso_flavoured:block/mug_${c}`, ...(y ? { y } : {}) }])),
 ) });
 // Vanilla, the golden mug and canisters.
 for (const item of ['vanilla_syrup', 'unfired_canister']) {
-	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
-	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
+	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso_flavoured:item/${item}` } });
+	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso_flavoured:item/${item}` } });
 }
-out('items/vanilla_latte.json', dyed('espresso:item/vanilla_latte'));
+out('items/vanilla_latte.json', dyed('espresso_flavoured:item/vanilla_latte'));
 for (const drink of ['pumpkin_spice_latte', 'iced_coffee', 'night_shift', 'hot_chocolate', 'honey_latte', 'caramel_macchiato', 'cold_brew']) {
-	out(`items/${drink}.json`, dyed(`espresso:item/${drink}`));
-	out(`models/item/${drink}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: `espresso:item/${drink}_fill` } });
+	out(`items/${drink}.json`, dyed(`espresso_flavoured:item/${drink}`));
+	out(`models/item/${drink}.json`, { parent: 'minecraft:item/generated', textures: { layer0: 'espresso_flavoured:item/mug', layer1: `espresso_flavoured:item/${drink}_fill` } });
 }
-out('models/item/vanilla_latte.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: 'espresso:item/vanilla_latte_fill' } });
+out('models/item/vanilla_latte.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso_flavoured:item/mug', layer1: 'espresso_flavoured:item/vanilla_latte_fill' } });
 // The golden mug carries its gold colour as a dye, so it shares the mug's tinted model.
-out('items/golden_mug.json', dyed('espresso:item/mug'));
-const canisterTextures = { particle: 'espresso:block/canister', side: 'espresso:block/canister', top: 'espresso:block/canister_top' };
+out('items/golden_mug.json', dyed('espresso_flavoured:item/mug'));
+const canisterTextures = { particle: 'espresso_flavoured:block/canister', side: 'espresso_flavoured:block/canister', top: 'espresso_flavoured:block/canister_top' };
 out('models/block/canister.json', { parent: 'minecraft:block/block', textures: canisterTextures, display: {
 	gui: { rotation: [30, 225, 0], translation: [0, 1, 0], scale: [0.9, 0.9, 0.9] },
 	ground: { rotation: [0, 0, 0], translation: [0, 3, 0], scale: [0.5, 0.5, 0.5] },
@@ -558,38 +558,38 @@ out('models/block/canister.json', { parent: 'minecraft:block/block', textures: c
 	{ from: [4.5, 10, 4.5], to: [11.5, 11, 11.5], faces: tinted({ ...sides('#side'), up: '#top', down: '#side' }) },
 	{ from: [7, 11, 7], to: [9, 12, 9], faces: tinted({ ...sides('#side'), up: '#top', down: '#side' }) },
 ] });
-out('items/canister.json', dyed('espresso:block/canister'));
+out('items/canister.json', dyed('espresso_flavoured:block/canister'));
 out('blockstates/canister.json', { variants: Object.fromEntries(
-	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/canister', ...(y ? { y } : {}) }]),
+	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso_flavoured:block/canister', ...(y ? { y } : {}) }]),
 ) });
 // Glass jar, the Reserve and Ristretto.
 for (const item of ['glass_jar', 'baristas_reserve', 'decaf_coffee_beans', 'pumpkin_spice', 'cocoa_mix', 'cinnamon', 'caramel', 'croissant', 'biscotti', 'muffin', 'coffee_grounds']) {
-	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
-	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
+	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso_flavoured:item/${item}` } });
+	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso_flavoured:item/${item}` } });
 }
-out('items/ristretto.json', dyed('espresso:item/ristretto'));
-out('models/item/ristretto.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: 'espresso:item/ristretto_fill' } });
+out('items/ristretto.json', dyed('espresso_flavoured:item/ristretto'));
+out('models/item/ristretto.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso_flavoured:item/mug', layer1: 'espresso_flavoured:item/ristretto_fill' } });
 const all6 = (texture) => Object.fromEntries(['north', 'south', 'east', 'west', 'up', 'down'].map(f => [f, { texture }]));
-out('models/block/glass_jar.json', { parent: 'minecraft:block/block', textures: { particle: 'espresso:block/glass_jar', glass: 'espresso:block/glass_jar', lid: 'minecraft:block/oak_planks' }, elements: [
+out('models/block/glass_jar.json', { parent: 'minecraft:block/block', textures: { particle: 'espresso_flavoured:block/glass_jar', glass: 'espresso_flavoured:block/glass_jar', lid: 'minecraft:block/oak_planks' }, elements: [
 	{ from: [4, 0, 4], to: [12, 11, 12], faces: all6('#glass') },
 	{ from: [5, 11, 5], to: [11, 13, 11], faces: all6('#lid') },
 ] });
 // Coffee bars: plank cabinets with doors on the front and a smooth stone counter top.
 out('models/block/coffee_bar.json', { parent: 'minecraft:block/block', textures: { particle: '#planks', top: 'minecraft:block/smooth_stone',
-	top_side: 'minecraft:block/smooth_stone_slab_side', doors: 'espresso:block/coffee_bar_doors' }, elements: [
+	top_side: 'minecraft:block/smooth_stone_slab_side', doors: 'espresso_flavoured:block/coffee_bar_doors' }, elements: [
 	{ from: [0, 0, 0], to: [16, 14, 16], faces: { ...Object.fromEntries(['north', 'south', 'east', 'west'].map(f => [f, { texture: '#planks', uv: [0, 2, 16, 16] }])), down: { texture: '#planks', cullface: 'down' } } },
 	{ from: [0, 14, 0], to: [16, 16, 16], faces: { up: { texture: '#top', cullface: 'up' }, ...Object.fromEntries(['north', 'south', 'east', 'west'].map(f => [f, { texture: '#top_side', uv: [0, 0, 16, 2] }])) } },
 	{ from: [0.5, 0.5, -0.01], to: [15.5, 13.5, -0.01], faces: { north: { texture: '#doors', uv: [0, 0, 16, 14] } } },
 ] });
 for (const wood of ['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'mangrove', 'cherry', 'pale_oak', 'poplar', 'bamboo', 'crimson', 'warped']) {
-	out(`models/block/${wood}_coffee_bar.json`, { parent: 'espresso:block/coffee_bar', textures: { planks: `minecraft:block/${wood}_planks` } });
-	out(`items/${wood}_coffee_bar.json`, { model: { type: 'minecraft:model', model: `espresso:block/${wood}_coffee_bar` } });
+	out(`models/block/${wood}_coffee_bar.json`, { parent: 'espresso_flavoured:block/coffee_bar', textures: { planks: `minecraft:block/${wood}_planks` } });
+	out(`items/${wood}_coffee_bar.json`, { model: { type: 'minecraft:model', model: `espresso_flavoured:block/${wood}_coffee_bar` } });
 	out(`blockstates/${wood}_coffee_bar.json`, { variants: Object.fromEntries(
-		[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: `espresso:block/${wood}_coffee_bar`, ...(y ? { y } : {}) }]),
+		[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: `espresso_flavoured:block/${wood}_coffee_bar`, ...(y ? { y } : {}) }]),
 	) });
 }
 out('blockstates/glass_jar.json', { variants: Object.fromEntries(
-	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso:block/glass_jar', ...(y ? { y } : {}) }]),
+	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].map(([facing, y]) => [`facing=${facing}`, { model: 'espresso_flavoured:block/glass_jar', ...(y ? { y } : {}) }]),
 ) });
 
 
@@ -637,11 +637,11 @@ const all = (texture) => Object.fromEntries(['north', 'south', 'east', 'west', '
 // with a grate, a copper cup-warmer tray on top with a glass bean jar, and the steam wand on the side.
 out('models/block/espresso_machine.json', {
 	parent: 'minecraft:block/block',
-	textures: { particle: 'espresso:block/espresso_machine_side', side: 'espresso:block/espresso_machine_side',
-		front: 'espresso:block/espresso_machine_front', inner: 'espresso:block/espresso_machine_inner',
-		top: 'espresso:block/espresso_machine_top', copper: 'espresso:block/espresso_machine_copper',
-		dark: 'espresso:block/espresso_machine_dark', wood: 'espresso:block/espresso_machine_wood',
-		hopper: 'espresso:block/espresso_machine_hopper' },
+	textures: { particle: 'espresso_flavoured:block/espresso_machine_side', side: 'espresso_flavoured:block/espresso_machine_side',
+		front: 'espresso_flavoured:block/espresso_machine_front', inner: 'espresso_flavoured:block/espresso_machine_inner',
+		top: 'espresso_flavoured:block/espresso_machine_top', copper: 'espresso_flavoured:block/espresso_machine_copper',
+		dark: 'espresso_flavoured:block/espresso_machine_dark', wood: 'espresso_flavoured:block/espresso_machine_wood',
+		hopper: 'espresso_flavoured:block/espresso_machine_hopper' },
 	elements: [
 		// The upright body at the back, and the head reaching forward over the cup.
 		{ from: [4, 0, 7], to: [12, 13, 15], faces: { north: { texture: '#inner' }, south: { texture: '#side' }, east: { texture: '#side' },
@@ -665,12 +665,12 @@ out('models/block/espresso_machine.json', {
 	],
 });
 out('models/block/espresso_machine_filled.json', {
-	parent: 'espresso:block/espresso_machine', textures: { hopper: 'espresso:block/espresso_machine_hopper_filled' },
+	parent: 'espresso_flavoured:block/espresso_machine', textures: { hopper: 'espresso_flavoured:block/espresso_machine_hopper_filled' },
 });
 out('blockstates/espresso_machine.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].flatMap(([facing, y]) =>
 		[false, true].map(beans => [`beans=${beans},facing=${facing}`,
-			{ model: `espresso:block/espresso_machine${beans ? '_filled' : ''}`, ...(y ? { y } : {}) }])),
+			{ model: `espresso_flavoured:block/espresso_machine${beans ? '_filled' : ''}`, ...(y ? { y } : {}) }])),
 ) });
 
 // The machine's menu (176x166 in a 256x256 sheet): a warm café panel. A walnut frame round a cream
@@ -717,7 +717,7 @@ out('blockstates/espresso_machine.json', { variants: Object.fromEntries(
 		k: [64, 34, 16], b: [112, 64, 34], h: [164, 104, 58],
 	});
 }
-out('items/espresso_machine.json', { model: { type: 'minecraft:model', model: 'espresso:block/espresso_machine_filled' } });
+out('items/espresso_machine.json', { model: { type: 'minecraft:model', model: 'espresso_flavoured:block/espresso_machine_filled' } });
 
 // ---------------------------------------------------------------- café charms
 // Seven small charms (CharmItem.java), worn in Trinkets slots. Hand-drawn 16x16.
@@ -877,8 +877,8 @@ const CHARM_ART = {
 };
 for (const [charm, [rows, palette]] of Object.entries(CHARM_ART)) {
 	png(`item/${charm}`, rows, palette);
-	out(`items/${charm}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${charm}` } });
-	out(`models/item/${charm}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${charm}` } });
+	out(`items/${charm}.json`, { model: { type: 'minecraft:model', model: `espresso_flavoured:item/${charm}` } });
+	out(`models/item/${charm}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso_flavoured:item/${charm}` } });
 }
 // The beanie as worn: a knit dome, a ribbed cuff and a pom-pom, drawn from one small texture
 // (knit on top, cuff in the middle, pom-pom at the bottom). On the head it uses this model; in hand,
@@ -887,14 +887,14 @@ png('item/knit_beanie_worn', Array.from({ length: 16 }, (_, y) => Array.from({ l
 	y < 8 ? (x % 3 === 0 ? 'k' : (y % 4 === 3 ? 'b' : 'B')) : y < 12 ? (x % 2 === 0 ? 'C' : 'c') : (x + y) % 3 === 0 ? 'w' : 'W').join('')),
 	{ B: [196, 98, 62], b: [176, 84, 52], k: [150, 66, 40], C: [236, 222, 196], c: [206, 188, 160], W: [250, 246, 236], w: [222, 212, 194] });
 const knitBox = (from, to, uv) => ({ from, to, faces: Object.fromEntries(['north', 'south', 'east', 'west', 'up', 'down'].map(f => [f, { uv, texture: '#0' }])) });
-out('models/item/knit_beanie_worn.json', { textures: { 0: 'espresso:item/knit_beanie_worn', particle: 'espresso:item/knit_beanie_worn' }, elements: [
+out('models/item/knit_beanie_worn.json', { textures: { 0: 'espresso_flavoured:item/knit_beanie_worn', particle: 'espresso_flavoured:item/knit_beanie_worn' }, elements: [
 	knitBox([1.2, 9.5, 1.2], [14.8, 15.6, 14.8], [0, 0, 16, 8]),   // the knit dome
 	knitBox([0.7, 7.5, 0.7], [15.3, 10.5, 15.3], [0, 8, 16, 12]),  // the turned-up cuff
 	knitBox([6.4, 15.6, 6.4], [9.6, 18.4, 9.6], [0, 12, 4, 16]),   // the pom-pom
 ] });
 out('items/knit_beanie.json', { model: { type: 'minecraft:select', property: 'minecraft:display_context',
-	cases: [{ when: 'head', model: { type: 'minecraft:model', model: 'espresso:item/knit_beanie_worn' } }],
-	fallback: { type: 'minecraft:model', model: 'espresso:item/knit_beanie' } } });
+	cases: [{ when: 'head', model: { type: 'minecraft:model', model: 'espresso_flavoured:item/knit_beanie_worn' } }],
+	fallback: { type: 'minecraft:model', model: 'espresso_flavoured:item/knit_beanie' } } });
 // The pocket slot's empty-slot icon, in Trinkets' grey outline style.
 png('gui/sprites/container/slots/pocket', [
 	'................',
@@ -915,7 +915,7 @@ png('gui/sprites/container/slots/pocket', [
 	'................',
 ], { b: [85, 85, 85] });
 // How Trinkets draws them on the player: the Lucky Bean on a cord, the Thermos at the hip, the parasol on the back.
-const trinket = (charm, render) => out(`trinkets/${charm}.json`, { target: [`espresso:${charm}`], render });
+const trinket = (charm, render) => out(`trinkets/${charm}.json`, { target: [`espresso_flavoured:${charm}`], render });
 const turn = (angle) => ({ axis: [0, 1, 0], angle });
 trinket('lucky_bean', [
 	{ type: 'model', model_part: 'body', model: 'trinkets:item/generic_necklace', offset: [0, 1, 1],
@@ -932,142 +932,142 @@ trinket('cafe_parasol', [{ type: 'item', model_part: 'body', display_context: 'n
 	transformation: { translation: [0, -0.35, -0.06], left_rotation: turn(0), scale: [0.8, 0.8, 0.8], right_rotation: turn(0) } }]);
 
 out('lang/en_us.json', {
-	'item.espresso.lucky_bean': 'Lucky Bean',
-	'item.espresso.lucky_bean.desc': '+1 Luck: better fishing and chest finds',
-	'item.espresso.thermos': 'Thermos',
-	'item.espresso.thermos.desc': 'Coffee and cocoa effects last a quarter longer',
-	'item.espresso.pocket_hearth': 'Pocket Hearth',
-	'item.espresso.pocket_hearth.desc': "Powder snow can't freeze you, and you can walk on it",
-	'item.espresso.reading_socks': 'Reading Socks',
-	'item.espresso.reading_socks.desc': 'Step up full blocks without jumping',
-	'item.espresso.cafe_parasol': 'Café Parasol',
-	'item.espresso.cafe_parasol.desc': 'Fall 3 more blocks before it hurts',
-	'item.espresso.knit_beanie': 'Knit Beanie',
-	'item.espresso.knit_beanie.desc': 'Cozy heals you anywhere, not just near home',
-	'item.espresso.charm.slot.hat': 'Hat',
-	'item.espresso.ember_glove': 'Ember Glove',
-	'item.espresso.ember_glove.desc': 'Smelts ores, sand, cobblestone and logs as you mine them. Crouch to mine normally',
-	'item.espresso.copper_tamper': 'Copper Tamper',
-	'item.espresso.copper_tamper.desc': '15% more damage to hostile mobs',
-	'item.espresso.charm.slot': 'Wear in a %s slot',
-	'item.espresso.charm.carried': 'Works from your inventory',
-	'item.espresso.charm.slot.necklace': 'Necklace',
-	'item.espresso.charm.slot.belt': 'Belt',
-	'item.espresso.charm.slot.pocket': 'Pocket',
-	'item.espresso.charm.slot.shoes': 'Shoes',
-	'item.espresso.charm.slot.back': 'Back',
-	'item.espresso.charm.slot.glove': 'Glove',
+	'item.espresso_flavoured.lucky_bean': 'Lucky Bean',
+	'item.espresso_flavoured.lucky_bean.desc': '+1 Luck: better fishing and chest finds',
+	'item.espresso_flavoured.thermos': 'Thermos',
+	'item.espresso_flavoured.thermos.desc': 'Coffee and cocoa effects last a quarter longer',
+	'item.espresso_flavoured.pocket_hearth': 'Pocket Hearth',
+	'item.espresso_flavoured.pocket_hearth.desc': "Powder snow can't freeze you, and you can walk on it",
+	'item.espresso_flavoured.reading_socks': 'Reading Socks',
+	'item.espresso_flavoured.reading_socks.desc': 'Step up full blocks without jumping',
+	'item.espresso_flavoured.cafe_parasol': 'Café Parasol',
+	'item.espresso_flavoured.cafe_parasol.desc': 'Fall 3 more blocks before it hurts',
+	'item.espresso_flavoured.knit_beanie': 'Knit Beanie',
+	'item.espresso_flavoured.knit_beanie.desc': 'Cozy heals you anywhere, not just near home',
+	'item.espresso_flavoured.charm.slot.hat': 'Hat',
+	'item.espresso_flavoured.ember_glove': 'Ember Glove',
+	'item.espresso_flavoured.ember_glove.desc': 'Smelts ores, sand, cobblestone and logs as you mine them. Crouch to mine normally',
+	'item.espresso_flavoured.copper_tamper': 'Copper Tamper',
+	'item.espresso_flavoured.copper_tamper.desc': '15% more damage to hostile mobs',
+	'item.espresso_flavoured.charm.slot': 'Wear in a %s slot',
+	'item.espresso_flavoured.charm.carried': 'Works from your inventory',
+	'item.espresso_flavoured.charm.slot.necklace': 'Necklace',
+	'item.espresso_flavoured.charm.slot.belt': 'Belt',
+	'item.espresso_flavoured.charm.slot.pocket': 'Pocket',
+	'item.espresso_flavoured.charm.slot.shoes': 'Shoes',
+	'item.espresso_flavoured.charm.slot.back': 'Back',
+	'item.espresso_flavoured.charm.slot.glove': 'Glove',
 	'trinkets.slot.legs.pocket': 'Pocket',
-	'block.espresso.coffee_bush': 'Coffee Bush',
-	'item.espresso.coffee_cherries': 'Coffee Cherries',
-	'item.espresso.roasted_coffee_beans': 'Roasted Coffee Beans',
-	'item.espresso.espresso': 'Espresso',
-	'item.espresso.latte': 'Latte',
-	'item.espresso.mocha_latte': 'Mocha Latte',
-	'effect.espresso.drowsy': 'Drowsy',
-	'effect.espresso.caffeinated': 'Caffeinated',
-	'effect.espresso.cozy': 'Cozy',
-	'effect.espresso.well_rested': 'Well Rested',
-	'item.espresso.decaf_coffee_beans': 'Decaf Coffee Beans',
-	'item.espresso.decaf': 'Decaf',
-	'effect.espresso.warm': 'Warm',
-	'item.espresso.cinnamon': 'Cinnamon',
-	'item.espresso.pumpkin_spice': 'Pumpkin Spice',
-	'item.espresso.cocoa_mix': 'Cocoa Mix',
-	'item.espresso.pumpkin_spice_latte': 'Pumpkin Spice Latte',
-	'item.espresso.iced_coffee': 'Iced Coffee',
-	'item.espresso.night_shift': 'Night Shift',
-	'item.espresso.honey_latte': 'Honey Latte',
-	'item.espresso.caramel_macchiato': 'Caramel Macchiato',
-	'item.espresso.cold_brew': 'Cold Brew',
-	'item.espresso.caramel': 'Caramel',
-	'item.espresso.coffee_grounds': 'Coffee Grounds',
-	'jade.espresso.coffee_bush.0': 'Seedling',
-	'jade.espresso.coffee_bush.1': 'Young',
-	'jade.espresso.coffee_bush.2': 'Grown',
-	'jade.espresso.coffee_bush.3': 'Turning',
-	'jade.espresso.coffee_bush.4': 'Ripe: ready to pick',
-	'jade.espresso.espresso_machine.brewing': 'Brewing: %s%%',
-	'jade.espresso.espresso_machine.idle': 'Waiting for beans and a mug',
-	'jade.espresso.espresso_machine.no_bar': 'Needs a coffee bar underneath',
-	'config.jade.plugin_espresso.placed_mug': 'Placed mug drink names',
-	'config.jade.plugin_espresso.coffee_bush': 'Coffee bush growth',
-	'config.jade.plugin_espresso.espresso_machine': 'Espresso machine brewing',
-	'entity.espresso.seat': 'Seat',
-	'item.espresso.croissant': 'Croissant',
-	'item.espresso.biscotti': 'Biscotti',
-	'item.espresso.muffin': 'Berry Muffin',
-	'item.espresso.hot_chocolate': 'Hot Chocolate',
-	'espresso.options.sugarCaneHeight': 'Sugar Cane Height',
-	'espresso.options.sugarCaneHeight.tooltip': 'How tall sugar cane grows. Vanilla is 3.',
-	'block.espresso.espresso_machine': 'Espresso Machine',
-	'item.espresso.mug': 'Mug',
-	'item.espresso.unfired_mug': 'Unfired Mug',
-	'block.espresso.placed_mug': 'Mug',
-	'item.espresso.vanilla_syrup': 'Vanilla Syrup',
-	'item.espresso.vanilla_latte': 'Vanilla Latte',
-	'item.espresso.golden_mug': 'Golden Mug',
-	'item.espresso.bean_coin': 'Bean Coin',
-	'block.espresso.water_lily': 'Water Lily',
-	'jei.espresso.water_lily.info': 'A lily pad in bloom. Use bone meal on a lily pad to make one, or look among the lily pads by rivers and ponds in new land.',
-	'jei.espresso.espresso_machine.needs_bar': 'Brews on top of a coffee bar',
-	'item.espresso.bean_coin.desc': 'One for each Espresso advancement. A master barista takes them',
-	'item.espresso.unfired_canister': 'Unfired Canister',
-	'block.espresso.canister': 'Canister',
-	'block.espresso.glass_jar': 'Glass Jar',
-	'container.espresso.espresso_machine.needs_bar': 'Needs a coffee bar',
-	'container.espresso.coffee_bar': 'Coffee Bar',
-	...Object.fromEntries(['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'mangrove', 'cherry', 'pale_oak', 'poplar', 'bamboo', 'crimson', 'warped'].map(w => [`block.espresso.${w}_coffee_bar`, w.split('_').map(p => p[0].toUpperCase() + p.slice(1)).join(' ') + ' Coffee Bar'])),
-	'item.espresso.baristas_reserve': 'Barista\x27s Reserve',
-	'item.espresso.ristretto': 'Ristretto',
-	'entity.espresso.villager.barista': 'Barista',
-	'advancements.espresso.guide.barista.title': 'Barista',
-	'advancements.espresso.guide.first_sip.title': 'First Sip',
-	'advancements.espresso.guide.mug_shot.title': 'Mug Shot',
-	'advancements.espresso.guide.fair_trade.title': 'Fair Trade',
-	'advancements.espresso.guide.house_special.title': 'House Special',
-	'advancements.espresso.guide.sweet_dreams.title': 'Sweet Dreams',
-	'container.espresso.espresso_machine': 'Espresso Machine',
-	"espresso.options.title": "Espresso Flavoured Settings",
-	"espresso.options.section.home": "Home and Builds",
-	"espresso.options.section.days": "Days and Nights",
-	"espresso.options.section.wellbeing": "Looking After Yourself",
-	"espresso.options.section.storage": "Storage and Trading",
-	"espresso.options.safeHomeRadius": "Safe Home Radius",
-	"espresso.options.safeHomeRadius.tooltip": "No monsters spawn naturally within this many blocks of your home bed (crouch and use a bed with an empty hand to set it).",
-	"espresso.options.keepHotbarOnDeath": "Keep Hotbar on Death",
-	"espresso.options.keepHotbarOnDeath.tooltip": "Keep your hotbar, armour and off-hand when you die. Everything else stays where you fell.",
-	"espresso.options.creeperGriefing": "Creepers Break Blocks",
-	"espresso.options.creeperGriefing.tooltip": "Off: creeper explosions still hurt, but leave your builds alone.",
-	"espresso.options.endermanGriefing": "Endermen Take Blocks",
-	"espresso.options.endermanGriefing.tooltip": "Off: endermen leave blocks where they are.",
-	"espresso.options.clock": "Clock",
-	"espresso.options.clock.tooltip": "A day counter and clock in the top-right corner, right for the longer days. It turns gold in the hour before night.",
-	"espresso.options.longerDays": "Longer Days",
-	"espresso.options.longerDays.tooltip": "20-minute days and 10-minute nights. Takes effect after restarting the game.",
-	"espresso.options.toughNights": "Tougher Nights",
-	"espresso.options.toughNights.tooltip": "A few more monsters at night, with a little more health and damage.",
-	"espresso.options.phantoms": "Phantoms",
-	"espresso.options.phantoms.tooltip": "Off: phantoms never visit, so sleeping is up to you.",
-	"espresso.options.regenNeedsSaturation": "Heal Only When Fed",
-	"espresso.options.regenNeedsSaturation.tooltip": "Natural healing only happens when you have eaten recently.",
-	"espresso.options.drowsiness": "Drowsiness",
-	"espresso.options.drowsiness.tooltip": "Become Drowsy after two days without sleeping at home, and Hungry if you haven't eaten in that time either.",
-	"espresso.options.caffeineCrash": "Caffeine Crash",
-	"espresso.options.caffeineCrash.tooltip": "Coffee holds off Drowsy for up to a day, then you crash. Off: coffee holds it off as long as you keep drinking.",
-	"espresso.options.section.coffee": "Coffee",
-	"espresso.options.section.world": "Out in the World",
-	"espresso.options.lusherRivers": "Lusher Rivers",
-	"espresso.options.lusherRivers.tooltip": "Seagrass and kelp, plants and flowers on the banks, moss, moss carpet and azaleas at the waterline, muddy banks where there's clay, and more firefly bushes and lily pads, in newly explored land. Takes effect after restarting the game.",
-	"espresso.options.spawnGazebo": "Spawn Gazebo",
-	"espresso.options.spawnGazebo.tooltip": "A little stone gazebo at the world spawn of new worlds, built from the wood that grows around it, with a spore blossom over a glowstone floor and the starter kit in its chest. Only takes effect when a world is created.",
-	"espresso.options.protectGazebo": "Protect the Gazebo",
-	"espresso.options.protectGazebo.tooltip": "The spawn gazebo can only be changed in creative, and explosions, fire and pistons leave it alone. The chest, the benches and the pots still work. Turn off to remodel it.",
-	"espresso.options.coffeeBarRequired": "Machine Needs a Coffee Bar",
-	"espresso.options.coffeeBarRequired.tooltip": "The espresso machine only brews on top of a coffee bar.",
-	"espresso.options.bundleUnstackables": "Tools per Bundle",
-	"espresso.options.bundleUnstackables.tooltip": "How many tools or pieces of armour fit in one bundle (1 is vanilla). On a server, the server's setting is used.",
-	"espresso.options.blockMerchant": "Block Merchant",
-	"espresso.options.blockMerchant.tooltip": "The wandering trader also sells building blocks from far-off biomes.",
+	'block.espresso_flavoured.coffee_bush': 'Coffee Bush',
+	'item.espresso_flavoured.coffee_cherries': 'Coffee Cherries',
+	'item.espresso_flavoured.roasted_coffee_beans': 'Roasted Coffee Beans',
+	'item.espresso_flavoured.espresso': 'Espresso',
+	'item.espresso_flavoured.latte': 'Latte',
+	'item.espresso_flavoured.mocha_latte': 'Mocha Latte',
+	'effect.espresso_flavoured.drowsy': 'Drowsy',
+	'effect.espresso_flavoured.caffeinated': 'Caffeinated',
+	'effect.espresso_flavoured.cozy': 'Cozy',
+	'effect.espresso_flavoured.well_rested': 'Well Rested',
+	'item.espresso_flavoured.decaf_coffee_beans': 'Decaf Coffee Beans',
+	'item.espresso_flavoured.decaf': 'Decaf',
+	'effect.espresso_flavoured.warm': 'Warm',
+	'item.espresso_flavoured.cinnamon': 'Cinnamon',
+	'item.espresso_flavoured.pumpkin_spice': 'Pumpkin Spice',
+	'item.espresso_flavoured.cocoa_mix': 'Cocoa Mix',
+	'item.espresso_flavoured.pumpkin_spice_latte': 'Pumpkin Spice Latte',
+	'item.espresso_flavoured.iced_coffee': 'Iced Coffee',
+	'item.espresso_flavoured.night_shift': 'Night Shift',
+	'item.espresso_flavoured.honey_latte': 'Honey Latte',
+	'item.espresso_flavoured.caramel_macchiato': 'Caramel Macchiato',
+	'item.espresso_flavoured.cold_brew': 'Cold Brew',
+	'item.espresso_flavoured.caramel': 'Caramel',
+	'item.espresso_flavoured.coffee_grounds': 'Coffee Grounds',
+	'jade.espresso_flavoured.coffee_bush.0': 'Seedling',
+	'jade.espresso_flavoured.coffee_bush.1': 'Young',
+	'jade.espresso_flavoured.coffee_bush.2': 'Grown',
+	'jade.espresso_flavoured.coffee_bush.3': 'Turning',
+	'jade.espresso_flavoured.coffee_bush.4': 'Ripe: ready to pick',
+	'jade.espresso_flavoured.espresso_machine.brewing': 'Brewing: %s%%',
+	'jade.espresso_flavoured.espresso_machine.idle': 'Waiting for beans and a mug',
+	'jade.espresso_flavoured.espresso_machine.no_bar': 'Needs a coffee bar underneath',
+	'config.jade.plugin_espresso_flavoured.placed_mug': 'Placed mug drink names',
+	'config.jade.plugin_espresso_flavoured.coffee_bush': 'Coffee bush growth',
+	'config.jade.plugin_espresso_flavoured.espresso_machine': 'Espresso machine brewing',
+	'entity.espresso_flavoured.seat': 'Seat',
+	'item.espresso_flavoured.croissant': 'Croissant',
+	'item.espresso_flavoured.biscotti': 'Biscotti',
+	'item.espresso_flavoured.muffin': 'Berry Muffin',
+	'item.espresso_flavoured.hot_chocolate': 'Hot Chocolate',
+	'espresso_flavoured.options.sugarCaneHeight': 'Sugar Cane Height',
+	'espresso_flavoured.options.sugarCaneHeight.tooltip': 'How tall sugar cane grows. Vanilla is 3.',
+	'block.espresso_flavoured.espresso_machine': 'Espresso Machine',
+	'item.espresso_flavoured.mug': 'Mug',
+	'item.espresso_flavoured.unfired_mug': 'Unfired Mug',
+	'block.espresso_flavoured.placed_mug': 'Mug',
+	'item.espresso_flavoured.vanilla_syrup': 'Vanilla Syrup',
+	'item.espresso_flavoured.vanilla_latte': 'Vanilla Latte',
+	'item.espresso_flavoured.golden_mug': 'Golden Mug',
+	'item.espresso_flavoured.bean_coin': 'Bean Coin',
+	'block.espresso_flavoured.water_lily': 'Water Lily',
+	'jei.espresso_flavoured.water_lily.info': 'A lily pad in bloom. Use bone meal on a lily pad to make one, or look among the lily pads by rivers and ponds in new land.',
+	'jei.espresso_flavoured.espresso_machine.needs_bar': 'Brews on top of a coffee bar',
+	'item.espresso_flavoured.bean_coin.desc': 'One for each Espresso advancement. A master barista takes them',
+	'item.espresso_flavoured.unfired_canister': 'Unfired Canister',
+	'block.espresso_flavoured.canister': 'Canister',
+	'block.espresso_flavoured.glass_jar': 'Glass Jar',
+	'container.espresso_flavoured.espresso_machine.needs_bar': 'Needs a coffee bar',
+	'container.espresso_flavoured.coffee_bar': 'Coffee Bar',
+	...Object.fromEntries(['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'mangrove', 'cherry', 'pale_oak', 'poplar', 'bamboo', 'crimson', 'warped'].map(w => [`block.espresso_flavoured.${w}_coffee_bar`, w.split('_').map(p => p[0].toUpperCase() + p.slice(1)).join(' ') + ' Coffee Bar'])),
+	'item.espresso_flavoured.baristas_reserve': 'Barista\x27s Reserve',
+	'item.espresso_flavoured.ristretto': 'Ristretto',
+	'entity.espresso_flavoured.villager.barista': 'Barista',
+	'advancements.espresso_flavoured.guide.barista.title': 'Barista',
+	'advancements.espresso_flavoured.guide.first_sip.title': 'First Sip',
+	'advancements.espresso_flavoured.guide.mug_shot.title': 'Mug Shot',
+	'advancements.espresso_flavoured.guide.fair_trade.title': 'Fair Trade',
+	'advancements.espresso_flavoured.guide.house_special.title': 'House Special',
+	'advancements.espresso_flavoured.guide.sweet_dreams.title': 'Sweet Dreams',
+	'container.espresso_flavoured.espresso_machine': 'Espresso Machine',
+	"espresso_flavoured.options.title": "Espresso Flavoured Settings",
+	"espresso_flavoured.options.section.home": "Home and Builds",
+	"espresso_flavoured.options.section.days": "Days and Nights",
+	"espresso_flavoured.options.section.wellbeing": "Looking After Yourself",
+	"espresso_flavoured.options.section.storage": "Storage and Trading",
+	"espresso_flavoured.options.safeHomeRadius": "Safe Home Radius",
+	"espresso_flavoured.options.safeHomeRadius.tooltip": "No monsters spawn naturally within this many blocks of your home bed (crouch and use a bed with an empty hand to set it).",
+	"espresso_flavoured.options.keepHotbarOnDeath": "Keep Hotbar on Death",
+	"espresso_flavoured.options.keepHotbarOnDeath.tooltip": "Keep your hotbar, armour and off-hand when you die. Everything else stays where you fell.",
+	"espresso_flavoured.options.creeperGriefing": "Creepers Break Blocks",
+	"espresso_flavoured.options.creeperGriefing.tooltip": "Off: creeper explosions still hurt, but leave your builds alone.",
+	"espresso_flavoured.options.endermanGriefing": "Endermen Take Blocks",
+	"espresso_flavoured.options.endermanGriefing.tooltip": "Off: endermen leave blocks where they are.",
+	"espresso_flavoured.options.clock": "Clock",
+	"espresso_flavoured.options.clock.tooltip": "A day counter and clock in the top-right corner, right for the longer days. It turns gold in the hour before night.",
+	"espresso_flavoured.options.longerDays": "Longer Days",
+	"espresso_flavoured.options.longerDays.tooltip": "20-minute days and 10-minute nights. Takes effect after restarting the game.",
+	"espresso_flavoured.options.toughNights": "Tougher Nights",
+	"espresso_flavoured.options.toughNights.tooltip": "A few more monsters at night, with a little more health and damage.",
+	"espresso_flavoured.options.phantoms": "Phantoms",
+	"espresso_flavoured.options.phantoms.tooltip": "Off: phantoms never visit, so sleeping is up to you.",
+	"espresso_flavoured.options.regenNeedsSaturation": "Heal Only When Fed",
+	"espresso_flavoured.options.regenNeedsSaturation.tooltip": "Natural healing only happens when you have eaten recently.",
+	"espresso_flavoured.options.drowsiness": "Drowsiness",
+	"espresso_flavoured.options.drowsiness.tooltip": "Become Drowsy after two days without sleeping at home, and Hungry if you haven't eaten in that time either.",
+	"espresso_flavoured.options.caffeineCrash": "Caffeine Crash",
+	"espresso_flavoured.options.caffeineCrash.tooltip": "Coffee holds off Drowsy for up to a day, then you crash. Off: coffee holds it off as long as you keep drinking.",
+	"espresso_flavoured.options.section.coffee": "Coffee",
+	"espresso_flavoured.options.section.world": "Out in the World",
+	"espresso_flavoured.options.lusherRivers": "Lusher Rivers",
+	"espresso_flavoured.options.lusherRivers.tooltip": "Seagrass and kelp, plants and flowers on the banks, moss, moss carpet and azaleas at the waterline, muddy banks where there's clay, and more firefly bushes and lily pads, in newly explored land. Takes effect after restarting the game.",
+	"espresso_flavoured.options.spawnGazebo": "Spawn Gazebo",
+	"espresso_flavoured.options.spawnGazebo.tooltip": "A little stone gazebo at the world spawn of new worlds, built from the wood that grows around it, with a spore blossom over a glowstone floor and the starter kit in its chest. Only takes effect when a world is created.",
+	"espresso_flavoured.options.protectGazebo": "Protect the Gazebo",
+	"espresso_flavoured.options.protectGazebo.tooltip": "The spawn gazebo can only be changed in creative, and explosions, fire and pistons leave it alone. The chest, the benches and the pots still work. Turn off to remodel it.",
+	"espresso_flavoured.options.coffeeBarRequired": "Machine Needs a Coffee Bar",
+	"espresso_flavoured.options.coffeeBarRequired.tooltip": "The espresso machine only brews on top of a coffee bar.",
+	"espresso_flavoured.options.bundleUnstackables": "Tools per Bundle",
+	"espresso_flavoured.options.bundleUnstackables.tooltip": "How many tools or pieces of armour fit in one bundle (1 is vanilla). On a server, the server's setting is used.",
+	"espresso_flavoured.options.blockMerchant": "Block Merchant",
+	"espresso_flavoured.options.blockMerchant.tooltip": "The wandering trader also sells building blocks from far-off biomes.",
 });
 console.log('coffee assets written');

@@ -49,9 +49,9 @@ public class CharmItem extends Item {
 		String name = stack.getItem().getDescriptionId();
 		tooltip.accept(Component.translatable(name + ".desc").withStyle(ChatFormatting.GRAY));
 		if (!TRINKETS) {
-			tooltip.accept(Component.translatable("item.espresso.charm.carried").withStyle(ChatFormatting.DARK_GRAY));
+			tooltip.accept(Component.translatable("item.espresso_flavoured.charm.carried").withStyle(ChatFormatting.DARK_GRAY));
 		} else {
-			tooltip.accept(Component.translatable("item.espresso.charm.slot", Component.translatable("item.espresso.charm.slot." + slot))
+			tooltip.accept(Component.translatable("item.espresso_flavoured.charm.slot", Component.translatable("item.espresso_flavoured.charm.slot." + slot))
 					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
@@ -67,7 +67,7 @@ public class CharmItem extends Item {
 		return TRINKETS ? TrinketsCompat.isEquipped(player, charm) : player.getInventory().contains(new ItemStack(charm));
 	}
 
-	/** Drops the Ember Glove smelts as they fall: raw ores, sand, cobblestone and logs (data/espresso/tags/item/ember_glove_smelts.json). */
+	/** Drops the Ember Glove smelts as they fall: raw ores, sand, cobblestone and logs (data/espresso_flavoured/tags/item/ember_glove_smelts.json). */
 	private static final TagKey<Item> SMELTS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "ember_glove_smelts"));
 	private static final LootItemFunction SMELT = SmeltItemFunction.smelted().build();
 

@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:crafting_transmute",
-  "category": "misc",
-  "input": "espresso:latte",
-  "material": "minecraft:honey_bottle",
-  "result": {
-    "id": "espresso:honey_latte"
-  }
-}

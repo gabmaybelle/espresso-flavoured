@@ -1,0 +1,11 @@
+{
+  "gives": {
+    "count": 3,
+    "id": "espresso_flavoured:coffee_cherries"
+  },
+  "max_uses": 8,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "minecraft:emerald"
+  }
+}

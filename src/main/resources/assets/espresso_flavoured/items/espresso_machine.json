@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "espresso_flavoured:block/espresso_machine_filled"
+  }
+}

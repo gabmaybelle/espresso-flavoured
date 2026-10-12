@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "beans=false,facing=north": {
+      "model": "espresso_flavoured:block/espresso_machine"
+    },
+    "beans=true,facing=north": {
+      "model": "espresso_flavoured:block/espresso_machine_filled"
+    },
+    "beans=false,facing=east": {
+      "model": "espresso_flavoured:block/espresso_machine",
+      "y": 90
+    },
+    "beans=true,facing=east": {
+      "model": "espresso_flavoured:block/espresso_machine_filled",
+      "y": 90
+    },
+    "beans=false,facing=south": {
+      "model": "espresso_flavoured:block/espresso_machine",
+      "y": 180
+    },
+    "beans=true,facing=south": {
+      "model": "espresso_flavoured:block/espresso_machine_filled",
+      "y": 180
+    },
+    "beans=false,facing=west": {
+      "model": "espresso_flavoured:block/espresso_machine",
+      "y": 270
+    },
+    "beans=true,facing=west": {
+      "model": "espresso_flavoured:block/espresso_machine_filled",
+      "y": 270
+    }
+  }
+}

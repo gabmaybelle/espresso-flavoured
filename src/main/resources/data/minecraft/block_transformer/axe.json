@@ -67,7 +67,7 @@
     },
     "drop_strategy": "clicked_face",
     "item_damage_per_use": 1,
-    "loot": "espresso:strip/cinnamon",
+    "loot": "espresso_flavoured:strip/cinnamon",
     "sound": "minecraft:item.axe.strip"
   },
   {

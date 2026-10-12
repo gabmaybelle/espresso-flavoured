@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "espresso:item/decaf_coffee_beans"
-  }
-}

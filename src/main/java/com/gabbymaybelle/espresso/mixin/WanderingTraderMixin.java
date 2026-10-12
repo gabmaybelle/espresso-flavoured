@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * The block merchant: after its usual trades, the wandering trader also offers a few
- * building blocks and decorations ({@code espresso:wandering_trader/building_blocks} and
+ * building blocks and decorations ({@code espresso_flavoured:wandering_trader/building_blocks} and
  * {@code .../decor}), and always buys roasted coffee beans ({@code .../fair_trade}).
  */
 @Mixin(WanderingTrader.class)

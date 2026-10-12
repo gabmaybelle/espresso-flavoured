@@ -137,7 +137,7 @@ public final class EspressoContent {
 			trades.put(level, ResourceKey.create(Registries.TRADE_SET, id("barista/level_" + level)));
 		}
 		Registry.register(BuiltInRegistries.VILLAGER_PROFESSION, BARISTA, new VillagerProfession(
-				Component.translatable("entity.espresso.villager.barista"),
+				Component.translatable("entity.espresso_flavoured.villager.barista"),
 				poi -> poi.is(BARISTA_POI), poi -> poi.is(BARISTA_POI),
 				ImmutableSet.of(), ImmutableSet.of(), SoundEvents.BREWING_STAND_BREW, trades));
 	}

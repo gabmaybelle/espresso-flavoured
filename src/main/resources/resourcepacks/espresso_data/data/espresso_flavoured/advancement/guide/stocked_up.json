@@ -1,0 +1,20 @@
+{
+  "parent": "espresso_flavoured:guide/counter_culture",
+  "criteria": {
+    "stocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso_flavoured:glass_jar"
+    },
+    "title": "Stocked Up",
+    "description": "Put something in a canister or glass jar"
+  },
+  "requirements": [
+    [
+      "stocked"
+    ]
+  ]
+}

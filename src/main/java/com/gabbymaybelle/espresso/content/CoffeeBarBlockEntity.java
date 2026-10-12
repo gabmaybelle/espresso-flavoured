@@ -35,7 +35,7 @@ public class CoffeeBarBlockEntity extends BaseContainerBlockEntity {
 
 	@Override
 	protected Component getDefaultName() {
-		return Component.translatable("container.espresso.coffee_bar");
+		return Component.translatable("container.espresso_flavoured.coffee_bar");
 	}
 
 	@Override

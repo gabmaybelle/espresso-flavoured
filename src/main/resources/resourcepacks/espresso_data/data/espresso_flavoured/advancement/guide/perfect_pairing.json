@@ -1,0 +1,20 @@
+{
+  "parent": "espresso_flavoured:guide/first_sip",
+  "criteria": {
+    "paired": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso_flavoured:croissant"
+    },
+    "title": "Perfect Pairing",
+    "description": "Eat a pastry with your coffee (or cocoa)"
+  },
+  "requirements": [
+    [
+      "paired"
+    ]
+  ]
+}

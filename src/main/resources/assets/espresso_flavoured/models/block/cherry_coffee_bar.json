@@ -1,0 +1,6 @@
+{
+  "parent": "espresso_flavoured:block/coffee_bar",
+  "textures": {
+    "planks": "minecraft:block/cherry_planks"
+  }
+}

@@ -109,7 +109,7 @@ function gazebo(wood, p) {
 	// 26.3 keeps a pot's sherds by side; a side left out is plain brick.
 	const pot = (front, id, count) => ({ sherds: { front: { id: `minecraft:${front}_pottery_sherd` } }, item: { id: `minecraft:${id}`, count } });
 	const decorated = (x, z, facing, contents) => set(x, 3, z, `minecraft:decorated_pot[cracked=false,facing=${facing},waterlogged=false]`, contents);
-	decorated(4, 4, 'south', pot('flower', 'mangrove_propagule', 2));
+	decorated(4, 4, 'south', pot('plenty', 'mangrove_propagule', 2));
 	decorated(8, 4, 'south', pot('heart', 'bamboo', 4));
 	// Two different seeds by the entrance, picked by wood so worlds differ.
 	const seeds = [['torchflower_seeds', 2], ['pitcher_pod', 1], ['pumpkin_seeds', 4], ['melon_seeds', 4], ['beetroot_seeds', 4], ['cocoa_beans', 3]];
@@ -129,7 +129,7 @@ function gazebo(wood, p) {
 			set(x, 6, z, wall(p.footing, true));
 		} else if (x === C && z === 3) {
 			// The starter kit, in the railing opposite the entrance. SpawnGazebo.java knows this spot.
-			set(x, 3, z, 'minecraft:chest[facing=south,type=single,waterlogged=false]', { LootTable: 'espresso:chests/spawn_kit' });
+			set(x, 3, z, 'minecraft:chest[facing=south,type=single,waterlogged=false]', { LootTable: 'espresso_flavoured:chests/spawn_kit' });
 		} else if (!(z === 9 && x >= 5 && x <= 7)) {
 			set(x, 3, z, wall(p.rail));
 		}
@@ -198,5 +198,5 @@ function gazebo(wood, p) {
 }
 
 for (const [palette, p] of Object.entries(PALETTES)) {
-	for (const wood of WOODS) out(`espresso/structure/spawn/gazebo_${palette}_${wood}.nbt`, gazebo(wood, p));
+	for (const wood of WOODS) out(`espresso_flavoured/structure/spawn/gazebo_${palette}_${wood}.nbt`, gazebo(wood, p));
 }

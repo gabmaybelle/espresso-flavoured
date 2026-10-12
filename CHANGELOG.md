@@ -2,6 +2,10 @@
 
 ## 0.3.0: Bean Coins, Café Charms and Lush Shores
 
+### New mod ID
+- The mod ID is now `espresso_flavoured` (it was `espresso`, which another mod could easily share). Every block, item, recipe and advancement moves with it, and the settings file is now `config/espresso_flavoured.properties`.
+- Worlds from 0.2.0 or earlier don't carry over: their Espresso blocks and items are dropped when the world opens, and homes and settings start fresh. Start a new world for 0.3.0.
+
 ### Bean Coins
 - **Bean Coins** replace the loyalty card. Every Espresso advancement pays you one, straight into your inventory. A master barista takes them: eight for the **Golden Mug**, one for three Barista's Reserve, two for sixteen bottles o' enchanting. A master always offers these three.
 - Advancements you earned before this update pay out when you next play, and the old loyalty card is gone (its stamps are paid for in coins). A world from 0.2.0 shows Minecraft's "Missing content detected" screen once when it opens; choose "Create Backup and Load" and carry on, since the card is the only thing it drops.

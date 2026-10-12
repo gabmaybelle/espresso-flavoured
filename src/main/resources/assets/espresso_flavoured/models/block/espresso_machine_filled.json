@@ -1,0 +1,6 @@
+{
+  "parent": "espresso_flavoured:block/espresso_machine",
+  "textures": {
+    "hopper": "espresso_flavoured:block/espresso_machine_hopper_filled"
+  }
+}

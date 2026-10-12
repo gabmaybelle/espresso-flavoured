@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "espresso_flavoured:espresso"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipes": "espresso_flavoured:latte"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item_0",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "espresso_flavoured:latte",
+      "espresso_flavoured:iced_coffee",
+      "espresso_flavoured:night_shift",
+      "espresso_flavoured:cold_brew"
+    ]
+  }
+}

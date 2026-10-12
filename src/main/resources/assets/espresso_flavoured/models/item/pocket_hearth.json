@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "espresso_flavoured:item/pocket_hearth"
+  }
+}

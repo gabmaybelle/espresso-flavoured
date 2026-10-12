@@ -1,0 +1,23 @@
+{
+  "parent": "espresso_flavoured:guide/root",
+  "criteria": {
+    "crafted": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipes": "espresso_flavoured:espresso_machine"
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso_flavoured:espresso_machine"
+    },
+    "title": "Barista",
+    "description": "Craft an espresso machine"
+  },
+  "requirements": [
+    [
+      "crafted"
+    ]
+  ]
+}

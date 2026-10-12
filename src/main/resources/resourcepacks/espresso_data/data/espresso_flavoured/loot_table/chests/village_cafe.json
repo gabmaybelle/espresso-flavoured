@@ -1,0 +1,222 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 3,
+        "max": 6
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:coffee_cherries",
+          "weight": 10,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 6
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:roasted_coffee_beans",
+          "weight": 8,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 5
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:sugar",
+          "weight": 6,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 5
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:mug",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:decaf_coffee_beans",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:cinnamon",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:cocoa_mix",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:vanilla_syrup",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:milk_bucket",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:croissant",
+          "weight": 4,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:muffin",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:biscotti",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 6
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:caramel",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso_flavoured:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 28
+        }
+      ]
+    }
+  ],
+  "random_sequence": "espresso_flavoured:chests/village_cafe"
+}

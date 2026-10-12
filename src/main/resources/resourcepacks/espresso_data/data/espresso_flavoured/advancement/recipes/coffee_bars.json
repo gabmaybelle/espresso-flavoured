@@ -1,0 +1,55 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:smooth_stone_slab"
+          }
+        ]
+      }
+    },
+    "has_item_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "espresso_flavoured:espresso_machine"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipes": "espresso_flavoured:oak_coffee_bar"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item_0",
+      "has_item_1",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "espresso_flavoured:oak_coffee_bar",
+      "espresso_flavoured:spruce_coffee_bar",
+      "espresso_flavoured:birch_coffee_bar",
+      "espresso_flavoured:jungle_coffee_bar",
+      "espresso_flavoured:acacia_coffee_bar",
+      "espresso_flavoured:dark_oak_coffee_bar",
+      "espresso_flavoured:mangrove_coffee_bar",
+      "espresso_flavoured:cherry_coffee_bar",
+      "espresso_flavoured:pale_oak_coffee_bar",
+      "espresso_flavoured:poplar_coffee_bar",
+      "espresso_flavoured:bamboo_coffee_bar",
+      "espresso_flavoured:crimson_coffee_bar",
+      "espresso_flavoured:warped_coffee_bar"
+    ]
+  }
+}

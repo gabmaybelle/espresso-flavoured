@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "espresso_flavoured:block/bamboo_coffee_bar"
+    },
+    "facing=east": {
+      "model": "espresso_flavoured:block/bamboo_coffee_bar",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "espresso_flavoured:block/bamboo_coffee_bar",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "espresso_flavoured:block/bamboo_coffee_bar",
+      "y": 270
+    }
+  }
+}

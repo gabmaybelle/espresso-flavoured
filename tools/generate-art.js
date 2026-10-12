@@ -97,7 +97,7 @@ pixelText('ESPRESSO FLAVOURED', 128, 16, 3).save(path.join(LOOK, 'assets/minecra
 	const fill = (cx, cy, c, a) => img.rect(OFF + cx * S, OFF + cy * S, S, S, [c[0], c[1], c[2], a]);
 	for (let y = 0; y < G; y++) for (let x = 0; x < G; x++) if (cells[y][x] && cells[y][x].length === 3 && (y + 1 >= G || x + 1 >= G || !cells[y + 1][x + 1])) fill(x + 1, y + 1, [20, 12, 6], 100);
 	for (let y = 0; y < G; y++) for (let x = 0; x < G; x++) if (cells[y][x]) fill(x, y, cells[y][x], cells[y][x][3] ?? 255);
-	img.save(path.join(RES, 'assets/espresso/icon.png'));
+	img.save(path.join(RES, 'assets/espresso_flavoured/icon.png'));
 	img.save(path.join(LOOK, 'pack.png'));
 }
 

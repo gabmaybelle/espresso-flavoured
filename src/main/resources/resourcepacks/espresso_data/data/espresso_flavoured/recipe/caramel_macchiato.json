@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_transmute",
+  "category": "misc",
+  "input": "espresso_flavoured:latte",
+  "material": "espresso_flavoured:caramel",
+  "result": {
+    "id": "espresso_flavoured:caramel_macchiato"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "parent": "espresso_flavoured:guide/root",
+  "criteria": {
+    "door": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "#minecraft:doors"
+        }
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:oak_door"
+    },
+    "title": "First Shot",
+    "description": "Place a door. Every home starts somewhere"
+  },
+  "requirements": [
+    [
+      "door"
+    ]
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "icon": "espresso:container/slots/pocket",
+  "icon": "espresso_flavoured:container/slots/pocket",
   "order": -900,
   "amount": 2,
   "validator_predicates": [

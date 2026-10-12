@@ -51,7 +51,7 @@ public class EspressoJadePlugin implements IWailaPlugin {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			int age = accessor.getBlockState().getValue(CoffeeBushBlock.AGE);
-			Component stage = Component.translatable("jade.espresso.coffee_bush." + age);
+			Component stage = Component.translatable("jade.espresso_flavoured.coffee_bush." + age);
 			tooltip.add(age == CoffeeBushBlock.MAX_AGE ? stage.copy().withStyle(ChatFormatting.GREEN) : stage);
 		}
 
@@ -87,15 +87,15 @@ public class EspressoJadePlugin implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			CompoundTag data = accessor.getServerData();
 			if (!data.getBooleanOr("OnCoffeeBar", true)) {
-				tooltip.add(Component.translatable("jade.espresso.espresso_machine.no_bar").withStyle(ChatFormatting.RED));
+				tooltip.add(Component.translatable("jade.espresso_flavoured.espresso_machine.no_bar").withStyle(ChatFormatting.RED));
 				return;
 			}
 			int brewTime = data.getIntOr("BrewTime", 0);
 			if (brewTime > 0) {
 				int percent = (EspressoMachineBlockEntity.BREW_TIME - brewTime) * 100 / EspressoMachineBlockEntity.BREW_TIME;
-				tooltip.add(Component.translatable("jade.espresso.espresso_machine.brewing", percent));
+				tooltip.add(Component.translatable("jade.espresso_flavoured.espresso_machine.brewing", percent));
 			} else {
-				tooltip.add(Component.translatable("jade.espresso.espresso_machine.idle").withStyle(ChatFormatting.GRAY));
+				tooltip.add(Component.translatable("jade.espresso_flavoured.espresso_machine.idle").withStyle(ChatFormatting.GRAY));
 			}
 		}
 
