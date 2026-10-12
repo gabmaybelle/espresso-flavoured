@@ -1074,6 +1074,7 @@ out('lang/en_us.json', {
 	"hud.espresso_flavoured.am": "AM",
 	"hud.espresso_flavoured.pm": "PM",
 	"message.espresso_flavoured.home_set": "This bed is now your home. Monsters won't spawn within %s blocks of it.",
+	"message.espresso_flavoured.home_not_here": "A bed can't be your home here.",
 	// Names of the built-in packs in the Resource Packs and Data Packs screens.
 	"pack.espresso_flavoured.data": "Espresso Flavoured",
 	"pack.espresso_flavoured.look": "Espresso Flavoured Look",

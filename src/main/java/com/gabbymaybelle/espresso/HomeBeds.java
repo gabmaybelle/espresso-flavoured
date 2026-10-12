@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.level.block.AbstractBedBlock;
 
 /**
@@ -43,11 +44,28 @@ public final class HomeBeds {
 				return InteractionResult.PASS;
 			}
 			if (player instanceof ServerPlayer serverPlayer && world instanceof ServerLevel level) {
-				setHome(serverPlayer, level, hit.getBlockPos());
+				if (canBeHome(level, hit.getBlockPos())) {
+					setHome(serverPlayer, level, hit.getBlockPos());
+				} else {
+					serverPlayer.sendOverlayMessage(Component.translatable("message.espresso_flavoured.home_not_here"));
+				}
 			}
-			// Handled on both sides, so crouch-using a bed never also tries to sleep in it.
+			// Handled on both sides, so crouch-using a bed never also tries to sleep in it (or, in
+			// the Nether and the End, blows up).
 			return InteractionResult.SUCCESS;
 		});
+	}
+
+	/**
+	 * Only a bed you could use to set your respawn point can be a home: in the Nether and the End,
+	 * where beds blow up, a home could never be slept in, so Drowsy would never clear.
+	 */
+	private static boolean canBeHome(ServerLevel level, BlockPos bed) {
+		if (!(level.getBlockState(bed).getBlock() instanceof AbstractBedBlock block)) {
+			return false;
+		}
+		BedRule rule = block.getBedRule(level, bed);
+		return !rule.destroyOnUse() && rule.canSetSpawn(level);
 	}
 
 	private static void setHome(ServerPlayer player, ServerLevel level, BlockPos bed) {
