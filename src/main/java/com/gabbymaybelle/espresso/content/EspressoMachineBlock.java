@@ -32,6 +32,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class EspressoMachineBlock extends HorizontalDirectionalBlock implements EntityBlock {
 	public static final BooleanProperty HAS_BEANS = BooleanProperty.create("beans");
+	/** True while a brew is under way: the machine steams, hisses now and then, and gives a little light. */
+	public static final BooleanProperty BREWING = BooleanProperty.create("brewing");
 	/** Upright body, the head reaching forward with its trim, the drip tray and the bean jar, facing north; rotated for the other sides. */
 	private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Shapes.or(
 			Block.box(4, 0, 7, 12, 13, 15),
@@ -41,13 +43,14 @@ public class EspressoMachineBlock extends HorizontalDirectionalBlock implements 
 
 	public EspressoMachineBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HAS_BEANS, false));
+		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HAS_BEANS, false).setValue(BREWING, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(FACING, HAS_BEANS);
+		builder.add(FACING, HAS_BEANS, BREWING);
 	}
+
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -67,11 +70,15 @@ public class EspressoMachineBlock extends HorizontalDirectionalBlock implements 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		if (!(level instanceof ServerLevel serverLevel) || type != EspressoContent.ESPRESSO_MACHINE_ENTITY) {
+		if (type != EspressoContent.ESPRESSO_MACHINE_ENTITY) {
 			return null;
 		}
-		return (BlockEntityTicker<T>) (BlockEntityTicker<EspressoMachineBlockEntity>) (l, pos, s, machine) ->
-				EspressoMachineBlockEntity.serverTick(serverLevel, pos, s, machine);
+		if (level instanceof ServerLevel serverLevel) {
+			return (BlockEntityTicker<T>) (BlockEntityTicker<EspressoMachineBlockEntity>) (l, pos, s, machine) ->
+					EspressoMachineBlockEntity.serverTick(serverLevel, pos, s, machine);
+		}
+		// On a player's game: the steam and the hiss while it brews.
+		return (BlockEntityTicker<T>) (BlockEntityTicker<EspressoMachineBlockEntity>) EspressoMachineBlockEntity::clientTick;
 	}
 
 	@Override

@@ -38,6 +38,7 @@
 - **Water lilies:** a lily pad with a cactus flower blooming on it, right on the water. Bone meal a lily pad to make one bloom, and look for a few among the lily pads by rivers and ponds in new land.
 - **A gazebo at spawn:** new worlds start in a little stone gazebo, built from whatever wood grows nearby (sandstone in deserts and badlands). A spore blossom hangs over a glowstone floor, flower pots hold saplings and a cactus for your first garden, four decorated pots hide mangrove propagules, bamboo and seeds, and the starter kit waits in the chest. It's protected: outside creative it can't be broken or built on, and explosions, fire and pistons leave it alone. Switch off "Protect the Gazebo" in the settings to remodel it. Building it also moves the world spawn to the middle of the gazebo and sets the `spawn_radius` game rule to 0, so everyone starts inside it.
 - Rest spots no longer have a dirt path, and village cafés keep a little potted cactus on their chest.
+- **The espresso machine looks busy while it brews:** wisps of steam rise under the brew head, it hisses softly now and then, and it gives off a little light, so a café at night has a glow behind the counter.
 
 ### Smaller things
 - The title screen keeps the Minecraft logo, with "Espresso Flavoured" underneath where "Java Edition" usually sits.

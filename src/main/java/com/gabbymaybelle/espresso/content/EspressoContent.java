@@ -101,7 +101,7 @@ public final class EspressoContent {
 					.sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.POPPED));
 	public static final Block ESPRESSO_MACHINE = registerBlock("espresso_machine", EspressoMachineBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.5F).requiresCorrectToolForDrops()
-					.sound(SoundType.METAL).noOcclusion());
+					.sound(SoundType.METAL).noOcclusion().lightLevel(state -> state.getValue(EspressoMachineBlock.BREWING) ? 4 : 0));
 	public static final BlockEntityType<EspressoMachineBlockEntity> ESPRESSO_MACHINE_ENTITY = Registry.register(
 			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("espresso_machine"),
 			new BlockEntityType<>(EspressoMachineBlockEntity::new, Set.of(ESPRESSO_MACHINE)));

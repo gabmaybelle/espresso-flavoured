@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,6 +17,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -80,12 +82,33 @@ public class EspressoMachineBlockEntity extends BaseContainerBlockEntity impleme
 			machine.setChanged();
 		}
 		boolean hasBeans = !machine.items.get(BEAN_SLOT).isEmpty();
-		if (state.getValue(EspressoMachineBlock.HAS_BEANS) != hasBeans) {
-			level.setBlock(pos, state.setValue(EspressoMachineBlock.HAS_BEANS, hasBeans), Block.UPDATE_CLIENTS);
+		boolean brewing = machine.brewTime > 0;
+		if (state.getValue(EspressoMachineBlock.HAS_BEANS) != hasBeans || state.getValue(EspressoMachineBlock.BREWING) != brewing) {
+			level.setBlock(pos, state.setValue(EspressoMachineBlock.HAS_BEANS, hasBeans).setValue(EspressoMachineBlock.BREWING, brewing), Block.UPDATE_CLIENTS);
 		}
 	}
 
-	/** The machine only works on a coffee bar (unless that's turned off in the settings). */
+	/**
+	 * On a player's game, while the block says it's brewing: wisps of steam rise from under the
+	 * brew head a few times a second, with a quiet hiss every few seconds.
+	 */
+	public static void clientTick(Level level, BlockPos pos, BlockState state, EspressoMachineBlockEntity machine) {
+		if (!state.getValue(EspressoMachineBlock.BREWING)) {
+			return;
+		}
+		RandomSource random = level.getRandom();
+		Direction front = state.getValue(EspressoMachineBlock.FACING);
+		if (random.nextInt(4) == 0) {
+			double x = pos.getX() + 0.5 + front.getStepX() * 0.25 + (random.nextDouble() - 0.5) * 0.15;
+			double z = pos.getZ() + 0.5 + front.getStepZ() * 0.25 + (random.nextDouble() - 0.5) * 0.15;
+			level.addParticle(ParticleTypes.WHITE_SMOKE, x, pos.getY() + 0.4, z, 0.0, 0.012, 0.0);
+		}
+		if (random.nextInt(60) == 0) {
+			level.playLocalSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS,
+					0.12F, 1.6F + random.nextFloat() * 0.4F, false);
+		}
+	}
+
 	/** Ticks left on the current brew; 0 when idle. */
 	public int brewTime() {
 		return brewTime;
