@@ -39,13 +39,10 @@ const FONT = {
 	D: ['####.', '#...#', '#...#', '#...#', '#...#', '#...#', '####.'],
 	' ': ['...', '...', '...', '...', '...', '...', '...'],
 };
-const CREMA_TOP = [244, 220, 172], CREMA_BOTTOM = [196, 136, 78], ESPRESSO = [74, 44, 26], OUTLINE = [28, 17, 10];
-let seed = 7; const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+const CREMA_TOP = [244, 220, 172], CREMA_BOTTOM = [196, 136, 78], ESPRESSO = [74, 44, 26];
 
-/** Blocky 3D text: crema face, espresso-brown extrusion, dark outline. Matte drops the sheen: no highlight, no speckle, a gentler fade.
- * tall stretches the letters upwards (a pixel is tall times as high as it is wide). */
-function blockText(text, scale, depth, outline, w, h, top, matte = false, tall = 1) {
-	const scaleY = Math.round(scale * tall);
+/** Plain pixel text, one texture pixel to a screen pixel, like the game's own "Java Edition": a crema-to-latte fade with a one-pixel espresso shadow. */
+function pixelText(text, w, h, top) {
 	const cells = [];
 	// Each letter is as wide as its glyph, plus a column of space.
 	let at = 0;
@@ -53,39 +50,20 @@ function blockText(text, scale, depth, outline, w, h, top, matte = false, tall =
 		FONT[ch].forEach((row, y) => [...row].forEach((c, x) => { if (c === '#') cells.push([at + x, y]); }));
 		at += FONT[ch][0].length + 1;
 	}
-	const cols = at - 1;
-	const left = Math.round((w - cols * scale - depth) / 2);
-	const mask = canvas(w, h);
-	const face = [];
-	for (const [cx, cy] of cells) {
-		const x = left + cx * scale, y = top + cy * scaleY;
-		for (let d = depth; d >= 1; d--) mask.rect(x + d, y + d, scale, scaleY, [...ESPRESSO, 255]);
-		face.push([x, y, cx, cy]);
-	}
-	for (const [x, y, cx, cy] of face) {
-		const t = matte ? 0.35 + cy / 6 * 0.3 : cy / 6;
-		const base = CREMA_TOP.map((v, k) => Math.round(v * (1 - t) + CREMA_BOTTOM[k] * t));
-		const shade = matte ? 1 : 1 + (rnd() - 0.5) * 0.08;
-		mask.rect(x, y, scale, scaleY, [...base.map(v => Math.max(0, Math.min(255, Math.round(v * shade)))), 255]);
-		if (!matte && !cells.some(([ox, oy]) => ox === cx && oy === cy - 1)) mask.rect(x, y, scale, Math.max(2, scale >> 3), [255, 240, 210, 255]);
-	}
+	const left = Math.floor((w - (at - 1)) / 2);
 	const out = canvas(w, h);
-	for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-		if (mask.get(x, y)) { const i = (y * w + x) * 4; out.set(x, y, [mask.px[i], mask.px[i + 1], mask.px[i + 2], 255]); continue; }
-		let near = false;
-		for (let dy = -outline; dy <= outline && !near; dy++) for (let dx = -outline; dx <= outline; dx++) {
-			const X = x + dx, Y = y + dy;
-			if (X >= 0 && Y >= 0 && X < w && Y < h && mask.get(X, Y)) { near = true; break; }
-		}
-		if (near) out.set(x, y, [...OUTLINE, 255]);
+	for (const [x, y] of cells) out.set(left + x + 1, top + y + 1, [...ESPRESSO, 255]);
+	for (const [x, y] of cells) {
+		const t = y / 6;
+		out.set(left + x, top + y, [...CREMA_TOP.map((v, k) => Math.round(v * (1 - t) + CREMA_BOTTOM[k] * t)), 255]);
 	}
 	return out;
 }
 
-// The Minecraft logo stays as it is; "Espresso Flavoured" takes the place of "Java Edition" under it.
+// The Minecraft logo stays as it is; "Espresso Flavoured" takes the place of "Java Edition" under it,
+// drawn at the size the game shows it (128 x 16, of which it uses the top 14 rows).
 fs.rmSync(path.join(LOOK, 'assets/minecraft/textures/gui/title/minecraft.png'), { force: true });
-// The game shows the top 14 of its 16 rows, so the letters stand tall to fill those.
-blockText('ESPRESSO FLAVOURED', 19, 7, 5, 2048, 256, 10, true, 1.45).save(path.join(LOOK, 'assets/minecraft/textures/gui/title/edition.png'));
+pixelText('ESPRESSO FLAVOURED', 128, 16, 3).save(path.join(LOOK, 'assets/minecraft/textures/gui/title/edition.png'));
 
 // ---------------------------------------------------------------- mod icon: an espresso cup
 {
