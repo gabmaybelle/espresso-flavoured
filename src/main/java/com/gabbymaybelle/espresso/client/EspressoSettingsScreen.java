@@ -34,7 +34,8 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 				toggle("longerDays", Config.longerDays, v -> Config.longerDays = v),
 				toggle("toughNights", Config.toughNights, v -> Config.toughNights = v),
 				toggle("phantoms", Config.phantoms, v -> Config.phantoms = v),
-				toggle("clock", Config.clock, v -> Config.clock = v));
+				toggle("clock", Config.clock, v -> Config.clock = v),
+				toggle("duskWarning", Config.duskWarning, v -> Config.duskWarning = v));
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.wellbeing"));
 		list.addSmall(

@@ -1,0 +1,21 @@
+{
+  "parent": "espresso_flavoured:guide/root",
+  "criteria": {
+    "drowsy": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:clock"
+    },
+    "title": "Bleary-Eyed",
+    "description": "Three days away from home. A night in your own bed puts it right",
+    "hidden": true
+  },
+  "requirements": [
+    [
+      "drowsy"
+    ]
+  ]
+}

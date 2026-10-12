@@ -432,8 +432,8 @@ const PAGES = [
 	'Espresso Flavoured\nField Notes\n\nWelcome! This world is a little kinder to builders, so you can spend less time worrying and more time making something you love.\n\n- Gabby',
 	'Your Safe Haven\n\nCrouch and use a bed with an empty hand to make it your home. Monsters won\'t spawn within 32 blocks of it, even in caves below, so build mob farms further out.\n\nSleeping elsewhere won\'t move it. Break the bed and the protection goes.',
 	'Builds Stay Built\n\nCreepers still bite, but their blasts no longer break blocks.\n\nEndermen leave your walls alone, and phantoms never visit, so rest whenever you like.',
-	'Looking After Yourself\n\nYou only heal while you\'ve eaten recently, so keep a snack handy.\n\nTwo days without a night at home and you turn Drowsy: no sprinting, slower mining. Coffee buys a day, then you crash.',
-	'Coffee Corner\n\nRoast coffee cherries, then brew them in an espresso machine on a coffee bar. Mugs are fired clay.\n\nAway two days? Only your own bed leaves you rested. Decaf helps you sleep well.',
+	'Looking After Yourself\n\nYou only heal while you\'ve eaten recently, so keep a snack handy.\n\nThree days without a night at home and you turn Drowsy: no sprinting, slower mining. Coffee buys a day, then you crash.',
+	'Coffee Corner\n\nRoast coffee cherries, then brew them in an espresso machine on a coffee bar. Mugs are fired clay.\n\nAway three days? Only your own bed leaves you rested. Decaf helps you sleep well.',
 	'Bean Coins\n\nEvery advancement in the Espresso Flavoured tab pays you a Bean Coin.\n\nA master barista (a villager with an espresso machine) takes them: eight buy the Golden Mug, and one or two buy a treat.',
 	'Café Charms\n\nA master barista sells a charm or two for Bean Coins, and they turn up in café and village chests.\n\nWear them in your trinket slots: a Lucky Bean, a Thermos, a Pocket Hearth and more, each with a small perk.',
 	'If You Fall\n\nYour hotbar, armour and off-hand stay with you. In the Espresso Flavoured pack, the rest waits in a grave where you fell. Head back, open it, and carry on.\n\nHappy building!',
@@ -555,6 +555,10 @@ adv('guide/all_dressed_up', 'guide/your_usual', 'espresso_flavoured:lucky_bean',
 adv('guide/fair_trade', 'guide/first_sip', 'espresso_flavoured:roasted_coffee_beans', 'Fair Trade', 'Sell roasted coffee beans to the wandering trader',
 	// Awarded by EspressoAdvancements.traded: the vanilla trigger only sees what you got, not what you sold.
 	{ sold: { trigger: 'minecraft:impossible' } });
+// Hidden until it happens: the first time a player turns Drowsy, the toast says why. Awarded by
+// Wellbeing. It lives outside guide/ so it doesn't pay a Bean Coin for staying up.
+adv('tips/bleary_eyed', 'guide/root', 'minecraft:clock', 'Bleary-Eyed', 'Three days away from home. A night in your own bed puts it right',
+	{ drowsy: { trigger: 'minecraft:impossible' } }, { hidden: true });
 
 // Gives the starter kit once, the first time a player joins.
 out('data/espresso_flavoured/advancement/starter_kit.json', {

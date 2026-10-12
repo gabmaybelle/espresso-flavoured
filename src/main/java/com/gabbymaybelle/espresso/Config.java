@@ -41,15 +41,17 @@ public final class Config {
 	public static boolean longerDays = true;
 	/** A day counter and clock in the top-right corner (client side). */
 	public static boolean clock = true;
+	/** "The sun's getting real low" above the hotbar at 6:00 PM, an hour before night (client side). */
+	public static boolean duskWarning = true;
 	/** Keep the hotbar, armour and off-hand on death; everything else drops. */
 	public static boolean keepHotbarOnDeath = true;
 	/** Slow natural healing only happens while you have saturation (you've eaten recently). */
 	public static boolean regenNeedsSaturation = true;
 	/** Nights bring a few more hostile mobs, with 20% more health and damage. */
 	public static boolean toughNights = true;
-	/** Drowsy after two days without sleeping at home; Hungry too if you haven't eaten in that time. */
+	/** Drowsy after three days without sleeping at home; Hungry too if you haven't eaten in that time. */
 	public static boolean drowsiness = true;
-	/** After two days away, coffee only holds Drowsy off for a while, then you crash. Off: coffee holds it off for as long as you keep drinking. */
+	/** After three days away, coffee only holds Drowsy off for a while, then you crash. Off: coffee holds it off for as long as you keep drinking. */
 	public static boolean caffeineCrash = true;
 	/** The espresso machine only brews on a coffee bar. */
 	public static boolean coffeeBarRequired = true;
@@ -86,6 +88,7 @@ public final class Config {
 		bundleUnstackables = Math.max(1, integer(props, "bundleUnstackables", bundleUnstackables));
 		longerDays = bool(props, "longerDays", longerDays);
 		clock = bool(props, "clock", clock);
+		duskWarning = bool(props, "duskWarning", duskWarning);
 		keepHotbarOnDeath = bool(props, "keepHotbarOnDeath", keepHotbarOnDeath);
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
 		toughNights = bool(props, "toughNights", toughNights);
@@ -110,6 +113,7 @@ public final class Config {
 		props.setProperty("bundleUnstackables", Integer.toString(bundleUnstackables));
 		props.setProperty("longerDays", Boolean.toString(longerDays));
 		props.setProperty("clock", Boolean.toString(clock));
+		props.setProperty("duskWarning", Boolean.toString(duskWarning));
 		props.setProperty("keepHotbarOnDeath", Boolean.toString(keepHotbarOnDeath));
 		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
 		props.setProperty("toughNights", Boolean.toString(toughNights));
@@ -131,14 +135,15 @@ public final class Config {
 					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
 					+ "clock: a day counter and clock in the top-right corner\n"
+					+ "duskWarning: \"The sun's getting real low\" above the hotbar at 6:00 PM, an hour before night\n"
 					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
 					+ "spawnGazebo: a little stone gazebo at the world spawn of new worlds\n"
 					+ "protectGazebo: the spawn gazebo can only be changed in creative, and explosions, fire and pistons leave it alone\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
-					+ "drowsiness: Drowsy after two days without sleeping at home (any bed within your safe home radius), and Hungry if you haven't eaten in that time either\n"
-					+ "caffeineCrash: past two days away, coffee holds off Drowsy for a while and then you crash (off: it holds it off as long as you keep drinking)\n"
+					+ "drowsiness: Drowsy after three days without sleeping at home (any bed within your safe home radius), and Hungry if you haven't eaten in that time either\n"
+					+ "caffeineCrash: past three days away, coffee holds off Drowsy for a while and then you crash (off: it holds it off as long as you keep drinking)\n"
 					+ "coffeeBarRequired: the espresso machine only brews on top of a coffee bar\n"
 					+ "sugarCaneHeight: how tall sugar cane grows (vanilla 3)\n"
 					+ "longerDays needs a restart; everything else applies straight away");

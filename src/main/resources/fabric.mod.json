@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "espresso_flavoured",
 	"version": "${version}",
-	"name": "Espresso Flavoured",
+	"name": "Espresso Flavoured Core",
 	"description": "A shot of espresso for your survival world: a safe home radius, builds creepers can't wreck, longer days, shorter but sharper nights, graves-friendly deaths that keep your hotbar, Overworld shulker boxes, roomier bundles, a block merchant, and coffee to keep you going.",
 	"authors": [
 		"Gabby"

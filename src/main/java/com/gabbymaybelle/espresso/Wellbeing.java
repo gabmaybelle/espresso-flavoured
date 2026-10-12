@@ -17,13 +17,14 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
 /**
- * Two days away from your own bed (unless you're Caffeinated) makes you Drowsy: too tired
- * to sprint, and slower to mine and walk. Only sleeping at home puts it right, so a long
- * mining trip ends with the walk back. Coffee only borrows time: once you're past two days,
+ * {@link #DAYS_AWAY} days away from your own bed (unless you're Caffeinated) make you Drowsy:
+ * too tired to sprint, and slower to mine and walk. Only sleeping at home puts it right, so a
+ * long trip ends with the walk back. Coffee only borrows time: once you're past those days,
  * being Caffeinated holds Drowsy off, but when the coffee wears off (or after one extra day
  * at most) you crash into Drowsy II, and more coffee won't help until you've slept at home.
- * Going those two days without eating as well makes you Hungry. No messages and no screen
- * effects; the effect icons say it.
+ * Going those days without eating as well makes you Hungry. No chat messages and no screen
+ * effects: the effect icons say it, and the first time you turn Drowsy the hidden
+ * "Bleary-Eyed" advancement pops up to say why.
  * <p>
  * Decaf is the cozy side: it gives Cozy, which heals you slowly near your home bed; sleeping
  * while Cozy wakes you Well Rested (two golden hearts); and a decaf after a crash calms
@@ -68,8 +69,11 @@ public final class Wellbeing {
 		return longerDays ? 36000 : 24000;
 	}
 
-	private static int twoDays() {
-		return 2 * oneDay();
+	/** How many in-game days away from home (or without a meal) before Drowsy (or Hungry) sets in. */
+	private static final int DAYS_AWAY = 3;
+
+	private static int daysAway() {
+		return DAYS_AWAY * oneDay();
 	}
 
 	public static void ate(ServerPlayer player) {
@@ -126,11 +130,11 @@ public final class Wellbeing {
 				if (!Config.drowsiness || player.isSpectator() || player.isCreative()) {
 					continue;
 				}
-				boolean upTwoDays = sinceRest >= twoDays();
+				boolean tooLongAway = sinceRest >= daysAway();
 				int caffeine = player.getAttachedOrElse(CAFFEINE, 0);
-				if (upTwoDays && caffeine != CRASHED && caffeine != CALMED) {
+				if (tooLongAway && caffeine != CRASHED && caffeine != CALMED) {
 					boolean caffeinated = player.hasEffect(EspressoContent.CAFFEINATED);
-					if (caffeinated && (!Config.caffeineCrash || sinceRest < twoDays() + oneDay())) {
+					if (caffeinated && (!Config.caffeineCrash || sinceRest < daysAway() + oneDay())) {
 						caffeine = BORROWING;
 					} else if (caffeine == BORROWING && !Config.caffeineCrash) {
 						caffeine = 0;
@@ -140,12 +144,13 @@ public final class Wellbeing {
 					player.setAttached(CAFFEINE, caffeine);
 				}
 				// Refreshed every second; each fades a moment after its cause is gone.
-				if (caffeine == CRASHED) {
-					player.addEffect(new MobEffectInstance(EspressoContent.DROWSY, 60, 1, true, false, true));
-				} else if (caffeine == CALMED || (upTwoDays && caffeine != BORROWING)) {
-					player.addEffect(new MobEffectInstance(EspressoContent.DROWSY, 60, 0, true, false, true));
+				int drowsy = caffeine == CRASHED ? 1 : caffeine == CALMED || (tooLongAway && caffeine != BORROWING) ? 0 : -1;
+				if (drowsy >= 0) {
+					player.addEffect(new MobEffectInstance(EspressoContent.DROWSY, 60, drowsy, true, false, true));
+					// The first time, a hidden advancement says why (it's not under guide/, so it pays no Bean Coin).
+					EspressoAdvancements.award(player, "tips/bleary_eyed", "drowsy");
 				}
-				if (upTwoDays && sinceMeal >= twoDays()) {
+				if (tooLongAway && sinceMeal >= daysAway()) {
 					player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 60, 0, true, false, true));
 				}
 			}

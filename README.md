@@ -1,8 +1,10 @@
-# Espresso Flavoured
+# Espresso Flavoured Core
 
-*A shot of espresso for your survival world: less stress, less grind, more building.*
+*Survival that's kind to builders: a safe home, builds that stay built, and coffee you grow and brew.*
 
-Espresso Flavoured is a Fabric mod for Minecraft 26.3 that makes survival kinder to builders without making it toothless. Your home is a refuge and your builds are safe, while nights, hunger and the wider world keep their bite. It also adds coffee, grown and brewed by you, to help you through a long day of building.
+This is the mod at the heart of the [Espresso Flavoured modpack](https://github.com/gabmaybelle/espresso-flavoured-pack). It works on its own too.
+
+Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival kinder to builders without making it toothless. Your home is a refuge and your builds are safe, while nights, hunger and the wider world keep their bite. It also adds coffee, grown and brewed by you, to help you through a long day of building.
 
 ## What it changes
 
@@ -10,9 +12,9 @@ Espresso Flavoured is a Fabric mod for Minecraft 26.3 that makes survival kinder
 
 **Builds stay built.** Creeper explosions no longer break blocks, endermen leave blocks alone, and phantoms never visit.
 
-**Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher.
+**Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher. A clock in the top-right corner keeps the time, and at 6 PM, an hour before dark, "The sun's getting real low" appears above your hotbar.
 
-**Looking after yourself.** Natural healing needs you to have eaten recently. Spend two days without sleeping in your own bed and you become Drowsy: too tired to sprint, and slower to mine and walk. A bed in the mine won't fix it; only a night at home will, so long trips end with the walk back. Coffee can buy you up to a day more, but when it wears off you crash, and only home will fix that. Go those two days without eating as well, and you'll get Hungry too.
+**Looking after yourself.** Natural healing needs you to have eaten recently. Spend three days without sleeping in your own bed and you become Drowsy: too tired to sprint, and slower to mine and walk. A bed in the mine won't fix it; only a night at home will, so long trips end with the walk back. Coffee can buy you up to a day more, but when it wears off you crash, and only home will fix that. Go those three days without eating as well, and you'll get Hungry too.
 
 **Coffee.** Coffee bushes grow wild in jungles and savannas. Roast the cherries, then set an espresso machine on a coffee bar (a stone-topped cabinet counter, in every wood) and brew Espresso in it: beans on top, mugs below, just like a brewing stand (hoppers work too). Mugs are shaped from clay, fired in a furnace, and dyed any colour; your coffee stays in the mug you chose, from Espresso to Latte (add milk) to Mocha (add cocoa), and you get the mug back when you drink. Crouch to set a mug down on a table or shelf, empty or full. Sweeten things up with Vanilla Syrup (honey and sugar) for the house special, a Vanilla Latte.
 

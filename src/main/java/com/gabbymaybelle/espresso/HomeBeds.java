@@ -18,6 +18,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.level.block.AbstractBedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
 
 /**
  * The safe home radius. A player chooses their home by crouching and using a bed with an
@@ -44,10 +46,12 @@ public final class HomeBeds {
 				return InteractionResult.PASS;
 			}
 			if (player instanceof ServerPlayer serverPlayer && world instanceof ServerLevel level) {
-				if (canBeHome(level, hit.getBlockPos())) {
-					setHome(serverPlayer, level, hit.getBlockPos());
-				} else {
+				if (!canBeHome(level, hit.getBlockPos())) {
 					serverPlayer.sendOverlayMessage(Component.translatable("message.espresso_flavoured.home_not_here"));
+				} else if (isSomeoneElsesHome(serverPlayer, level, hit.getBlockPos())) {
+					serverPlayer.sendOverlayMessage(Component.translatable("message.espresso_flavoured.home_taken"));
+				} else {
+					setHome(serverPlayer, level, hit.getBlockPos());
 				}
 			}
 			// Handled on both sides, so crouch-using a bed never also tries to sleep in it (or, in
@@ -66,6 +70,24 @@ public final class HomeBeds {
 		}
 		BedRule rule = block.getBedRule(level, bed);
 		return !rule.destroyOnUse() && rule.canSetSpawn(level);
+	}
+
+	/**
+	 * True when another player has already made this bed their home, so two players never share
+	 * (or take over) one home by accident. A home is saved at whichever half was clicked, so both
+	 * halves of the bed are checked.
+	 */
+	private static boolean isSomeoneElsesHome(ServerPlayer player, ServerLevel level, BlockPos bed) {
+		BlockState state = level.getBlockState(bed);
+		BlockPos otherHalf = bed.relative(state.getValue(AbstractBedBlock.PART) == BedPart.FOOT
+				? state.getValue(AbstractBedBlock.FACING) : state.getValue(AbstractBedBlock.FACING).getOpposite());
+		for (Map.Entry<UUID, GlobalPos> home : store(level).entrySet()) {
+			if (!home.getKey().equals(player.getUUID()) && home.getValue().dimension() == level.dimension()
+					&& (home.getValue().pos().equals(bed) || home.getValue().pos().equals(otherHalf))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static void setHome(ServerPlayer player, ServerLevel level, BlockPos bed) {
