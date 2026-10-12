@@ -32,7 +32,7 @@ const PALETTES = {
 		leaves: ['minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false]', 'minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false]', 'minecraft:moss_block'],
 		ground: 'minecraft:grass_block[snowy=false]', path: 'minecraft:dirt_path',
 		moss: 'minecraft:moss_block', carpet: 'minecraft:moss_carpet',
-		corners: 'minecraft:flowering_azalea', sides: 'minecraft:pink_petals[facing=north,segment_amount=3]',
+		corners: 'minecraft:flowering_azalea', sides: 'minecraft:pink_petals[facing=north,flower_amount=3]',
 		front: 'minecraft:pink_tulip', back: 'minecraft:allium',
 	},
 	// Sandstone for deserts and badlands: a browner copper dome, no moss, dead bushes and cactus
@@ -204,10 +204,10 @@ function gazebo(wood, p) {
 	// corners. With the glowstone in the floor that's all the light the inside needs.
 	set(C, 8, C, 'minecraft:spore_blossom');
 	for (const [x, z] of [[C - 1, C - 1], [C + 1, C + 1]]) set(x, 8, z, 'minecraft:cave_vines[age=25,berries=true]');
-	// A lantern on a chain under each diagonal of the eaves, and one on a post either side of the
+	// A lantern on an iron chain (26.3's name for the chain) under each diagonal of the eaves, and one on a post either side of the
 	// steps, lighting the ground round about.
 	for (const [x, z] of [[C - 4, C - 4], [C + 4, C - 4], [C - 4, C + 4], [C + 4, C + 4]]) {
-		set(x, 6, z, 'minecraft:chain[axis=y,waterlogged=false]');
+		set(x, 6, z, 'minecraft:iron_chain[axis=y,waterlogged=false]');
 		set(x, 5, z, lantern(true));
 	}
 	for (const x of [C - 2, C + 2]) {
