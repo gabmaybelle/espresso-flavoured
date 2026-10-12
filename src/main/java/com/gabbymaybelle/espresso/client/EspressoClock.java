@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.registries.Registries;
@@ -17,7 +18,8 @@ import net.minecraft.world.timeline.Timeline;
 import net.minecraft.world.timeline.Timelines;
 
 /**
- * A day counter and clock in the top-right corner ("Day 4 · 2:35 PM"). It reads the overworld
+ * A day counter and clock in a corner of the screen ("Day 4 · 2:35 PM"; top-right unless the
+ * "clockPosition" setting says otherwise). It reads the overworld
  * day, so it's right with Espresso's longer days, where daylight runs at half speed (vanilla
  * clocks would say it's evening at what's really mid-afternoon). Hidden in the Nether and the
  * End, and with the "clock" setting off.
@@ -28,6 +30,8 @@ import net.minecraft.world.timeline.Timelines;
  */
 public final class EspressoClock {
 	private static final int MARGIN = 4;
+	/** Half of the vanilla hotbar's width (182 GUI pixels), which sits centred at the bottom. */
+	private static final int HOTBAR_HALF_WIDTH = 91;
 	/** Height of a row of vanilla effect icons, including the gap below it. */
 	private static final int EFFECT_ROW = 26;
 	private static final int WHITE = 0xFFFFFFFF;
@@ -79,7 +83,16 @@ public final class EspressoClock {
 		Component text = Component.translatable("hud.espresso_flavoured.clock", dayAndMinute[0], hour12, String.format("%02d", minute % 60),
 				Component.translatable(hour24 < 12 ? "hud.espresso_flavoured.am" : "hud.espresso_flavoured.pm"));
 		int colour = minute >= DUSK && minute < NIGHT ? GOLD : WHITE;
-		graphics.text(mc.font, text, graphics.guiWidth() - mc.font.width(text) - MARGIN, clockY(mc), colour, true);
+		int width = mc.font.width(text);
+		Config.ClockPosition corner = Config.clockPosition;
+		// On a narrow screen a bottom corner would run into the hotbar, so use the top one.
+		boolean top = corner.top() || graphics.guiWidth() / 2 - HOTBAR_HALF_WIDTH < width + MARGIN * 2;
+		if (!top && mc.gui.screen() instanceof ChatScreen) {
+			return; // chat's input box runs along the bottom while it's open
+		}
+		int x = corner.right() ? graphics.guiWidth() - width - MARGIN : MARGIN;
+		int y = !top ? graphics.guiHeight() - mc.font.lineHeight - MARGIN : corner.right() ? clockY(mc) : MARGIN;
+		graphics.text(mc.font, text, x, y, colour, true);
 	}
 
 	/**

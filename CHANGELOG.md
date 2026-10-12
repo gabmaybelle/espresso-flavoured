@@ -57,6 +57,8 @@
 - The espresso machine waits until its knock box has room for all of a brew's grounds instead of losing some, and cocoa (which leaves no grounds) brews even when the box is full.
 - Turning Longer Days on or off no longer changes the Drowsy timer until the restart that changes the days.
 - Without Iris, the log no longer shows an "Error loading class" line for the shader time fix: the mod only applies it when Iris is there.
+- A "Clock Position" setting: the clock can sit in any corner (bottom corners step up on narrow screens and hide while chat is open).
+- Drowsy and Hungry count days by the world's actual day length, read from the overworld's day timeline, so another mod's or datapack's longer days count too.
 - Cinnamon no longer replaces vanilla's axe data to drop from jungle and acacia logs; it watches the stripping instead. Other mods' logs now strip as they should alongside Espresso, and a new block tag, `espresso_flavoured:cinnamon_bark`, says which logs give cinnamon.
 - On someone else's server, the settings screen greys out the settings that are the server's to decide and says so; only the clock and the dusk warning (which are yours) can be changed there.
 - Mod Menu's Website button now works (it opens the GitHub page).

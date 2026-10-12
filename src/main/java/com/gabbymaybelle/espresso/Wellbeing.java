@@ -9,9 +9,13 @@ import java.util.UUID;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.timeline.Timelines;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -56,17 +60,25 @@ public final class Wellbeing {
 	private static final int TEST_DAY = Integer.getInteger("espresso.testDayTicks", 0);
 
 	/**
-	 * Whether the longer days are on in this game. The setting only changes the day length after a
-	 * restart, so it's read once here (at startup) rather than each time.
+	 * One in-game day in ticks, read from the overworld's day timeline when the server starts or
+	 * reloads its data: 36000 with Espresso's longer days, 24000 in vanilla, or whatever another
+	 * mod's or datapack's timeline says.
 	 */
-	private static boolean longerDays;
+	private static int dayTicks = 24000;
 
-	/** One in-game day: 36000 ticks with longer days, 24000 without. */
 	private static int oneDay() {
-		if (TEST_DAY > 0) {
-			return TEST_DAY;
+		return TEST_DAY > 0 ? TEST_DAY : dayTicks;
+	}
+
+	/** The overworld day's length from the server's timeline data (vanilla's 24000 if it can't be read). */
+	private static int readDayTicks(MinecraftServer server) {
+		try {
+			return server.registryAccess().lookupOrThrow(Registries.TIMELINE).get(Timelines.OVERWORLD_DAY)
+					.map(holder -> holder.value().periodTicks().orElse(24000)).orElse(24000);
+		} catch (RuntimeException e) {
+			Espresso.LOGGER.warn("Espresso Flavoured: couldn't read the day length; assuming 24000 ticks", e);
+			return 24000;
 		}
-		return longerDays ? 36000 : 24000;
 	}
 
 	/** How many in-game days away from home (or without a meal) before Drowsy (or Hungry) sets in. */
@@ -88,7 +100,11 @@ public final class Wellbeing {
 	}
 
 	static void register() {
-		longerDays = Config.longerDays;
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			dayTicks = readDayTicks(server);
+			Espresso.LOGGER.info("Espresso Flavoured: a day is {} ticks, so Drowsy comes after {} ticks away from home", oneDay(), daysAway());
+		});
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, success) -> dayTicks = readDayTicks(server));
 		if (TEST_DAY > 0) {
 			Espresso.LOGGER.warn("Espresso Flavoured: test mode, wellbeing days are {} ticks long", TEST_DAY);
 		}

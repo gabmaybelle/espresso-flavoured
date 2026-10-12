@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.Properties;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -39,8 +40,23 @@ public final class Config {
 	}
 	/** 20-minute days and 10-minute nights (vanilla: 10 and 10). */
 	public static boolean longerDays = true;
-	/** A day counter and clock in the top-right corner (client side). */
+	/** A day counter and clock in a corner of the screen (client side). */
 	public static boolean clock = true;
+	/** Which corner the clock sits in (client side). */
+	public static ClockPosition clockPosition = ClockPosition.TOP_RIGHT;
+
+	/** The corner of the screen the clock sits in. */
+	public enum ClockPosition {
+		TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT;
+
+		public boolean top() {
+			return this == TOP_RIGHT || this == TOP_LEFT;
+		}
+
+		public boolean right() {
+			return this == TOP_RIGHT || this == BOTTOM_RIGHT;
+		}
+	}
 	/** "The sun's getting real low" above the hotbar at 6:00 PM, an hour before night (client side). */
 	public static boolean duskWarning = true;
 	/** Keep the hotbar, armour, off-hand and (with Trinkets) worn charms on death; everything else drops. */
@@ -88,6 +104,7 @@ public final class Config {
 		bundleUnstackables = Math.max(1, integer(props, "bundleUnstackables", bundleUnstackables));
 		longerDays = bool(props, "longerDays", longerDays);
 		clock = bool(props, "clock", clock);
+		clockPosition = choice(props, "clockPosition", clockPosition);
 		duskWarning = bool(props, "duskWarning", duskWarning);
 		keepHotbarOnDeath = bool(props, "keepHotbarOnDeath", keepHotbarOnDeath);
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
@@ -113,6 +130,7 @@ public final class Config {
 		props.setProperty("bundleUnstackables", Integer.toString(bundleUnstackables));
 		props.setProperty("longerDays", Boolean.toString(longerDays));
 		props.setProperty("clock", Boolean.toString(clock));
+		props.setProperty("clockPosition", clockPosition.name().toLowerCase(Locale.ROOT));
 		props.setProperty("duskWarning", Boolean.toString(duskWarning));
 		props.setProperty("keepHotbarOnDeath", Boolean.toString(keepHotbarOnDeath));
 		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
@@ -134,7 +152,8 @@ public final class Config {
 					+ "blockMerchant: the wandering trader also sells building blocks\n"
 					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
-					+ "clock: a day counter and clock in the top-right corner\n"
+					+ "clock: a day counter and clock in a corner of the screen\n"
+					+ "clockPosition: top_right, top_left, bottom_right or bottom_left\n"
 					+ "duskWarning: \"The sun's getting real low\" above the hotbar at 6:00 PM, an hour before night\n"
 					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
 					+ "spawnGazebo: a little stone gazebo at the world spawn of new worlds\n"
@@ -155,6 +174,19 @@ public final class Config {
 	private static boolean bool(Properties props, String key, boolean fallback) {
 		String value = props.getProperty(key);
 		return value == null ? fallback : Boolean.parseBoolean(value.trim());
+	}
+
+	private static <E extends Enum<E>> E choice(Properties props, String key, E fallback) {
+		String value = props.getProperty(key);
+		if (value == null) {
+			return fallback;
+		}
+		try {
+			return Enum.valueOf(fallback.getDeclaringClass(), value.trim().toUpperCase(Locale.ROOT));
+		} catch (IllegalArgumentException e) {
+			Espresso.LOGGER.warn("Espresso Flavoured: unknown {} \"{}\", using {}", key, value.trim(), fallback.name().toLowerCase(Locale.ROOT));
+			return fallback;
+		}
 	}
 
 	private static int integer(Properties props, String key, int fallback) {

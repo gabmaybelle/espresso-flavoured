@@ -2,8 +2,10 @@ package com.gabbymaybelle.espresso.client;
 
 import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.ServerSettings;
+import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -52,6 +54,7 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 				server(toggle("toughNights", Config.toughNights, v -> Config.toughNights = v)),
 				server(toggle("phantoms", Config.phantoms, v -> Config.phantoms = v)),
 				toggle("clock", Config.clock, v -> Config.clock = v),
+				choice("clockPosition", Config.ClockPosition.values(), Config.clockPosition, v -> Config.clockPosition = v),
 				toggle("duskWarning", Config.duskWarning, v -> Config.duskWarning = v));
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.wellbeing"));
@@ -106,6 +109,17 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 	private static OptionInstance<Boolean> toggle(String key, boolean value, Consumer<Boolean> set) {
 		return OptionInstance.createBoolean("espresso_flavoured.options." + key,
 				OptionInstance.cachedConstantTooltip(Component.translatable("espresso_flavoured.options." + key + ".tooltip")),
+				value, set::accept);
+	}
+
+	/** A button that cycles through an enum's values, each named "espresso_flavoured.options.<key>.<value>". */
+	private static <E extends Enum<E>> OptionInstance<E> choice(String key, E[] values, E value, Consumer<E> set) {
+		String prefix = "espresso_flavoured.options." + key;
+		return new OptionInstance<>(prefix,
+				OptionInstance.cachedConstantTooltip(Component.translatable(prefix + ".tooltip")),
+				// The button adds the caption itself, so this is just the value.
+				(caption, v) -> Component.translatable(prefix + "." + v.name().toLowerCase(Locale.ROOT)),
+				new OptionInstance.Enum<>(List.of(values), Codec.INT.xmap(i -> values[i], Enum::ordinal)),
 				value, set::accept);
 	}
 

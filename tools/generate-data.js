@@ -91,8 +91,8 @@ out('data/espresso_flavoured/recipe/vanilla_latte.json', {
 	type: 'minecraft:crafting_transmute', category: 'misc',
 	input: 'espresso_flavoured:latte', material: 'espresso_flavoured:vanilla_syrup', result: { id: 'espresso_flavoured:vanilla_latte' },
 });
-// Cinnamon: stripping a jungle or acacia log sometimes drops some (one in three); the axe
-// transformer that rolls this loot is written by tools/generate-strip.js.
+// Cinnamon: stripping a jungle or acacia log sometimes drops some (one in three). CinnamonMixin
+// rolls this loot table after the strip; the tag below says which logs count.
 out('data/espresso_flavoured/loot_table/strip/cinnamon.json', {
 	type: 'minecraft:block_interact',
 	pools: [{ rolls: 1, condition: { type: 'minecraft:random_chance', chance: 0.33 },
