@@ -120,6 +120,9 @@ for (const [name, input, material] of [['pumpkin_spice_latte', 'espresso_flavour
 out('data/espresso_flavoured/tags/item/coffee.json', { values: ['espresso_flavoured:espresso', 'espresso_flavoured:latte', 'espresso_flavoured:mocha_latte', 'espresso_flavoured:vanilla_latte',
 	'espresso_flavoured:pumpkin_spice_latte', 'espresso_flavoured:iced_coffee', 'espresso_flavoured:night_shift', 'espresso_flavoured:honey_latte', 'espresso_flavoured:caramel_macchiato',
 	'espresso_flavoured:cold_brew'] });
+// Mobs whose explosions never break blocks (with creeper griefing off). Every creeper built on the
+// vanilla one is already covered in code; a pack can add creeper-like mobs from other mods here.
+out('data/espresso_flavoured/tags/entity_type/spares_blocks.json', { values: ['minecraft:creeper'] });
 // Pastries: a croissant (flaky with butter, so milk), biscotti (twice-baked, small) and a berry muffin.
 out('data/espresso_flavoured/recipe/croissant.json', {
 	type: 'minecraft:crafting_shapeless', category: 'misc',

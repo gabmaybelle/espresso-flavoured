@@ -36,6 +36,7 @@
 	},
 	"mixins": [
 		"espresso_flavoured.mixins.json",
+		"espresso_flavoured.optional.mixins.json",
 		"espresso_flavoured.client.mixins.json"
 	],
 	"depends": {
@@ -45,7 +46,7 @@
 		"java": ">=25"
 	},
 	"suggests": {
-		"trinkets": "*",
+		"trinkets_updated": "*",
 		"jei": "*",
 		"jade": "*",
 		"modmenu": "*"

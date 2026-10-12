@@ -3,29 +3,13 @@
 	"package": "com.gabbymaybelle.espresso.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
-		"BlockItemMixin",
-		"BucketItemMixin",
-		"BundleContentsMixin",
-		"CakeBlockMixin",
 		"CreeperMixin",
 		"DeathLootMixin",
 		"EndermanTakeBlockGoalMixin",
-		"FireBlockMixin",
-		"FoodDataMixin",
-		"FoodPropertiesMixin",
-		"MerchantTradeMixin",
-		"MobNightMixin",
 		"NaturalSpawnerMixin",
 		"PhantomSpawnerMixin",
-		"PistonBaseBlockMixin",
-		"PowderSnowMixin",
 		"ServerExplosionMixin",
-		"SpawnStateMixin",
-		"StructureTemplatePoolAccessor",
-		"SugarCaneBlockMixin",
-		"TamperMixin",
-		"WanderingTraderMixin",
-		"WarmMixin"
+		"StructureTemplatePoolAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

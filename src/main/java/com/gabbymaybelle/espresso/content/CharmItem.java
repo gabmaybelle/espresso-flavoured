@@ -55,8 +55,13 @@ public class CharmItem extends Item implements TooltipLines {
 		}
 	}
 
-	/** Trinkets is installed: charms only work when worn in their slot. */
-	private static final boolean TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets");
+	/**
+	 * Trinkets Updated is installed: charms only work when worn in their slot. This checks for Trinkets
+	 * Updated itself, not just "trinkets": the original Trinkets, and Accessories' compatibility layer,
+	 * also call themselves "trinkets" but don't have the API TrinketsCompat uses, so with them charms
+	 * work from the inventory instead of crashing the game.
+	 */
+	private static final boolean TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets_updated");
 
 	/** Whether this player is wearing (or, without Trinkets, carrying) a charm. */
 	public static boolean isWorn(LivingEntity entity, Item charm) {
