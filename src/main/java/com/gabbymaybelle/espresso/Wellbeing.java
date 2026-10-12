@@ -1,5 +1,6 @@
 package com.gabbymaybelle.espresso;
 
+import com.gabbymaybelle.espresso.content.CharmItem;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import com.mojang.serialization.Codec;
 import java.util.HashSet;
@@ -115,8 +116,8 @@ public final class Wellbeing {
 				}
 				int sinceRest = tick(player, SINCE_HOME_REST);
 				int sinceMeal = tick(player, SINCE_MEAL);
-				// Cozy heals gently near home: a short Regeneration, topped up as it runs out.
-				if (player.hasEffect(EspressoContent.COZY) && HomeBeds.isNearHome(player)) {
+				// Cozy heals gently near home (or anywhere in a Knit Beanie): a short Regeneration, topped up as it runs out.
+				if (player.hasEffect(EspressoContent.COZY) && (HomeBeds.isNearHome(player) || CharmItem.isWorn(player, EspressoContent.KNIT_BEANIE))) {
 					MobEffectInstance regen = player.getEffect(MobEffects.REGENERATION);
 					if (regen == null || regen.getDuration() <= CHECK_EVERY) {
 						player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0, true, false, true));

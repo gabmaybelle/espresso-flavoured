@@ -1,18 +1,24 @@
 # Changelog
 
-## 0.3.0: Bean Coins and Lush Shores
+## 0.3.0: Bean Coins, Café Charms and Lush Shores
 
 ### Bean Coins
 - **Bean Coins** replace the loyalty card. Every Espresso advancement pays you one, straight into your inventory. A master barista takes them: eight for the **Golden Mug**, one for three Barista's Reserve, two for sixteen bottles o' enchanting. A master always offers these three.
 - Advancements you earned before this update pay out when you next play, and the old loyalty card is gone (its stamps are paid for in coins). A world from 0.2.0 shows Minecraft's "Missing content detected" screen once when it opens; choose "Create Backup and Load" and carry on, since the card is the only thing it drops.
 - The wandering trader no longer trades the Golden Mug.
 
+### Café charms
+- Eight small charms, each with one gentle perk: the **Lucky Bean** (+1 Luck), the **Thermos** (coffee and cocoa effects last a quarter longer), the **Pocket Hearth** (powder snow can't freeze you, and you can walk on it), **Reading Socks** (step up a full block without jumping), the **Café Parasol** (fall three more blocks before it hurts), the **Knit Beanie** (Cozy heals you anywhere, not just near home), the **Ember Glove** (ores, sand, cobblestone and logs drop smelted as you mine them; crouch to mine normally, and there's no furnace XP) and the **Copper Tamper** (15% more damage to hostile mobs, and only them).
+- With **Trinkets Updated** installed (it's in the Espresso Flavoured pack), they're worn in trinket slots: right-click one to put it on. The Pocket Hearth and Copper Tamper share a new two-deep Pocket slot. The Lucky Bean, Thermos, Parasol and Beanie show on your character. Without Trinkets, a charm works from anywhere in your inventory.
+- Each master barista sells one cosy charm for 2 Bean Coins and one of the Glove or Tamper for 3, picked when they reach master, so different cafés have different charms. Café chests hold one about one time in five, and village houses now and then.
+- A new advancement, **All Dressed Up**: wear all eight at once. The field guide has a page on them.
+
 ### Baristas
 - Baristas bake and decorate now. They buy wheat, eggs and sugar cane, and sell bread, cookies, pumpkin pie, cake, lanterns, candles, flower pots and paintings. Each barista still offers two trades per level, picked from a bigger mix, so no two cafés are quite the same.
 - A master barista sells a music disc for the café's corner: Creator (Music Box).
 
 ### Advancements
-- Six new ones, so there are now 20 Bean Coins to earn: **Take a Seat** (sit on a bench or chair), **Scenic Route** (stop at a rest spot in the wild), **Local Favourite** (find a village café and open its supply chest), **Counter Culture** (place a coffee bar), **Stocked Up** (put something in a canister or jar) and **Your Usual** (trade with a barista).
+- Seven new ones, so there are now 21 Bean Coins to earn: **All Dressed Up** (see above), **Take a Seat** (sit on a bench or chair), **Scenic Route** (stop at a rest spot in the wild), **Local Favourite** (find a village café and open its supply chest), **Counter Culture** (place a coffee bar), **Stocked Up** (put something in a canister or jar) and **Your Usual** (trade with a barista).
 - **House Blend** now needs a building block or decoration from the wandering trader, not just any trade.
 - **Fair Trade** now needs you to actually sell roasted beans; selling the trader a water bottle no longer counts.
 - **Pocket Shot** was free (the starter kit gives a bundle). Now it asks you to tuck a pickaxe and an axe into the same bundle, which only Espresso's roomier bundles allow.

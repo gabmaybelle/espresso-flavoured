@@ -25,7 +25,8 @@ import net.minecraft.world.level.Level;
 /**
  * A coffee drink. Drunk from the Golden Mug, its pick-me-up (or Cozy) lasts half as long again.
  * A decaf one gives Cozy in place of the caffeine but keeps the drink's own extras (a decaf
- * pumpkin spice latte still makes you Warm), and anything Cozy calms a caffeine crash.
+ * pumpkin spice latte still makes you Warm), and anything Cozy calms a caffeine crash. A Thermos
+ * (a café charm) makes all of a drink's effects last a quarter longer.
  */
 public class CoffeeItem extends Item {
 	/** The caffeine: what decaf leaves out. */
@@ -46,16 +47,22 @@ public class CoffeeItem extends Item {
 			// doesn't carry the espresso's effects along.
 			stack.set(DataComponents.CONSUMABLE, decaf(components().get(DataComponents.CONSUMABLE)));
 		}
-		List<MobEffectInstance> perks = drinkPerks(stack);
+		List<MobEffectInstance> effects = drinkEffects(stack);
+		boolean thermos = CharmItem.isWorn(entity, EspressoContent.THERMOS);
 		ItemStack result = super.finishUsingItem(stack, level, entity);
-		if (entity instanceof ServerPlayer player && perks.stream().anyMatch(perk -> perk.getEffect() == EspressoContent.COZY)) {
+		if (entity instanceof ServerPlayer player && effects.stream().anyMatch(effect -> effect.getEffect() == EspressoContent.COZY)) {
 			Wellbeing.calm(player);
 		}
-		if (golden && !level.isClientSide()) {
-			// Half as long again as this drink gives (addEffect keeps anything longer you already had).
-			for (MobEffectInstance perk : perks) {
-				entity.addEffect(new MobEffectInstance(perk.getEffect(), perk.getDuration() * 3 / 2, perk.getAmplifier(),
-						perk.isAmbient(), perk.isVisible(), perk.showIcon()));
+		if ((golden || thermos) && !level.isClientSide()) {
+			// The Golden Mug makes the pick-me-up (or Cozy) last half as long again, and a Thermos makes
+			// everything the drink gives last a quarter longer; together they multiply. addEffect keeps
+			// anything longer you already had.
+			for (MobEffectInstance effect : effects) {
+				double stretch = (golden && PERKS.contains(effect.getEffect()) ? 1.5 : 1) * (thermos ? 1.25 : 1);
+				if (stretch > 1) {
+					entity.addEffect(new MobEffectInstance(effect.getEffect(), (int) (effect.getDuration() * stretch), effect.getAmplifier(),
+							effect.isAmbient(), effect.isVisible(), effect.showIcon()));
+				}
 			}
 		}
 		return result;
@@ -78,18 +85,18 @@ public class CoffeeItem extends Item {
 		return new Consumable(drink.consumeSeconds(), drink.animation(), drink.sound(), drink.hasConsumeParticles(), effects);
 	}
 
-	/** This drink's Speed, Haste, Caffeinated and Cozy, as it would give them. */
-	private static List<MobEffectInstance> drinkPerks(ItemStack stack) {
-		List<MobEffectInstance> perks = new ArrayList<>();
+	/** Every effect this drink gives, as it would give them. */
+	private static List<MobEffectInstance> drinkEffects(ItemStack stack) {
+		List<MobEffectInstance> effects = new ArrayList<>();
 		Consumable consumable = stack.get(DataComponents.CONSUMABLE);
 		if (consumable != null) {
 			for (ConsumeEffect effect : consumable.onConsumeEffects()) {
 				if (effect instanceof ApplyStatusEffectsConsumeEffect apply) {
-					apply.effects().stream().filter(e -> PERKS.contains(e.getEffect())).forEach(perks::add);
+					effects.addAll(apply.effects());
 				}
 			}
 		}
-		return perks;
+		return effects;
 	}
 
 	@Override

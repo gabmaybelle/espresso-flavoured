@@ -719,7 +719,245 @@ out('blockstates/espresso_machine.json', { variants: Object.fromEntries(
 }
 out('items/espresso_machine.json', { model: { type: 'minecraft:model', model: 'espresso:block/espresso_machine_filled' } });
 
+// ---------------------------------------------------------------- café charms
+// Seven small charms (CharmItem.java), worn in Trinkets slots. Hand-drawn 16x16.
+const CHARM_ART = {
+	// A gilded coffee bean on a cord, with its crease.
+	lucky_bean: [[
+		'................',
+		'.......cc.......',
+		'......c..c......',
+		'......c..c......',
+		'.......cc.......',
+		'........c.......',
+		'......hYYd......',
+		'.....hYYkYd.....',
+		'....hYYYkYYd....',
+		'....hYYYkYYd....',
+		'....hYYYkYYd....',
+		'....hYYYkYYd....',
+		'....YYYYkYYd....',
+		'.....YYYkYd.....',
+		'......dddd......',
+		'................',
+	], { c: [110, 72, 40], Y: [236, 190, 72], h: [255, 232, 140], d: [176, 128, 36], k: [140, 92, 24] }],
+	// A teal vacuum flask with a cream band and a steel cup for a lid.
+	thermos: [[
+		'................',
+		'......kkkk......',
+		'.....kKKKKk.....',
+		'.....kkkkkk.....',
+		'......ssss......',
+		'.....hSSSSd.....',
+		'.....hSSSSd.....',
+		'.....bBBBBb.....',
+		'.....bBBBBb.....',
+		'.....hSSSSd.....',
+		'.....hSSSSd.....',
+		'.....hSSSSd.....',
+		'.....hSSSSd.....',
+		'.....hSSSSd.....',
+		'.....dddddd.....',
+		'................',
+	], { k: [120, 124, 132], K: [204, 208, 214], s: [150, 154, 160], S: [72, 140, 130], h: [120, 190, 175], d: [40, 90, 84],
+		B: [238, 228, 210], b: [200, 188, 166] }],
+	// A copper locket with an ember glowing inside.
+	pocket_hearth: [[
+		'................',
+		'................',
+		'......oooo......',
+		'....ooCCCCoo....',
+		'...oCCrrrrCCo...',
+		'...oCrRRRRrCo...',
+		'..oCrRYYYYRrCo..',
+		'..oCrRYWWYRrCo..',
+		'..oCrRYWWYRrCo..',
+		'..oCrRYYYYRrCo..',
+		'...oCrRRRRrCo...',
+		'...oCCrrrrCCo...',
+		'....ooCCCCoo....',
+		'......oooo......',
+		'................',
+		'................',
+	], { o: [120, 62, 36], C: [196, 110, 60], r: [150, 40, 20], R: [230, 110, 30], Y: [255, 190, 60], W: [255, 240, 170] }],
+	// A slouchy knit reading sock: rose cuff, a sage stripe, folds bunched down the leg, sage heel and toe.
+	reading_socks: [[
+		'................',
+		'....rRRRRr......',
+		'....rRRRRr......',
+		'...cCCCCCCc.....',
+		'...sSSSSSSs.....',
+		'....cCCCCc......',
+		'...cCCCCCCc.....',
+		'...cCCCCCCc.....',
+		'....cCCCCc......',
+		'...cCCCCCCc.....',
+		'...cCCCCCCCcc...',
+		'...cCCCCCCCCCc..',
+		'...cHHCCCCCCHHc.',
+		'....hhcccccchh..',
+		'................',
+		'................',
+	], { C: [236, 224, 200], c: [178, 158, 126], R: [206, 112, 126], r: [156, 74, 90], S: [118, 156, 108], s: [86, 122, 80], H: [118, 156, 108], h: [86, 122, 80] }],
+	cafe_parasol: [[
+		'................',
+		'.......k........',
+		'.....RRWWRR.....',
+		'...RRRWWWWRRR...',
+		'..RRRWWWWWWRRR..',
+		'.RRRRWWWWWWRRRR.',
+		'.rrrrwwwwwwrrrr.',
+		'.r..r.w..w.r..r.',
+		'.......k........',
+		'.......k........',
+		'.......k........',
+		'.......k........',
+		'.......k........',
+		'.......k........',
+		'....k..k........',
+		'.....kk.........',
+	], { R: [200, 70, 60], r: [150, 48, 40], W: [244, 234, 214], w: [206, 192, 168], k: [80, 56, 38] }],
+	// A rust-red knit beanie with a cream turned-up cuff and a pom-pom.
+	knit_beanie: [[
+		'................',
+		'......wWWw......',
+		'.....wWWWWw.....',
+		'......wWWw......',
+		'......bBBb......',
+		'....bBBkBBBb....',
+		'...bBBBkBBBBb...',
+		'..bBBBkBBBkBBb..',
+		'..bBBBkBBBkBBb..',
+		'..bBBkBBBBkBBb..',
+		'..bBBkBBBBkBBb..',
+		'..cCcCcCcCcCcc..',
+		'..cCcCcCcCcCcc..',
+		'..cccccccccccc..',
+		'................',
+		'................',
+	], { B: [196, 98, 62], b: [150, 66, 40], k: [168, 80, 50], C: [236, 222, 196], c: [196, 176, 146], W: [250, 246, 236], w: [214, 204, 186] }],
+	// A roaster's leather glove, its fingertips glowing.
+	ember_glove: [[
+		'................',
+		'...kkkkkkk......',
+		'...kOkOkOk......',
+		'...kBkBkBk.kk...',
+		'...kBkBkBkkBk...',
+		'...kBBBBBBkBk...',
+		'...kBBBBBBBBk...',
+		'...kBBBOOBBBk...',
+		'...kBBOYYOBBk...',
+		'...kBBBOOBBBk...',
+		'....kBBBBBBk....',
+		'....kCCCCCCk....',
+		'....kCcCcCCk....',
+		'....kkkkkkkk....',
+		'................',
+		'................',
+	], { k: [70, 40, 24], B: [150, 92, 52], C: [200, 150, 90], c: [160, 110, 60], O: [240, 120, 30], Y: [255, 210, 90] }],
+	// An espresso tamper: a walnut handle on a copper base.
+	copper_tamper: [[
+		'................',
+		'................',
+		'......wWWw......',
+		'.....wWWWWw.....',
+		'.....wWWWWw.....',
+		'......wWWw......',
+		'.......Ww.......',
+		'.......Ww.......',
+		'......wWWw......',
+		'.....wWWWWw.....',
+		'...hCCCCCCCCd...',
+		'...hCCCCCCCCd...',
+		'...hCCCCCCCCd...',
+		'...dddddddddd...',
+		'................',
+		'................',
+	], { W: [170, 120, 74], w: [120, 82, 48], C: [214, 128, 74], h: [240, 170, 110], d: [150, 80, 44] }],
+};
+for (const [charm, [rows, palette]] of Object.entries(CHARM_ART)) {
+	png(`item/${charm}`, rows, palette);
+	out(`items/${charm}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${charm}` } });
+	out(`models/item/${charm}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${charm}` } });
+}
+// The beanie as worn: a knit dome, a ribbed cuff and a pom-pom, drawn from one small texture
+// (knit on top, cuff in the middle, pom-pom at the bottom). On the head it uses this model; in hand,
+// in the inventory and on the ground, the flat sprite.
+png('item/knit_beanie_worn', Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) =>
+	y < 8 ? (x % 3 === 0 ? 'k' : (y % 4 === 3 ? 'b' : 'B')) : y < 12 ? (x % 2 === 0 ? 'C' : 'c') : (x + y) % 3 === 0 ? 'w' : 'W').join('')),
+	{ B: [196, 98, 62], b: [176, 84, 52], k: [150, 66, 40], C: [236, 222, 196], c: [206, 188, 160], W: [250, 246, 236], w: [222, 212, 194] });
+const knitBox = (from, to, uv) => ({ from, to, faces: Object.fromEntries(['north', 'south', 'east', 'west', 'up', 'down'].map(f => [f, { uv, texture: '#0' }])) });
+out('models/item/knit_beanie_worn.json', { textures: { 0: 'espresso:item/knit_beanie_worn', particle: 'espresso:item/knit_beanie_worn' }, elements: [
+	knitBox([1.2, 9.5, 1.2], [14.8, 15.6, 14.8], [0, 0, 16, 8]),   // the knit dome
+	knitBox([0.7, 7.5, 0.7], [15.3, 10.5, 15.3], [0, 8, 16, 12]),  // the turned-up cuff
+	knitBox([6.4, 15.6, 6.4], [9.6, 18.4, 9.6], [0, 12, 4, 16]),   // the pom-pom
+] });
+out('items/knit_beanie.json', { model: { type: 'minecraft:select', property: 'minecraft:display_context',
+	cases: [{ when: 'head', model: { type: 'minecraft:model', model: 'espresso:item/knit_beanie_worn' } }],
+	fallback: { type: 'minecraft:model', model: 'espresso:item/knit_beanie' } } });
+// The pocket slot's empty-slot icon, in Trinkets' grey outline style.
+png('gui/sprites/container/slots/pocket', [
+	'................',
+	'................',
+	'................',
+	'................',
+	'....bbbbbbbb....',
+	'....b......b....',
+	'....bbbbbbbb....',
+	'....b......b....',
+	'....b......b....',
+	'....b......b....',
+	'....b......b....',
+	'.....b....b.....',
+	'......bbbb......',
+	'................',
+	'................',
+	'................',
+], { b: [85, 85, 85] });
+// How Trinkets draws them on the player: the Lucky Bean on a cord, the Thermos at the hip, the parasol on the back.
+const trinket = (charm, render) => out(`trinkets/${charm}.json`, { target: [`espresso:${charm}`], render });
+const turn = (angle) => ({ axis: [0, 1, 0], angle });
+trinket('lucky_bean', [
+	{ type: 'model', model_part: 'body', model: 'trinkets:item/generic_necklace', offset: [0, 1, 1],
+		transformation: { translation: [0, 0.01, 0.01], left_rotation: turn(0), scale: [1, 1, 1], right_rotation: turn(0) } },
+	{ type: 'item', model_part: 'body', display_context: 'none', offset: [0, 1, 1],
+		transformation: { translation: [0, -0.3, 0.02], left_rotation: turn(3.141), scale: [0.35, 0.35, 0.35], right_rotation: turn(0) } },
+]);
+trinket('thermos', [{ type: 'minecraft:if_slot', slot: 'legs/belt', then: {
+	type: 'item', model_part: 'left_leg', display_context: 'none', offset: [1, 1, 0],
+	transformation: { translation: [0.05, -0.2, 0], left_rotation: turn(1.571), scale: [0.45, 0.45, 0.45], right_rotation: turn(0) } } }]);
+trinket('knit_beanie', [{ type: 'item', model_part: 'head', display_context: 'head', offset: [0, 0, 0],
+	transformation: { translation: [0, 0, 0], left_rotation: turn(3.141), scale: [0.625, 0.625, 0.625], right_rotation: turn(0) } }]);
+trinket('cafe_parasol', [{ type: 'item', model_part: 'body', display_context: 'none', offset: [0, 1, -1],
+	transformation: { translation: [0, -0.35, -0.06], left_rotation: turn(0), scale: [0.8, 0.8, 0.8], right_rotation: turn(0) } }]);
+
 out('lang/en_us.json', {
+	'item.espresso.lucky_bean': 'Lucky Bean',
+	'item.espresso.lucky_bean.desc': '+1 Luck: better fishing and chest finds',
+	'item.espresso.thermos': 'Thermos',
+	'item.espresso.thermos.desc': 'Coffee and cocoa effects last a quarter longer',
+	'item.espresso.pocket_hearth': 'Pocket Hearth',
+	'item.espresso.pocket_hearth.desc': "Powder snow can't freeze you, and you can walk on it",
+	'item.espresso.reading_socks': 'Reading Socks',
+	'item.espresso.reading_socks.desc': 'Step up full blocks without jumping',
+	'item.espresso.cafe_parasol': 'Café Parasol',
+	'item.espresso.cafe_parasol.desc': 'Fall 3 more blocks before it hurts',
+	'item.espresso.knit_beanie': 'Knit Beanie',
+	'item.espresso.knit_beanie.desc': 'Cozy heals you anywhere, not just near home',
+	'item.espresso.charm.slot.hat': 'Hat',
+	'item.espresso.ember_glove': 'Ember Glove',
+	'item.espresso.ember_glove.desc': 'Smelts ores, sand, cobblestone and logs as you mine them. Crouch to mine normally',
+	'item.espresso.copper_tamper': 'Copper Tamper',
+	'item.espresso.copper_tamper.desc': '15% more damage to hostile mobs',
+	'item.espresso.charm.slot': 'Wear in a %s slot',
+	'item.espresso.charm.carried': 'Works from your inventory',
+	'item.espresso.charm.slot.necklace': 'Necklace',
+	'item.espresso.charm.slot.belt': 'Belt',
+	'item.espresso.charm.slot.pocket': 'Pocket',
+	'item.espresso.charm.slot.shoes': 'Shoes',
+	'item.espresso.charm.slot.back': 'Back',
+	'item.espresso.charm.slot.glove': 'Glove',
+	'trinkets.slot.legs.pocket': 'Pocket',
 	'block.espresso.coffee_bush': 'Coffee Bush',
 	'item.espresso.coffee_cherries': 'Coffee Cherries',
 	'item.espresso.roasted_coffee_beans': 'Roasted Coffee Beans',

@@ -1,0 +1,16 @@
+{
+  "values": [
+    "minecraft:raw_iron",
+    "minecraft:raw_copper",
+    "minecraft:raw_gold",
+    {
+      "id": "#c:raw_materials",
+      "required": false
+    },
+    "minecraft:sand",
+    "minecraft:red_sand",
+    "minecraft:cobblestone",
+    "minecraft:cobbled_deepslate",
+    "#minecraft:logs_that_burn"
+  ]
+}

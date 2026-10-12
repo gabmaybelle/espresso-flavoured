@@ -15,9 +15,11 @@
 		"MobNightMixin",
 		"NaturalSpawnerMixin",
 		"PhantomSpawnerMixin",
+		"PowderSnowMixin",
 		"ServerChunkCacheMixin",
 		"StructureTemplatePoolAccessor",
 		"SugarCaneBlockMixin",
+		"TamperMixin",
 		"WanderingTraderMixin",
 		"WarmMixin"
 	],

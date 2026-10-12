@@ -1,0 +1,8 @@
+{
+  "icon": "espresso:container/slots/pocket",
+  "order": -900,
+  "amount": 2,
+  "validator_predicates": [
+    "trinkets:default"
+  ]
+}

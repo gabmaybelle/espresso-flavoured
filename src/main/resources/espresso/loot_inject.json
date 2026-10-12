@@ -34,6 +34,55 @@
           "weight": 4
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
+        }
+      ]
     }
   ],
   "minecraft:chests/village/village_desert_house": [
@@ -69,6 +118,55 @@
         {
           "type": "minecraft:empty",
           "weight": 4
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
         }
       ]
     }
@@ -108,6 +206,55 @@
           "weight": 4
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
+        }
+      ]
     }
   ],
   "minecraft:chests/village/village_taiga_house": [
@@ -143,6 +290,55 @@
         {
           "type": "minecraft:empty",
           "weight": 4
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
         }
       ]
     }
@@ -182,6 +378,55 @@
           "weight": 4
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
+        }
+      ]
     }
   ],
   "kaisyn:village/village_jungle_house": [
@@ -217,6 +462,55 @@
         {
           "type": "minecraft:empty",
           "weight": 4
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
         }
       ]
     }
@@ -256,6 +550,55 @@
           "weight": 4
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
+        }
+      ]
     }
   ],
   "kaisyn:village/village_badlands_house": [
@@ -291,6 +634,55 @@
         {
           "type": "minecraft:empty",
           "weight": 4
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
         }
       ]
     }
@@ -330,6 +722,55 @@
           "weight": 4
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
+        }
+      ]
     }
   ],
   "kaisyn:village/exclusives/village_mediterranean_house": [
@@ -365,6 +806,55 @@
         {
           "type": "minecraft:empty",
           "weight": 4
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "espresso:lucky_bean",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:thermos",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:pocket_hearth",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:reading_socks",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:cafe_parasol",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:knit_beanie",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:ember_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "espresso:copper_tamper",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 133
         }
       ]
     }

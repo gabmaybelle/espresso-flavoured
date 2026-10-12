@@ -34,6 +34,9 @@ dependencies {
 	// JEI: only for the espresso machine's page and the water lily note; not bundled or required.
 	// (Modrinth version id of JEI 31.10.0.63 for Fabric 26.3.)
 	compileOnly "maven.modrinth:jei:xx7kXPHL"
+	// Trinkets Updated: charms go in its slots when it's installed; not bundled or required.
+	// (Modrinth version id of Trinkets Updated 4.2.1+26.3.)
+	compileOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
 
 }
 

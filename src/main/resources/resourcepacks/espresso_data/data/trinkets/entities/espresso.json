@@ -1,0 +1,15 @@
+{
+  "entities": [
+    "player"
+  ],
+  "slots": [
+    "chest/necklace",
+    "legs/belt",
+    "chest/back",
+    "feet/shoes",
+    "hand/glove",
+    "offhand/glove",
+    "legs/pocket",
+    "head/hat"
+  ]
+}

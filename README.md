@@ -20,6 +20,8 @@ Espresso Flavoured is a Fabric mod for Minecraft 26.3 that makes survival kinder
 
 **Decaf.** Wash roasted beans in water for decaf beans, and any coffee you brew from them is decaf all the way to a vanilla latte. Decaf makes you Cozy: you heal slowly near your home bed, sleeping while Cozy wakes you Well Rested with two golden hearts, and a decaf after a caffeine crash softens it.
 
+**Café charms.** Eight small charms, each with one gentle perk: a Lucky Bean, a Thermos that makes coffee last longer, a Pocket Hearth against the cold, Reading Socks that step up full blocks, a Café Parasol that softens falls, a Knit Beanie that keeps Cozy healing you away from home, an Ember Glove that smelts what you mine, and a Copper Tamper that hits monsters harder. A master barista sells a couple for Bean Coins, and they turn up in café and village chests. With Trinkets Updated they go in trinket slots; without it they work from your inventory.
+
 **The barista.** Villagers can take an espresso machine as their workstation and become baristas. They trade in beans, mugs, drinks, bakes and café decor, and a master barista sells the Barista's Reserve for Bean Coins: rare beans that brew a Ristretto, the only coffee strong enough for Speed II and Haste II. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
 
 **Death.** You keep your hotbar, armour and off-hand. Everything else stays where you fell, so there's still a trip back for your things (into a grave, if you also use a graves mod).

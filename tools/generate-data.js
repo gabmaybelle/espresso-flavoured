@@ -270,6 +270,16 @@ out('data/espresso/trade_set/wandering_trader/fair_trade.json', {
 out('data/minecraft/tags/point_of_interest_type/acquirable_job_site.json', { values: ['espresso:barista'] });
 // Trades by level: [name, wants (id, count), gives (id, count), max uses, xp]. Two of each level are offered.
 const E = 'minecraft:emerald';
+// Café charms (CharmItem.java), split by price: the cosy six for 2 Bean Coins, the handy two for 3.
+const COSY_CHARMS = ['espresso:lucky_bean', 'espresso:thermos', 'espresso:pocket_hearth', 'espresso:reading_socks', 'espresso:cafe_parasol', 'espresso:knit_beanie'];
+const HANDY_CHARMS = ['espresso:ember_glove', 'espresso:copper_tamper'];
+const CHARMS = [...COSY_CHARMS, ...HANDY_CHARMS];
+// A fair pick of one charm when the barista sets up the trade: each later charm replaces the one
+// before with chance 1/n (the n-th of the list), which leaves every charm equally likely.
+const pickOne = (charms) => charms.slice(1).map((id, i) => ({
+	type: 'minecraft:set_item', item: id, condition: { type: 'minecraft:random_chance', chance: 1 / (i + 2) },
+}));
+const CHARM_PICKS = { bean_coins_cosy_charm: pickOne(COSY_CHARMS), bean_coins_handy_charm: pickOne(HANDY_CHARMS) };
 const BARISTA_TRADES = {
 	1: [
 		['beans_emerald', ['espresso:roasted_coffee_beans', 10], [E, 1], 16, 2],
@@ -317,6 +327,9 @@ const BARISTA_TRADES = {
 		['bean_coins_golden_mug', ['espresso:bean_coin', 8], ['espresso:golden_mug', 1], 1, 0],
 		['bean_coin_baristas_reserve', ['espresso:bean_coin', 1], ['espresso:baristas_reserve', 3], 4, 0],
 		['bean_coins_experience_bottles', ['espresso:bean_coin', 2], ['minecraft:experience_bottle', 16], 4, 0],
+		// Café charms: each master barista picks one cosy charm and one handy one (see CHARM_PICKS).
+		['bean_coins_cosy_charm', ['espresso:bean_coin', 2], [COSY_CHARMS[0], 1], 1, 0],
+		['bean_coins_handy_charm', ['espresso:bean_coin', 3], [HANDY_CHARMS[0], 1], 1, 0],
 	],
 };
 // A master shows every trade, so the Bean Coin ones are always there.
@@ -330,6 +343,7 @@ for (const [level, trades] of Object.entries(BARISTA_TRADES)) {
 			// Coin prices stay put; everything else gets cheaper as the barista likes you more.
 			gives: item(gives), max_uses: maxUses, reputation_discount: wants[0] === 'espresso:bean_coin' ? 0 : 0.05, wants: item(wants),
 			...(xp ? { xp } : {}),
+			...(CHARM_PICKS[name] ? { given_item_modifier: CHARM_PICKS[name] } : {}),
 		});
 	}
 	out(`data/espresso/tags/villager_trade/barista/level_${level}.json`, { values: ids });
@@ -352,6 +366,23 @@ for (const wood of COFFEE_BARS) {
 	});
 }
 out('data/minecraft/tags/block/mineable/axe.json', { values: COFFEE_BARS.map(w => `espresso:${w}_coffee_bar`) });
+
+// ---------------------------------------------------------------- café charms
+// Trinkets Updated slots (ignored without it). Each charm's tag says which slot takes it; the pocket
+// is our own slot, two deep, on the legs. Players get every slot the charms use.
+const CHARM_SLOTS = {
+	'chest/necklace': ['espresso:lucky_bean'], 'legs/belt': ['espresso:thermos'], 'chest/back': ['espresso:cafe_parasol'],
+	'feet/shoes': ['espresso:reading_socks'], 'hand/glove': ['espresso:ember_glove'], 'offhand/glove': ['espresso:ember_glove'],
+	'legs/pocket': ['espresso:pocket_hearth', 'espresso:copper_tamper'], 'head/hat': ['espresso:knit_beanie'],
+};
+for (const [slot, items] of Object.entries(CHARM_SLOTS)) out(`data/trinkets/tags/item/${slot}.json`, { values: items });
+out('data/trinkets/slots/legs/pocket.json', { icon: 'espresso:container/slots/pocket', order: -900, amount: 2, validator_predicates: ['trinkets:default'] });
+out('data/trinkets/entities/espresso.json', { entities: ['player'], slots: Object.keys(CHARM_SLOTS) });
+// What the Ember Glove smelts as it drops: raw ores, sand, cobblestone and logs.
+out('data/espresso/tags/item/ember_glove_smelts.json', { values: [
+	'minecraft:raw_iron', 'minecraft:raw_copper', 'minecraft:raw_gold', { id: '#c:raw_materials', required: false },
+	'minecraft:sand', 'minecraft:red_sand', 'minecraft:cobblestone', 'minecraft:cobbled_deepslate', '#minecraft:logs_that_burn',
+] });
 
 // ---------------------------------------------------------------- recipe book
 // Like vanilla, recipes show up in the recipe book once you pick up something they use.
@@ -403,6 +434,7 @@ const PAGES = [
 	'Builds Stay Built\n\nCreepers still bite, but their blasts no longer break blocks.\n\nEndermen leave your walls alone, and phantoms never visit, so rest whenever you like.',
 	'Coffee Corner\n\nRoast coffee cherries, then brew them in an espresso machine on a coffee bar. Mugs are fired clay.\n\nAway two days? Only your own bed leaves you rested. Decaf helps you sleep well.',
 	'Bean Coins\n\nEvery advancement in the Espresso Flavoured tab pays you a Bean Coin.\n\nA master barista (a villager with an espresso machine) takes them: eight buy the Golden Mug, and one or two buy a treat.',
+	'Café Charms\n\nA master barista sells a charm or two for Bean Coins, and they turn up in café and village chests.\n\nWear them in your trinket slots: a Lucky Bean, a Thermos, a Pocket Hearth and more, each with a small perk.',
 	'If You Fall\n\nYour hotbar, armour and off-hand stay with you. In the Espresso Flavoured pack, the rest waits in a grave where you fell. Head back, open it, and carry on.\n\nHappy building!',
 ];
 out('data/espresso/loot_table/field_guide.json', {
@@ -490,6 +522,9 @@ adv('guide/house_special', 'guide/first_sip', 'espresso:vanilla_latte', 'House S
 	{ made: { trigger: 'minecraft:recipe_crafted', conditions: { recipes: 'espresso:vanilla_latte' } } });
 adv('guide/full_card', 'guide/house_special', 'espresso:golden_mug', 'On the House', 'Buy the Golden Mug from a master barista with Bean Coins',
 	{ redeemed: { trigger: 'minecraft:villager_trade', conditions: { item: { items: 'espresso:golden_mug' } } } }, { frame: 'challenge' });
+adv('guide/all_dressed_up', 'guide/your_usual', 'espresso:lucky_bean', 'All Dressed Up', 'Wear all eight café charms at once',
+	// Awarded by CharmItem: the game can't see trinket slots.
+	{ dressed: { trigger: 'minecraft:impossible' } }, { frame: 'challenge' });
 adv('guide/fair_trade', 'guide/first_sip', 'espresso:roasted_coffee_beans', 'Fair Trade', 'Sell roasted coffee beans to the wandering trader',
 	// Awarded by EspressoAdvancements.traded: the vanilla trigger only sees what you got, not what you sold.
 	{ sold: { trigger: 'minecraft:impossible' } });
@@ -516,12 +551,14 @@ out('data/espresso/loot_table/chests/village_cafe.json', {
 		loot('espresso:mug', 4), loot('espresso:decaf_coffee_beans', 3, 1, 3), loot('espresso:cinnamon', 3, 1, 3), loot('espresso:cocoa_mix', 3, 1, 2),
 		loot('espresso:vanilla_syrup', 2), loot('minecraft:milk_bucket', 2), loot('minecraft:emerald', 2, 1, 2),
 		loot('espresso:croissant', 4, 1, 3), loot('espresso:muffin', 3, 1, 2), loot('espresso:biscotti', 3, 2, 6), loot('espresso:caramel', 2, 1, 3),
-	] }],
+	] }, { rolls: 1, entries: [...CHARMS.map(id => loot(id, 1)), nothing(28)] }], // and a café charm one time in five
 	random_sequence: 'espresso:chests/village_cafe',
 });
 // Pools added to vanilla chests (by CoffeeLoot.java), so coffee turns up while exploring.
 // Kept outside the data pack: they're merged into the vanilla tables, not loaded as tables.
-const villageCoffee = [{ rolls: 1, entries: [loot('espresso:coffee_cherries', 2, 1, 4), loot('espresso:roasted_coffee_beans', 1, 1, 3), nothing(4)] }];
+const villageCoffee = [{ rolls: 1, entries: [loot('espresso:coffee_cherries', 2, 1, 4), loot('espresso:roasted_coffee_beans', 1, 1, 3), nothing(4)] },
+	// ...and a café charm one time in twenty.
+	{ rolls: 1, entries: [...CHARMS.map(id => loot(id, 1)), nothing(133)] }];
 const inject = {
 	...Object.fromEntries(['plains', 'desert', 'savanna', 'taiga', 'snowy'].map(b => [`minecraft:chests/village/village_${b}_house`, villageCoffee])),
 	// Towns and Towers houses mostly reuse the vanilla tables above; these are its own (skipped without it).

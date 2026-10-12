@@ -1,0 +1,21 @@
+{
+  "parent": "espresso:guide/your_usual",
+  "criteria": {
+    "dressed": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "espresso:lucky_bean"
+    },
+    "title": "All Dressed Up",
+    "description": "Wear all eight café charms at once",
+    "frame": "challenge"
+  },
+  "requirements": [
+    [
+      "dressed"
+    ]
+  ]
+}

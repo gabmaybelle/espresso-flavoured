@@ -196,6 +196,16 @@ public final class EspressoContent {
 			.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 	/** One for each Espresso advancement; a master barista takes them (see BeanCoin). */
 	public static final Item BEAN_COIN = registerItem("bean_coin", BeanCoin::new, new Item.Properties().rarity(Rarity.UNCOMMON));
+	// Café charms (see CharmItem): worn in Trinkets slots, or just carried without Trinkets.
+	public static final Item LUCKY_BEAN = charm("lucky_bean", "necklace");
+	public static final Item THERMOS = charm("thermos", "belt");
+	public static final Item POCKET_HEARTH = charm("pocket_hearth", "pocket");
+	public static final Item READING_SOCKS = charm("reading_socks", "shoes");
+	public static final Item CAFE_PARASOL = charm("cafe_parasol", "back");
+	public static final Item EMBER_GLOVE = charm("ember_glove", "glove");
+	public static final Item COPPER_TAMPER = charm("copper_tamper", "pocket");
+	public static final Item KNIT_BEANIE = charm("knit_beanie", "hat");
+	public static final List<Item> CHARMS = List.of(LUCKY_BEAN, THERMOS, POCKET_HEARTH, READING_SOCKS, CAFE_PARASOL, KNIT_BEANIE, EMBER_GLOVE, COPPER_TAMPER);
 	public static final Item VANILLA_SYRUP = registerItem("vanilla_syrup", Item::new, new Item.Properties());
 	public static final Item ROASTED_COFFEE_BEANS = registerItem("roasted_coffee_beans", Item::new, new Item.Properties());
 	public static final Item ESPRESSO = registerItem("espresso", CoffeeItem::new, drink(1800, null));
@@ -259,6 +269,10 @@ public final class EspressoContent {
 		return food == null ? props.component(DataComponents.CONSUMABLE, consumable) : props.food(food, consumable);
 	}
 
+	private static Item charm(String name, String slot) {
+		return registerItem(name, props -> new CharmItem(props, slot), new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+	}
+
 	private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties props) {
 		ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, id(name));
 		return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(props.setId(key)));
@@ -273,6 +287,7 @@ public final class EspressoContent {
 	public static void register() {
 		Mugs.register();
 		BeanCoin.register();
+		CharmItem.register();
 		Seat.register();
 		WaterLilyBlock.register();
 		CoffeeLoot.register();
@@ -288,6 +303,7 @@ public final class EspressoContent {
 			output.accept(GLASS_JAR);
 			COFFEE_BAR_ITEMS.forEach(output::accept);
 		});
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(output -> CHARMS.forEach(output::accept));
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> {
 			output.accept(UNFIRED_MUG);
 			output.accept(UNFIRED_CANISTER);
