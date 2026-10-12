@@ -2,6 +2,7 @@ package com.gabbymaybelle.espresso.client;
 
 import com.gabbymaybelle.espresso.content.CanisterBlock;
 import com.gabbymaybelle.espresso.content.EspressoContent;
+import com.gabbymaybelle.espresso.content.GazeboGuard;
 import com.gabbymaybelle.espresso.content.Mugs;
 import com.gabbymaybelle.espresso.content.PlacedMugBlock;
 import com.gabbymaybelle.espresso.Config;
@@ -51,7 +52,13 @@ public class EspressoClient implements ClientModInitializer {
 				Config.serverBundleUnstackables = settings.bundleUnstackables();
 			}
 		});
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> Config.serverBundleUnstackables = 0);
+		// Where the spawn gazebo is (while it's protected), so a placement there is refused on this side too.
+		ClientPlayNetworking.registerGlobalReceiver(GazeboGuard.Box.TYPE, (payload, context) ->
+				GazeboGuard.setClientBox(payload.box().orElse(null)));
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			Config.serverBundleUnstackables = 0;
+			GazeboGuard.setClientBox(null);
+		});
 	}
 
 	/** Tints a block's model (tintindex 0) by its colour property: cream, one of the 16 dyes, or gold. */

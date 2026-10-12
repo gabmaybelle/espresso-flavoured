@@ -2,6 +2,7 @@ package com.gabbymaybelle.espresso.client;
 
 import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.ServerSettings;
+import com.gabbymaybelle.espresso.content.GazeboGuard;
 import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,8 +102,11 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		Config.save();
 		IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
 		if (server != null) {
-			// Hosting a LAN world: guests use the host's bundle setting.
-			server.execute(() -> ServerSettings.broadcast(server));
+			// Hosting a LAN world: guests use the host's bundle setting, and hear whether the gazebo is protected.
+			server.execute(() -> {
+				ServerSettings.broadcast(server);
+				GazeboGuard.broadcast(server);
+			});
 		}
 	}
 
