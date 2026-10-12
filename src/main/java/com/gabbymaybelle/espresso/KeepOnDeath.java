@@ -1,5 +1,7 @@
 package com.gabbymaybelle.espresso;
 
+import com.gabbymaybelle.espresso.compat.TrinketsCompat;
+import com.gabbymaybelle.espresso.content.CharmItem;
 import com.mojang.serialization.Codec;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,11 +58,20 @@ public final class KeepOnDeath {
 		Inventory inventory = player.getInventory();
 		for (Map.Entry<String, ItemStack> entry : kept.entrySet()) {
 			// Keys are the slot, plus "#n" for items from a second death while these were waiting.
-			int slot = Integer.parseInt(entry.getKey().split("#")[0]);
+			String key = entry.getKey().split("#")[0];
+			ItemStack stack = entry.getValue();
+			if (TrinketsCompat.isCharmKey(key)) {
+				// A worn charm goes back in its trinket slot; into the inventory if that slot's gone.
+				if (!(CharmItem.TRINKETS && TrinketsCompat.putBack(player, key, stack)) && !inventory.add(stack)) {
+					player.spawnAtLocation(player.level(), stack);
+				}
+				continue;
+			}
+			int slot = Integer.parseInt(key);
 			if (inventory.getItem(slot).isEmpty()) {
-				inventory.setItem(slot, entry.getValue());
-			} else if (!inventory.add(entry.getValue())) {
-				player.spawnAtLocation(player.level(), entry.getValue());
+				inventory.setItem(slot, stack);
+			} else if (!inventory.add(stack)) {
+				player.spawnAtLocation(player.level(), stack);
 			}
 		}
 	}
@@ -85,6 +96,16 @@ public final class KeepOnDeath {
 			}
 			kept.put(key, stack.copy());
 			inventory.setItem(slot, ItemStack.EMPTY);
+		}
+		// Worn café charms stay too (with Trinkets; without it they're ordinary inventory items).
+		if (CharmItem.TRINKETS) {
+			for (Map.Entry<String, ItemStack> charm : TrinketsCompat.takeCharms(player).entrySet()) {
+				String key = charm.getKey();
+				for (int n = 1; kept.containsKey(key); n++) {
+					key = charm.getKey() + "#" + n;
+				}
+				kept.put(key, charm.getValue());
+			}
 		}
 		if (!kept.isEmpty()) {
 			player.setAttached(KEPT, kept);

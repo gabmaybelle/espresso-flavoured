@@ -43,7 +43,7 @@ public final class Config {
 	public static boolean clock = true;
 	/** "The sun's getting real low" above the hotbar at 6:00 PM, an hour before night (client side). */
 	public static boolean duskWarning = true;
-	/** Keep the hotbar, armour and off-hand on death; everything else drops. */
+	/** Keep the hotbar, armour, off-hand and (with Trinkets) worn charms on death; everything else drops. */
 	public static boolean keepHotbarOnDeath = true;
 	/** Slow natural healing only happens while you have saturation (you've eaten recently). */
 	public static boolean regenNeedsSaturation = true;
@@ -139,7 +139,7 @@ public final class Config {
 					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
 					+ "spawnGazebo: a little stone gazebo at the world spawn of new worlds\n"
 					+ "protectGazebo: the spawn gazebo can only be changed in creative, and explosions, fire and pistons leave it alone\n"
-					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
+					+ "keepHotbarOnDeath: keep your hotbar, armour, off-hand and worn charms when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
 					+ "drowsiness: Drowsy after three days without sleeping at home (any bed within your safe home radius), and Hungry if you haven't eaten in that time either\n"

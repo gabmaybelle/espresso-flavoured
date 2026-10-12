@@ -26,7 +26,7 @@ Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival k
 
 **The barista.** Villagers can take an espresso machine as their workstation and become baristas. They trade in beans, mugs, drinks, bakes and café decor, and a master barista sells the Barista's Reserve for Bean Coins: rare beans that brew a Ristretto, the only coffee strong enough for Speed II and Haste II. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
 
-**Death.** You keep your hotbar, armour and off-hand. Everything else stays where you fell, so there's still a trip back for your things (into a grave, if you also use a graves mod).
+**Death.** You keep your hotbar, armour, off-hand and the charms you're wearing. Everything else stays where you fell, so there's still a trip back for your things (into a grave, if you also use a graves mod).
 
 **Room for more.** Shulker boxes can be crafted in the Overworld (a chest, iron, ender pearls and amethyst), bundles also take wool or rabbit hide, and a bundle holds four tools or pieces of armour.
 

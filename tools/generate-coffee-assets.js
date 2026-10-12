@@ -1028,7 +1028,7 @@ out('lang/en_us.json', {
 	"espresso_flavoured.options.safeHomeRadius": "Safe Home Radius",
 	"espresso_flavoured.options.safeHomeRadius.tooltip": "No monsters spawn naturally within this many blocks of your home bed (crouch and use a bed with an empty hand to set it).",
 	"espresso_flavoured.options.keepHotbarOnDeath": "Keep Hotbar on Death",
-	"espresso_flavoured.options.keepHotbarOnDeath.tooltip": "Keep your hotbar, armour and off-hand when you die. Everything else stays where you fell.",
+	"espresso_flavoured.options.keepHotbarOnDeath.tooltip": "Keep your hotbar, armour, off-hand and the charms you're wearing when you die. Everything else stays where you fell.",
 	"espresso_flavoured.options.creeperGriefing": "Creepers Break Blocks",
 	"espresso_flavoured.options.creeperGriefing.tooltip": "Off: creeper explosions still hurt, but leave your builds alone.",
 	"espresso_flavoured.options.endermanGriefing": "Endermen Take Blocks",

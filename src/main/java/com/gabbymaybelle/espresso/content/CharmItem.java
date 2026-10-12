@@ -56,7 +56,7 @@ public class CharmItem extends Item implements TooltipLines {
 	 * also call themselves "trinkets" but don't have the API TrinketsCompat uses, so with them charms
 	 * work from the inventory instead of crashing the game.
 	 */
-	private static final boolean TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets_updated");
+	public static final boolean TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets_updated");
 
 	/** Whether this player is wearing (or, without Trinkets, carrying) a charm. */
 	public static boolean isWorn(LivingEntity entity, Item charm) {
