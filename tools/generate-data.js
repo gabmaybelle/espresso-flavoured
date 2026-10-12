@@ -558,7 +558,8 @@ adv('guide/fair_trade', 'guide/first_sip', 'espresso_flavoured:roasted_coffee_be
 // Hidden until it happens: the first time a player turns Drowsy, the toast says why. Awarded by
 // Wellbeing. It lives outside guide/ so it doesn't pay a Bean Coin for staying up.
 adv('tips/bleary_eyed', 'guide/root', 'minecraft:clock', 'Bleary-Eyed', 'Three days away from home. A night in your own bed puts it right',
-	{ drowsy: { trigger: 'minecraft:impossible' } }, { hidden: true });
+	// The toast shows, but nothing goes to chat: on a server, nobody else needs to know you're Drowsy.
+	{ drowsy: { trigger: 'minecraft:impossible' } }, { hidden: true, announce_to_chat: false });
 
 // Gives the starter kit once, the first time a player joins.
 out('data/espresso_flavoured/advancement/starter_kit.json', {

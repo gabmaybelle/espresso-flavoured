@@ -11,7 +11,8 @@
     },
     "title": "Bleary-Eyed",
     "description": "Three days away from home. A night in your own bed puts it right",
-    "hidden": true
+    "hidden": true,
+    "announce_to_chat": false
   },
   "requirements": [
     [
