@@ -27,7 +27,6 @@ const PALETTES = {
 		cap: 'minecraft:stone_brick_slab', rail: 'minecraft:tuff_brick_wall', footing: 'minecraft:stone_brick_wall',
 		ground: 'minecraft:grass_block[snowy=false]', path: 'minecraft:dirt_path',
 		moss: 'minecraft:moss_block', carpet: 'minecraft:moss_carpet',
-		pots: ['minecraft:potted_torchflower', 'minecraft:potted_blue_orchid', 'minecraft:potted_flowering_azalea_bush', 'minecraft:potted_open_eyeblossom'],
 		corners: 'minecraft:flowering_azalea', sides: 'minecraft:pink_petals[facing=north,segment_amount=3]',
 		front: 'minecraft:pink_tulip', back: 'minecraft:allium',
 	},
@@ -41,7 +40,6 @@ const PALETTES = {
 		cap: 'minecraft:smooth_sandstone_slab', rail: 'minecraft:sandstone_wall', footing: 'minecraft:sandstone_wall',
 		ground: 'minecraft:sand', path: 'minecraft:sand',
 		moss: null,
-		pots: ['minecraft:potted_cactus', 'minecraft:potted_torchflower', 'minecraft:potted_dead_bush', 'minecraft:potted_cactus'],
 		corners: 'minecraft:dead_bush', sides: 'minecraft:cactus_flower', front: 'minecraft:dead_bush', back: 'minecraft:cactus_flower',
 	},
 };
@@ -98,17 +96,26 @@ function gazebo(wood, p) {
 		set(x, 2, 10, stairs(p.stair, 'north'));
 	}
 
-	// Pots. Flower pots with rarer plants stand on the railing either side of the entrance and on
-	// the ground by the steps; inside, two decorated pots in the back corners each hide something
-	// only a sniffer finds (break the pot to get it).
-	const [railL, railR, stepL, stepR] = p.pots;
+	// Pots, for a builder's first garden. Flower pots stand on the railing either side of the
+	// entrance and on the ground by the steps, with saplings of woods that don't grow everywhere
+	// (never the gazebo's own) and a cactus; take a plant out with an empty hand. Inside, a
+	// decorated pot in each corner holds mangrove propagules, bamboo or seeds (break it to get them).
+	const potted = ['jungle', 'spruce'].filter(x => x !== wood).map(x => `minecraft:potted_${x}_sapling`)
+		.concat('minecraft:potted_cactus', 'minecraft:potted_azalea_bush', 'minecraft:potted_flowering_azalea_bush');
+	const [railL, railR, stepL, stepR] = potted;
 	set(4, 4, 9, railL);
 	set(8, 4, 9, railR);
 	for (const [x, s] of [[4, stepL], [8, stepR]]) { set(x, 0, 11, p.ground); set(x, 1, 11, s); }
 	// 26.3 keeps a pot's sherds by side; a side left out is plain brick.
-	const pot = (front, id, count) => ({ sherds: { front: { id: `minecraft:${front}` } }, item: { id, count } });
-	set(4, 3, 4, 'minecraft:decorated_pot[cracked=false,facing=south,waterlogged=false]', pot('flower_pottery_sherd', 'minecraft:torchflower_seeds', 2));
-	set(8, 3, 4, 'minecraft:decorated_pot[cracked=false,facing=south,waterlogged=false]', pot('heart_pottery_sherd', 'minecraft:pitcher_pod', 1));
+	const pot = (front, id, count) => ({ sherds: { front: { id: `minecraft:${front}_pottery_sherd` } }, item: { id: `minecraft:${id}`, count } });
+	const decorated = (x, z, facing, contents) => set(x, 3, z, `minecraft:decorated_pot[cracked=false,facing=${facing},waterlogged=false]`, contents);
+	decorated(4, 4, 'south', pot('flower', 'mangrove_propagule', 2));
+	decorated(8, 4, 'south', pot('heart', 'bamboo', 4));
+	// Two different seeds by the entrance, picked by wood so worlds differ.
+	const seeds = [['torchflower_seeds', 2], ['pitcher_pod', 1], ['pumpkin_seeds', 4], ['melon_seeds', 4], ['beetroot_seeds', 4], ['cocoa_beans', 3]];
+	const first = WOODS.indexOf(wood) % seeds.length;
+	decorated(4, 8, 'east', pot('sheaf', ...seeds[first]));
+	decorated(8, 8, 'west', pot('snort', ...seeds[(first + 3) % seeds.length]));
 
 	// Railing round the plinth edge, open at the entrance. Each corner has a fence post with a wall
 	// at its foot and its head.
