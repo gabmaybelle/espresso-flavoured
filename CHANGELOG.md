@@ -56,6 +56,8 @@
 - Breaking a canister or glass jar in creative mode spills what was inside instead of deleting it.
 - The espresso machine waits until its knock box has room for all of a brew's grounds instead of losing some, and cocoa (which leaves no grounds) brews even when the box is full.
 - Turning Longer Days on or off no longer changes the Drowsy timer until the restart that changes the days.
+- Without Iris, the log no longer shows an "Error loading class" line for the shader time fix: the mod only applies it when Iris is there.
+- Bean Coin payouts check only Espresso's own advancements each second, picked out once when the server starts or reloads, instead of scanning every advancement for every player.
 
 ## 0.2.0: The Café
 

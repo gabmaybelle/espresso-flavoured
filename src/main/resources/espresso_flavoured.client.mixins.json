@@ -2,10 +2,8 @@
 	"required": false,
 	"package": "com.gabbymaybelle.espresso.client.mixin",
 	"compatibilityLevel": "JAVA_25",
-	"client": [
-		"IrisWorldTimeMixin",
-		"LocalPlayerMixin"
-	],
+	"plugin": "com.gabbymaybelle.espresso.client.mixin.EspressoClientMixinPlugin",
+	"client": [],
 	"injectors": {
 		"defaultRequire": 1
 	}

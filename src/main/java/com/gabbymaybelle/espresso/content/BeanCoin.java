@@ -3,10 +3,13 @@ package com.gabbymaybelle.espresso.content;
 import com.gabbymaybelle.espresso.Espresso;
 import com.mojang.serialization.Codec;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.AdvancementHolder;
@@ -42,23 +45,41 @@ public class BeanCoin extends Item implements TooltipLines {
 		tooltip.accept(Component.translatable("item.espresso_flavoured.bean_coin.desc").withStyle(ChatFormatting.GRAY));
 	}
 
+	/** The advancements that pay a coin, picked out once per server start or data reload rather than every second. */
+	private static List<AdvancementHolder> paying = List.of();
+
 	static void register() {
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> paying = payingAdvancements(server));
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, success) -> paying = payingAdvancements(server));
+		ServerLifecycleEvents.SERVER_STOPPED.register(server -> paying = List.of());
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			if (server.getTickCount() % 20 == 0) {
+			if (server.getTickCount() % 20 == 0 && !paying.isEmpty()) {
 				for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-					payCoins(server, player);
+					payCoins(player);
 				}
 			}
 		});
 	}
 
-	private static void payCoins(MinecraftServer server, ServerPlayer player) {
-		List<String> paid = player.getAttachedOrElse(PAID, List.of());
-		List<String> nowPaid = null;
+	/** Every Espresso guide/* advancement except the root, which only opens the tab. */
+	private static List<AdvancementHolder> payingAdvancements(MinecraftServer server) {
+		List<AdvancementHolder> out = new ArrayList<>();
 		for (AdvancementHolder advancement : server.getAdvancements().getAllAdvancements()) {
 			Identifier id = advancement.id();
-			if (!id.getNamespace().equals(Espresso.MOD_ID) || !id.getPath().startsWith(GUIDE) || id.getPath().equals(ROOT)
-					|| paid.contains(id.toString()) || !player.getAdvancements().getOrStartProgress(advancement).isDone()) {
+			if (id.getNamespace().equals(Espresso.MOD_ID) && id.getPath().startsWith(GUIDE) && !id.getPath().equals(ROOT)) {
+				out.add(advancement);
+			}
+		}
+		return List.copyOf(out);
+	}
+
+	private static void payCoins(ServerPlayer player) {
+		List<String> paid = player.getAttachedOrElse(PAID, List.of());
+		Set<String> paidSet = new HashSet<>(paid);
+		List<String> nowPaid = null;
+		for (AdvancementHolder advancement : paying) {
+			Identifier id = advancement.id();
+			if (paidSet.contains(id.toString()) || !player.getAdvancements().getOrStartProgress(advancement).isDone()) {
 				continue;
 			}
 			if (nowPaid == null) {
