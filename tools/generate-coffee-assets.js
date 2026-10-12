@@ -302,53 +302,6 @@ png('item/vanilla_syrup', [
 	'................',
 ], { k: [120, 90, 60], W: [240, 236, 226], g: [200, 220, 230, 220], Y: [232, 196, 120], y: [214, 170, 96], p: [70, 44, 24], P: [96, 62, 34] });
 
-// Loyalty card: a cream card with a coffee cup logo and six stamp circles, filled one by one.
-for (let n = 0; n <= 6; n++) {
-	png(`item/loyalty_card_${n}`, grid((x, y) => {
-		if (y < 3 || y > 12 || x < 1 || x > 14) return '.';
-		if (y === 3 || y === 12 || x === 1 || x === 14) return 'e';
-		if (y >= 4 && y <= 6 && x >= 3 && x <= 5) return y === 4 ? 'b' : 'B'; // cup logo
-		if (y === 5 && x === 6) return 'b';
-		if (y === 5 && x >= 8 && x <= 12) return 'l'; // the café's name, as a line
-		// Stamps: two rows of three, two pixels each, at x = 4, 7, 10 and y = 7..8, 10..11.
-		const column = [4, 7, 10].findIndex(sx => x === sx || x === sx + 1);
-		const row = y === 7 || y === 8 ? 0 : y === 10 || y === 11 ? 1 : -1;
-		if (column >= 0 && row >= 0) return row * 3 + column < n ? 's' : 'o';
-		return 'c';
-	}), { e: [150, 120, 90], c: [246, 236, 214], b: [112, 64, 34], B: [164, 104, 58], l: [190, 170, 140], o: [214, 200, 176], s: [176, 52, 40] });
-}
-
-// Bean Coin: a round brass coin with a coffee bean stamped in the middle.
-png('item/bean_coin', grid((x, y) => {
-	const dx = x - 7.5, dy = y - 7.5, r = Math.sqrt(dx * dx + dy * dy);
-	if (r > 7.1) return '.';
-	if (r > 6.1) return dx + dy > 0 ? 'e' : 'E'; // rim, shaded bottom-right
-	// The bean: an oval leaning to the right, with its S-shaped crease down the middle.
-	const u = (dx + dy) * 0.707, v = (dy - dx) * 0.707;
-	if ((u * u) / 17 + (v * v) / 7 <= 1) return Math.abs(v - 0.6 * Math.sin(u * 0.8)) < 0.5 ? 'k' : (v < 0 ? 'B' : 'b');
-	return dx + dy < -5 ? 'h' : 'c';
-}), { e: [140, 98, 38], E: [176, 130, 52], c: [214, 170, 78], h: [240, 210, 128], b: [112, 64, 34], B: [150, 92, 50], k: [56, 30, 14] });
-out('items/bean_coin.json', { model: { type: 'minecraft:model', model: 'espresso:item/bean_coin' } });
-
-// Water lily: vanilla's lily pad with vanilla's cactus flower standing right on it (only vanilla
-// textures, referenced, not copied). The pad is tinted green in the world like a lily pad.
-const crossPanel = (from, to, faces) => ({ from, to, rotation: { origin: [8, 8, 8], axis: 'y', angle: 45, rescale: true },
-	shade_direction_override: 'up', faces: Object.fromEntries(faces.map(f => [f, { uv: [0, 0, 16, 16], texture: '#flower' }])) });
-out('models/block/water_lily.json', {
-	ambientocclusion: false,
-	textures: { particle: 'minecraft:block/lily_pad', pad: 'minecraft:block/lily_pad', flower: 'minecraft:block/cactus_flower' },
-	elements: [
-		{ from: [0, 0.25, 0], to: [16, 0.25, 16], faces: {
-			down: { uv: [0, 16, 16, 0], texture: '#pad', tintindex: 0 }, up: { uv: [0, 0, 16, 16], texture: '#pad', tintindex: 0 } } },
-		crossPanel([0.8, 0.25, 8], [15.2, 16.25, 8], ['north', 'south']),
-		crossPanel([8, 0.25, 0.8], [8, 16.25, 15.2], ['east', 'west']),
-	],
-});
-out('blockstates/water_lily.json', { variants: { '': { model: 'espresso:block/water_lily' } } });
-out('models/item/water_lily.json', { parent: 'minecraft:item/generated', textures: { layer0: 'minecraft:block/lily_pad', layer1: 'minecraft:block/cactus_flower' } });
-out('items/water_lily.json', { model: { type: 'minecraft:model', model: 'espresso:item/water_lily', tints: [{ type: 'minecraft:constant', value: -9321636 }] } });
-out('models/item/bean_coin.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/bean_coin' } });
-
 // Canisters: glazed like the mugs (greys, tinted), with a lid and knob.
 png('block/canister', grid((x, y) => (y <= 1 ? 'W' : (y >= 14 ? 'S' : ((x * 7 + y) % 13 === 0 ? 'S' : 'B')))), MUG);
 png('block/canister_top', grid((x, y) => (x <= 1 || x >= 14 || y <= 1 || y >= 14 ? 'S' : 'W')), MUG);
@@ -580,7 +533,7 @@ out('blockstates/placed_mug.json', { variants: Object.fromEntries(
 	[['north', 0], ['east', 90], ['south', 180], ['west', 270]].flatMap(([facing, y]) =>
 		['empty', ...Object.keys(DRINKS)].map(c => [`contents=${c},facing=${facing}`, { model: `espresso:block/mug_${c}`, ...(y ? { y } : {}) }])),
 ) });
-// Vanilla, the golden mug, the loyalty card and canisters.
+// Vanilla, the golden mug and canisters.
 for (const item of ['vanilla_syrup', 'unfired_canister']) {
 	out(`items/${item}.json`, { model: { type: 'minecraft:model', model: `espresso:item/${item}` } });
 	out(`models/item/${item}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/${item}` } });
@@ -593,14 +546,6 @@ for (const drink of ['pumpkin_spice_latte', 'iced_coffee', 'night_shift', 'hot_c
 out('models/item/vanilla_latte.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/mug', layer1: 'espresso:item/vanilla_latte_fill' } });
 // The golden mug carries its gold colour as a dye, so it shares the mug's tinted model.
 out('items/golden_mug.json', dyed('espresso:item/mug'));
-for (let n = 0; n <= 6; n++) {
-	out(`models/item/loyalty_card_${n}.json`, { parent: 'minecraft:item/generated', textures: { layer0: `espresso:item/loyalty_card_${n}` } });
-}
-out('items/loyalty_card.json', { model: {
-	type: 'minecraft:range_dispatch', property: 'minecraft:custom_model_data', index: 0,
-	entries: [1, 2, 3, 4, 5, 6].map(n => ({ threshold: n, model: { type: 'minecraft:model', model: `espresso:item/loyalty_card_${n}` } })),
-	fallback: { type: 'minecraft:model', model: 'espresso:item/loyalty_card_0' },
-} });
 const canisterTextures = { particle: 'espresso:block/canister', side: 'espresso:block/canister', top: 'espresso:block/canister_top' };
 out('models/block/canister.json', { parent: 'minecraft:block/block', textures: canisterTextures, display: {
 	gui: { rotation: [30, 225, 0], translation: [0, 1, 0], scale: [0.9, 0.9, 0.9] },
@@ -824,7 +769,6 @@ out('lang/en_us.json', {
 	'item.espresso.vanilla_syrup': 'Vanilla Syrup',
 	'item.espresso.vanilla_latte': 'Vanilla Latte',
 	'item.espresso.golden_mug': 'Golden Mug',
-	'item.espresso.loyalty_card': 'Old Loyalty Card',
 	'item.espresso.bean_coin': 'Bean Coin',
 	'block.espresso.water_lily': 'Water Lily',
 	'jei.espresso.water_lily.info': 'A lily pad in bloom. Use bone meal on a lily pad to make one, or look among the lily pads by rivers and ponds in new land.',

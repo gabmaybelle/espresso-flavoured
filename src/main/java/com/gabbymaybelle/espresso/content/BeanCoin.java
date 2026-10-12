@@ -17,7 +17,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Prediction;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -26,9 +25,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 /**
  * Bean Coins: every Espresso advancement pays one, once per player, straight into the inventory.
  * A master barista takes them for the Golden Mug (8) and a couple of treats. Advancements earned
- * before coins existed are paid on the next check, so older worlds catch up; retired loyalty cards
- * are taken out of inventories at the same time (their stamps were advancements, so they're paid
- * for already).
+ * before coins existed are paid on the next check, so older worlds catch up.
  */
 public class BeanCoin extends Item {
 	/** Advancements a player has already been paid a coin for. */
@@ -52,7 +49,6 @@ public class BeanCoin extends Item {
 			if (server.getTickCount() % 20 == 0) {
 				for (ServerPlayer player : server.getPlayerList().getPlayers()) {
 					payCoins(server, player);
-					retireLoyaltyCards(player);
 				}
 			}
 		});
@@ -79,17 +75,5 @@ public class BeanCoin extends Item {
 		player.setAttached(PAID, List.copyOf(nowPaid));
 		player.getInventory().placeItemBackInInventory(new ItemStack(EspressoContent.BEAN_COIN, coins), Prediction.SERVER_ONLY);
 		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8F, 1.4F);
-	}
-
-	private static void retireLoyaltyCards(ServerPlayer player) {
-		Inventory inventory = player.getInventory();
-		for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
-			if (inventory.getItem(slot).is(EspressoContent.LOYALTY_CARD)) {
-				inventory.setItem(slot, ItemStack.EMPTY);
-			}
-		}
-		if (player.containerMenu.getCarried().is(EspressoContent.LOYALTY_CARD)) {
-			player.containerMenu.setCarried(ItemStack.EMPTY);
-		}
 	}
 }

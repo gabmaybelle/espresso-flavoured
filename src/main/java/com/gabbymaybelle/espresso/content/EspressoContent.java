@@ -168,9 +168,6 @@ public final class EspressoContent {
 			props -> new BlockItem(COFFEE_BUSH, props), new Item.Properties().useItemDescriptionPrefix());
 	public static final Item ESPRESSO_MACHINE_ITEM = registerItem("espresso_machine",
 			props -> new BlockItem(ESPRESSO_MACHINE, props), new Item.Properties().useBlockDescriptionPrefix());
-	/** The retired loyalty card's stamps; still registered so old cards load. */
-	public static final DataComponentType<Integer> STAMPS = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("stamps"),
-			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
 	/** Marks a drink as decaf; it carries from Espresso to Latte and on, like the mug's colour. */
 	public static final DataComponentType<Boolean> DECAF = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("decaf"),
 			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
@@ -199,8 +196,6 @@ public final class EspressoContent {
 			.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 	/** One for each Espresso advancement; a master barista takes them (see BeanCoin). */
 	public static final Item BEAN_COIN = registerItem("bean_coin", BeanCoin::new, new Item.Properties().rarity(Rarity.UNCOMMON));
-	/** Retired (Bean Coins took over); kept so old cards still load, and taken out of inventories. */
-	public static final Item LOYALTY_CARD = registerItem("loyalty_card", Item::new, new Item.Properties().stacksTo(1));
 	public static final Item VANILLA_SYRUP = registerItem("vanilla_syrup", Item::new, new Item.Properties());
 	public static final Item ROASTED_COFFEE_BEANS = registerItem("roasted_coffee_beans", Item::new, new Item.Properties());
 	public static final Item ESPRESSO = registerItem("espresso", CoffeeItem::new, drink(1800, null));
