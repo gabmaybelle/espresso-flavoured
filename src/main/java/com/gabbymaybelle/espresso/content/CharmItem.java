@@ -35,23 +35,18 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
  * A master barista sells a couple for Bean Coins, and they turn up now and then in café and village chests.
  */
 public class CharmItem extends Item implements TooltipLines {
-	/** Which Trinkets slot it goes in, for the tooltip ("necklace", "belt", ...). */
-	private final String slot;
-
-	public CharmItem(Properties properties, String slot) {
+	public CharmItem(Properties properties) {
 		super(properties);
-		this.slot = slot;
 	}
 
 	@Override
 	public void addTooltipLines(ItemStack stack, Consumer<Component> tooltip) {
 		String name = stack.getItem().getDescriptionId();
 		tooltip.accept(Component.translatable(name + ".desc").withStyle(ChatFormatting.GRAY));
+		// With Trinkets Updated, its own tooltip line names the slot ("Equippable in the Necklace trinket
+		// slot"); which slot a charm goes in comes from the data/trinkets item tags.
 		if (!TRINKETS) {
 			tooltip.accept(Component.translatable("item.espresso_flavoured.charm.carried").withStyle(ChatFormatting.DARK_GRAY));
-		} else {
-			tooltip.accept(Component.translatable("item.espresso_flavoured.charm.slot", Component.translatable("item.espresso_flavoured.charm.slot." + slot))
-					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 

@@ -433,7 +433,7 @@ out('data/espresso_flavoured/recipe/glass_jar.json', {
 // ---------------------------------------------------------------- field guide
 const PAGES = [
 	'Espresso Flavoured\nField Notes\n\nWelcome! This world is a little kinder to builders, so you can spend less time worrying and more time making something you love.\n\n- Gabby',
-	'Your Safe Haven\n\nCrouch and use a bed with an empty hand to make it your home. Monsters won\'t spawn within 32 blocks of it, even in caves below, so build mob farms further out.\n\nSleeping elsewhere won\'t move it. Break the bed and the protection goes.',
+	'Your Safe Haven\n\nCrouch and use a bed with an empty hand to make it your home. Monsters won\'t spawn within 32 blocks of it, even in caves below, so build mob farms further out.\n\nBreak the bed and the protection goes.',
 	'Builds Stay Built\n\nCreepers still bite, but their blasts no longer break blocks.\n\nEndermen leave your walls alone, and phantoms never visit, so rest whenever you like.',
 	'Looking After Yourself\n\nYou only heal while you\'ve eaten recently, so keep a snack handy.\n\nThree days without a night at home and you turn Drowsy: no sprinting, slower mining. Coffee buys a day, then you crash.',
 	'Coffee Corner\n\nRoast coffee cherries, then brew them in an espresso machine on a coffee bar. Mugs are fired clay.\n\nAway three days? Only your own bed leaves you rested. Decaf helps you sleep well.',
