@@ -37,11 +37,13 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.storage.LevelData;
 
 /**
- * A little stone gazebo at the world spawn, built once when a world is created. The template
- * (tools/generate-spawn.js) comes in one file per wood and per palette: the wood is whatever
- * grows around spawn, and deserts and badlands get sandstone. The ground inside the footprint is
- * cleared and anything hanging over a drop gets a stone foundation under it. The spawn point
- * moves to the middle of the gazebo, so new players wake up under the spore blossom.
+ * A little stone gazebo at the world spawn, built once when a world is created: a stone plinth,
+ * stripped-log pillars and a fence railing in the local wood, and a pitched stone roof with
+ * lanterns under its eaves. The template (tools/generate-spawn.js) comes in one file per wood
+ * and per palette: the wood is whatever grows around spawn, and deserts and badlands get
+ * sandstone. The ground inside the footprint is cleared and anything hanging over a drop gets a
+ * stone foundation under it. The spawn point moves to the middle of the gazebo, so new players
+ * wake up under the spore blossom.
  */
 public final class SpawnGazebo {
 	/** Set on the overworld once this world has been looked at, so the gazebo is never built twice. */
@@ -49,7 +51,7 @@ public final class SpawnGazebo {
 			Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "spawn_gazebo"),
 			builder -> builder.persistent(Codec.BOOL));
 
-	/** The template is 13 wide, centred on (6, y, 6), with its entrance facing south. */
+	/** The template is 13 wide and 12 tall, centred on (6, y, 6), with its entrance facing south. */
 	static final int HALF = 6, SIZE = 13;
 	/** Where the starter kit chest is in the template (tools/generate-spawn.js puts it in the north railing). */
 	private static final BlockPos CHEST = new BlockPos(HALF, 3, 3);
