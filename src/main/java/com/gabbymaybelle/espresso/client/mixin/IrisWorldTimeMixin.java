@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Shaders (through Iris) read the time of day as the world clock modulo 24000, so with Espresso's
- * longer days their sky ran ahead: sunset colours at noon, night by mid-afternoon. This hands them
- * the time of day as a normal 24000-tick day instead. Does nothing without Iris, or with the
- * longer days off.
+ * longer days their sky ran ahead: sunset colours at noon, night by mid-afternoon. The same happens
+ * with any other mod's or datapack's day length. This hands them the time of day as a normal
+ * 24000-tick day instead. Does nothing without Iris, or on a vanilla-length day.
  */
 @Pseudo
 @Mixin(targets = "net.irisshaders.iris.uniforms.WorldTimeUniforms", remap = false)

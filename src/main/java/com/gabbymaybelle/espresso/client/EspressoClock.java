@@ -56,16 +56,19 @@ public final class EspressoClock {
 	}
 
 	/**
-	 * The time of day as a normal 24000-tick day (0 = 6:00 AM) when Espresso's longer days are on, for
-	 * shaders (see IrisWorldTimeMixin); -1 otherwise, or where there's no day.
+	 * The time of day as a normal 24000-tick day (0 = 6:00 AM) whenever the day isn't vanilla's length,
+	 * whoever changed it (Espresso's longer days, or another mod's or datapack's timeline), for shaders
+	 * (see IrisWorldTimeMixin). Espresso's own day keeps its stretched daylight; any other length is
+	 * scaled evenly. -1 on a vanilla-length day, or where there's no day.
 	 */
 	public static int vanillaDayTime() {
 		ClientLevel level = Minecraft.getInstance().level;
 		Timeline timeline = level == null ? null : overworldDay(level);
-		if (timeline == null || timeline.periodTicks().get() != LONG_DAY) {
+		if (timeline == null || timeline.periodTicks().get() == 24000) {
 			return -1;
 		}
-		return (int) toVanilla(timeline.getCurrentTicks(level.clockManager()), LONG_DAY) % 24000;
+		int period = timeline.periodTicks().get();
+		return (int) toVanilla(timeline.getCurrentTicks(level.clockManager()), period) % 24000;
 	}
 
 	/** The overworld day timeline, if this dimension follows it. */

@@ -32,6 +32,7 @@
 - Coffee turns up in Towns and Towers' own village chests too (jungle, swamp, badlands, mushroom and Mediterranean houses).
 - The field guide has a Bean Coins page, and says your hotbar and armour stay with you when you fall.
 - Lusher Rivers is switched on once for everyone on this update (older settings files had it off alongside Terralith by default, not by choice); turn it off again any time.
+- With shaders (Iris), the sky now keeps time with any day length, not just Espresso's: another mod's or datapack's timeline is scaled to a normal day for the shader too.
 - With **JEI**: a page for what the espresso machine brews (beans, decaf beans, the Barista's Reserve and cocoa mix, with the grounds they leave), and a note on where water lilies come from.
 - The espresso machine's recipe now also shows up in the recipe book when you pick up a lightning rod.
 - Canisters and glass jars have their own sounds: a soft rustle as things go in and out, with a ceramic tink (or a glass clink) of the lid.
