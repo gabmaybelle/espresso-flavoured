@@ -1,7 +1,8 @@
 // Writes the spawn gazebo: a little stone pavilion that SpawnGazebo.java builds at the world
 // spawn of every new world. Mostly stone (bricks, tuff, moss) with fence posts holding the roof
-// up; a spore blossom hangs in the middle and glow berries light it. One file per wood (the mod
-// picks the wood growing around spawn) and per palette (grey stone, or sandstone in dry biomes).
+// up; a spore blossom hangs in the middle and glowstone in the floor lights it. One file per
+// wood (the mod picks the wood growing around spawn) and per palette (grey stone, or sandstone in
+// dry biomes).
 // Run by generate-data.js (which clears the pack first).
 const fs = require('fs'), path = require('path');
 const { Structure, stairs, fence } = require('./structure.js');
@@ -22,8 +23,11 @@ const PALETTES = {
 		plinth: 'minecraft:stone_bricks', plinthWorn: 'minecraft:mossy_stone_bricks', plinthAccent: 'minecraft:tuff_bricks',
 		stair: 'minecraft:stone_brick', stairWorn: 'minecraft:mossy_stone_brick',
 		ceiling: 'minecraft:tuff_bricks', ceilingCentre: 'minecraft:chiseled_tuff_bricks', fill: 'minecraft:stone_bricks',
-		cap: 'minecraft:stone_brick_slab', post: 'minecraft:chiseled_stone_bricks', rail: 'minecraft:tuff_brick_wall', footing: 'minecraft:stone_brick_wall',
-		ground: 'minecraft:grass_block[snowy=false]', path: 'minecraft:dirt_path', carpet: 'minecraft:moss_carpet',
+		floorBorder: 'minecraft:tuff_bricks', floorSide: 'minecraft:chiseled_tuff', floorCorner: 'minecraft:polished_tuff',
+		cap: 'minecraft:stone_brick_slab', rail: 'minecraft:tuff_brick_wall', footing: 'minecraft:stone_brick_wall',
+		ground: 'minecraft:grass_block[snowy=false]', path: 'minecraft:dirt_path',
+		moss: 'minecraft:moss_block', carpet: 'minecraft:moss_carpet',
+		pots: ['minecraft:potted_torchflower', 'minecraft:potted_blue_orchid', 'minecraft:potted_flowering_azalea_bush', 'minecraft:potted_open_eyeblossom'],
 		corners: 'minecraft:flowering_azalea', sides: 'minecraft:pink_petals[facing=north,segment_amount=3]',
 		front: 'minecraft:pink_tulip', back: 'minecraft:allium',
 	},
@@ -33,8 +37,11 @@ const PALETTES = {
 		plinth: 'minecraft:smooth_sandstone', plinthWorn: 'minecraft:sandstone', plinthAccent: 'minecraft:chiseled_sandstone',
 		stair: 'minecraft:smooth_sandstone', stairWorn: 'minecraft:sandstone',
 		ceiling: 'minecraft:cut_sandstone', ceilingCentre: 'minecraft:chiseled_sandstone', fill: 'minecraft:sandstone',
-		cap: 'minecraft:smooth_sandstone_slab', post: 'minecraft:chiseled_sandstone', rail: 'minecraft:sandstone_wall', footing: 'minecraft:sandstone_wall',
-		ground: 'minecraft:sand', path: 'minecraft:sand', carpet: null,
+		floorBorder: 'minecraft:cut_sandstone', floorSide: 'minecraft:chiseled_sandstone', floorCorner: 'minecraft:smooth_sandstone',
+		cap: 'minecraft:smooth_sandstone_slab', rail: 'minecraft:sandstone_wall', footing: 'minecraft:sandstone_wall',
+		ground: 'minecraft:sand', path: 'minecraft:sand',
+		moss: null,
+		pots: ['minecraft:potted_cactus', 'minecraft:potted_torchflower', 'minecraft:potted_dead_bush', 'minecraft:potted_cactus'],
 		corners: 'minecraft:dead_bush', sides: 'minecraft:cactus_flower', front: 'minecraft:dead_bush', back: 'minecraft:cactus_flower',
 	},
 };
@@ -48,7 +55,7 @@ function rng(seed) {
 const wall = (base, up = false) => `${base}[east=none,north=none,south=none,up=${up},waterlogged=false,west=none]`;
 
 // Template: 13 x 10 x 13, the gazebo centred on (6, y, 6). y=0 is the ground surface; the apron
-// replaces the top layer of ground and the plinth stands one block proud of it. The entrance and
+// replaces the top layer of ground and the plinth stands two blocks proud of it. The entrance and
 // the archway face south (+z); the mod rotates the whole thing at random.
 function gazebo(wood, p) {
 	const g = new Structure([13, 10, 13]);
@@ -64,81 +71,115 @@ function gazebo(wood, p) {
 		if (edge && (x === 2 || x === 10) && (z === 2 || z === 10)) continue;
 		set(x, 0, z, worn(edge ? 0.45 : 0.2, p.apron, p.apronWorn));
 	}
-	// Moss carpet on a few apron stones.
-	if (p.carpet) for (const [x, z] of [[2, 5], [10, 7], [4, 10], [9, 2]]) set(x, 1, z, p.carpet);
-
-	// Plinth, one block up: 7 x 7 of bricks with the odd mossy or tuff one.
-	for (let x = 3; x <= 9; x++) for (let z = 3; z <= 9; z++) {
-		const r = rand();
-		set(x, 1, z, r < 0.12 ? p.plinthWorn : r < 0.2 ? p.plinthAccent : p.plinth);
+	// A low wall round the foot of the plinth, a block out from it, open at the steps.
+	for (let x = 2; x <= 10; x++) for (let z = 2; z <= 10; z++) {
+		if (x !== 2 && x !== 10 && z !== 2 && z !== 10) continue;
+		if (z === 10 && x >= 5 && x <= 7) continue;
+		const post = (x === 2 || x === 10) && (z === 2 || z === 10) || z === 10 && (x === 4 || x === 8);
+		set(x, 1, z, wall(p.footing, post));
 	}
-	// Steps up at the entrance.
-	for (let x = 5; x <= 7; x++) set(x, 1, 10, stairs(p.stair, 'north'));
 
-	// Railing round the plinth edge, open at the entrance, with a footing and fence post at each corner.
+	// Plinth, two blocks high: 7 x 7 of bricks with the odd mossy or tuff one. Inside the railing
+	// its top is a floor: a border round a glowstone under the spore blossom, set in chiseled stone.
+	for (let x = 3; x <= 9; x++) for (let z = 3; z <= 9; z++) {
+		for (const y of [1, 2]) {
+			const r = rand();
+			set(x, y, z, r < 0.12 ? p.plinthWorn : r < 0.2 ? p.plinthAccent : p.plinth);
+		}
+		const inside = x >= 4 && x <= 8 && z >= 4 && z <= 8;
+		const panel = x >= 5 && x <= 7 && z >= 5 && z <= 7;
+		const side = x === C || z === C;
+		if (inside) set(x, 2, z, x === C && z === C ? 'minecraft:glowstone' : !panel ? p.floorBorder : side ? p.floorSide : p.floorCorner);
+	}
+	// Two steps up at the entrance, the upper one on a block of plinth in the gap in the wall.
+	for (let x = 5; x <= 7; x++) {
+		set(x, 1, 11, stairs(p.stair, 'north'));
+		set(x, 1, 10, p.plinth);
+		set(x, 2, 10, stairs(p.stair, 'north'));
+	}
+
+	// Pots. Flower pots with rarer plants stand on the railing either side of the entrance and on
+	// the ground by the steps; inside, two decorated pots in the back corners each hide something
+	// only a sniffer finds (break the pot to get it).
+	const [railL, railR, stepL, stepR] = p.pots;
+	set(4, 4, 9, railL);
+	set(8, 4, 9, railR);
+	for (const [x, s] of [[4, stepL], [8, stepR]]) { set(x, 0, 11, p.ground); set(x, 1, 11, s); }
+	// 26.3 keeps a pot's sherds by side; a side left out is plain brick.
+	const pot = (front, id, count) => ({ sherds: { front: { id: `minecraft:${front}` } }, item: { id, count } });
+	set(4, 3, 4, 'minecraft:decorated_pot[cracked=false,facing=south,waterlogged=false]', pot('flower_pottery_sherd', 'minecraft:torchflower_seeds', 2));
+	set(8, 3, 4, 'minecraft:decorated_pot[cracked=false,facing=south,waterlogged=false]', pot('heart_pottery_sherd', 'minecraft:pitcher_pod', 1));
+
+	// Railing round the plinth edge, open at the entrance. Each corner has a fence post with a wall
+	// at its foot and its head.
 	for (let x = 3; x <= 9; x++) for (let z = 3; z <= 9; z++) {
 		const edge = x === 3 || x === 9 || z === 3 || z === 9;
 		if (!edge) continue;
 		const corner = (x === 3 || x === 9) && (z === 3 || z === 9);
 		if (corner) {
-			set(x, 2, z, wall(p.footing, true));
-			for (let y = 3; y <= 5; y++) set(x, y, z, fence(w));
+			set(x, 3, z, wall(p.footing, true));
+			for (let y = 4; y <= 5; y++) set(x, y, z, fence(w));
+			set(x, 6, z, wall(p.footing, true));
 		} else if (x === C && z === 3) {
 			// The starter kit, in the railing opposite the entrance. SpawnGazebo.java knows this spot.
-			set(x, 2, z, 'minecraft:chest[facing=south,type=single,waterlogged=false]', { LootTable: 'espresso:chests/spawn_kit' });
+			set(x, 3, z, 'minecraft:chest[facing=south,type=single,waterlogged=false]', { LootTable: 'espresso:chests/spawn_kit' });
 		} else if (!(z === 9 && x >= 5 && x <= 7)) {
-			set(x, 2, z, wall(p.rail));
+			set(x, 3, z, wall(p.rail));
 		}
 	}
 
 	// Two benches facing each other across the middle, backs to the railing.
 	for (const z of [5, 6, 7]) {
-		set(4, 2, z, stairs(w, 'west'));
-		set(8, 2, z, stairs(w, 'east'));
+		set(4, 3, z, stairs(w, 'west'));
+		set(8, 3, z, stairs(w, 'east'));
 	}
 
-	// A low roof in two flat tiers. Each tier is a ring of upside-down stairs (the brackets you see
-	// from below), a layer of slabs on top of them, and a square post at each corner. The ceiling
-	// under it is full blocks so things can hang from it, and a fringe of closed fence gates runs
-	// under its edge between the piers.
+	// A low roof in two flat tiers, the lower one no wider than the plinth. Each tier is a ring of
+	// upside-down stairs (the brackets you see from below), a layer of slabs on top of them, and a
+	// wall post at each corner. The ceiling under it is full blocks so things can hang from it, and
+	// a fringe of closed fence gates runs under its edge between the piers.
 	const facingIn = (x, z, lo, hi) => x === lo ? 'east' : x === hi ? 'west' : z === lo ? 'south' : 'north';
 	const bracket = (x, z, lo, hi) => `${worn(0.2, p.stair, p.stairWorn)}_stairs[facing=${facingIn(x, z, lo, hi)},half=top,shape=straight,waterlogged=false]`;
 	const slab = () => `${p.cap}[type=bottom,waterlogged=false]`;
 	const corner = (x, z, lo, hi) => (x === lo || x === hi) && (z === lo || z === hi);
 	// A closed gate along the edge: on the north and south sides its bar runs east-west.
 	const gate = (x, z) => `${w}_fence_gate[facing=${z === 3 || z === 9 ? 'south' : 'east'},in_wall=false,open=false,powered=false]`;
-	// The ceiling is a ring of beam blocks at y=6 round an open middle, so from inside you look up
-	// into the roof: the recessed ceiling is the underside of the upper tier at y=7.
+	// Lower tier: brackets over the railing at y=7 round an open middle (so from inside you look up
+	// into the roof), slabs and corner posts at y=8, and the gates hung under the brackets.
 	for (let x = 3; x <= 9; x++) for (let z = 3; z <= 9; z++) {
-		const ring = x === 3 || x === 9 || z === 3 || z === 9;
-		if (ring) set(x, 6, z, p.ceiling);
-		if (ring && !corner(x, z, 3, 9)) set(x, 5, z, gate(x, z));
+		if (x !== 3 && x !== 9 && z !== 3 && z !== 9) continue;
+		set(x, 7, z, bracket(x, z, 3, 9));
+		set(x, 8, z, corner(x, z, 3, 9) ? wall(p.footing, true) : slab());
+		if (!corner(x, z, 3, 9)) set(x, 6, z, gate(x, z));
 	}
-	// Lower tier: brackets round the ceiling at y=6, slabs and corner posts at y=7.
-	for (let x = 2; x <= 10; x++) for (let z = 2; z <= 10; z++) {
-		if (x !== 2 && x !== 10 && z !== 2 && z !== 10) continue;
-		set(x, 6, z, bracket(x, z, 2, 10));
-		set(x, 7, z, corner(x, z, 2, 10) ? p.post : slab());
-	}
-	// Upper tier, set in by one: brackets at y=7 round the recessed ceiling, slabs and posts at y=8.
-	for (let x = 3; x <= 9; x++) for (let z = 3; z <= 9; z++) {
-		const ring = x === 3 || x === 9 || z === 3 || z === 9;
-		set(x, 7, z, ring ? bracket(x, z, 3, 9) : x === C && z === C ? p.ceilingCentre : p.ceiling);
-		set(x, 8, z, ring && corner(x, z, 3, 9) ? p.post : slab());
+	// Upper tier, set in by one: brackets at y=8 round the recessed ceiling, slabs and posts at y=9.
+	for (let x = 4; x <= 8; x++) for (let z = 4; z <= 8; z++) {
+		const ring = x === 4 || x === 8 || z === 4 || z === 8;
+		set(x, 8, z, ring ? bracket(x, z, 4, 8) : x === C && z === C ? p.ceilingCentre : p.ceiling);
+		set(x, 9, z, ring && corner(x, z, 4, 8) ? wall(p.footing, true) : slab());
 	}
 
-	// From the recessed ceiling: the spore blossom in the middle and glow berries round it, which
-	// are all the light it needs (two longer strands hang in opposite corners).
-	set(C, 6, C, 'minecraft:spore_blossom');
-	const berries = 'minecraft:cave_vines[age=25,berries=true]';
-	for (const [x, z] of [[4, C], [8, C], [C, 4], [C, 8]]) set(x, 6, z, berries);
-	for (const [x, z] of [[4, 4], [8, 8]]) {
-		set(x, 6, z, 'minecraft:cave_vines_plant[berries=true]');
-		set(x, 5, z, berries);
-	}
+	// From the recessed ceiling: the spore blossom in the middle and a sprig of glow berries in two
+	// opposite corners. With the glowstone in the floor that's all the light it needs.
+	set(C, 7, C, 'minecraft:spore_blossom');
+	for (const [x, z] of [[5, 5], [7, 7]]) set(x, 7, z, 'minecraft:cave_vines[age=25,berries=true]');
 
 	// A short path out from the steps.
-	for (const z of [11, 12]) for (let x = 5; x <= 7; x++) set(x, 0, z, p.path);
+	for (let x = 5; x <= 7; x++) set(x, 0, 12, p.path);
+
+	// Moss and mossy stone worked into the ground round the base, thick by the wall and thinning
+	// out, so the gazebo looks like it has sat there a while. The path, the pots by the steps and
+	// the planting are left alone.
+	if (p.moss) for (let x = 0; x <= 12; x++) for (let z = 0; z <= 12; z++) {
+		const ring = Math.max(Math.abs(x - C), Math.abs(z - C));
+		if (ring < 5 || (x >= 4 && x <= 8 && z >= 10)) continue;
+		if (rand() > (ring === 5 ? 0.7 : 0.3)) continue;
+		const r = rand();
+		if (r < 0.55) {
+			set(x, 0, z, p.moss);
+			if (rand() < 0.4) set(x, 1, z, p.carpet);
+		} else set(x, 0, z, r < 0.8 ? p.plinthWorn : p.apronWorn);
+	}
 
 	// Planting round the outside, on ground the template lays itself so it always takes.
 	const plant = (x, z, s) => { set(x, 0, z, p.ground); set(x, 1, z, s); };

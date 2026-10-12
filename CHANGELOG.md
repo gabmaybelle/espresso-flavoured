@@ -32,6 +32,7 @@
 - **Lusher water, like a lush cave come up to the light:** moss patches spread along the banks, sprouting moss carpet, grass and azaleas (some flowering); little clay pools of big and small dripleaf sit at the water's edge; there's more moss at the waterline and more lily pads. Where there's clay in the water, the bank turns to mud and fades out through patchy mud, packed mud and rooted dirt to coarse dirt among the grass.
 - **Lusher Rivers is on with Terralith too** (it used to switch itself off). Like all of it, this only changes land you haven't explored yet.
 - **Water lilies:** a lily pad with a cactus flower blooming on it, right on the water. Bone meal a lily pad to make one bloom, and look for a few among the lily pads by rivers and ponds in new land.
+- **A gazebo at spawn:** new worlds start in a little stone gazebo, built from whatever wood grows nearby (sandstone in deserts and badlands). A spore blossom hangs over a glowstone floor, flower pots hold a few rarer plants, two decorated pots hide something only a sniffer usually finds, and the starter kit waits in the chest. It's protected: outside creative it can't be broken or built on, and explosions, fire and pistons leave it alone. Switch off "Protect the Gazebo" in the settings to remodel it.
 - Rest spots no longer have a dirt path, and village cafés keep a little potted cactus on their chest.
 
 ### Smaller things

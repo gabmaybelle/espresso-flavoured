@@ -63,6 +63,8 @@ public final class Config {
 	public static boolean lusherRivers = true;
 	/** A little stone gazebo at the world spawn of every new world. Read when a world is created. */
 	public static boolean spawnGazebo = true;
+	/** Nobody outside creative can break or build in the spawn gazebo, and explosions, fire and pistons leave it alone. */
+	public static boolean protectGazebo = true;
 
 	private Config() {
 	}
@@ -93,6 +95,7 @@ public final class Config {
 		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
 		lusherRivers = bool(props, "lusherRivers", lusherRivers);
 		spawnGazebo = bool(props, "spawnGazebo", spawnGazebo);
+		protectGazebo = bool(props, "protectGazebo", protectGazebo);
 		// Files from before 0.3.0 have lusherRivers switched off whenever Terralith was installed (the old
 		// default, not a choice). Lush shores are part of the look now, so turn it on once; it can be
 		// turned off again any time.
@@ -122,6 +125,7 @@ public final class Config {
 		props.setProperty("sugarCaneHeight", Integer.toString(sugarCaneHeight));
 		props.setProperty("lusherRivers", Boolean.toString(lusherRivers));
 		props.setProperty("spawnGazebo", Boolean.toString(spawnGazebo));
+		props.setProperty("protectGazebo", Boolean.toString(protectGazebo));
 		props.setProperty("configVersion", Integer.toString(CONFIG_VERSION));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
@@ -135,6 +139,7 @@ public final class Config {
 					+ "clock: a day counter and clock in the top-right corner\n"
 					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
 					+ "spawnGazebo: a little stone gazebo at the world spawn of new worlds\n"
+					+ "protectGazebo: the spawn gazebo can only be changed in creative, and explosions, fire and pistons leave it alone\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"

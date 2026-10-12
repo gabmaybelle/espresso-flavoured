@@ -50,7 +50,8 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		list.addHeader(Component.translatable("espresso.options.section.world"));
 		list.addSmall(
 				toggle("lusherRivers", Config.lusherRivers, v -> Config.lusherRivers = v),
-				toggle("spawnGazebo", Config.spawnGazebo, v -> Config.spawnGazebo = v));
+				toggle("spawnGazebo", Config.spawnGazebo, v -> Config.spawnGazebo = v),
+				toggle("protectGazebo", Config.protectGazebo, v -> Config.protectGazebo = v));
 
 		list.addHeader(Component.translatable("espresso.options.section.storage"));
 		list.addSmall(

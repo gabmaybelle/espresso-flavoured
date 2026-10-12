@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.storage.LevelData;
@@ -49,9 +50,9 @@ public final class SpawnGazebo {
 			builder -> builder.persistent(Codec.BOOL));
 
 	/** The template is 13 wide, centred on (6, y, 6), with its entrance facing south. */
-	private static final int HALF = 6, SIZE = 13;
+	static final int HALF = 6, SIZE = 13;
 	/** Where the starter kit chest is in the template (tools/generate-spawn.js puts it in the north railing). */
-	private static final BlockPos CHEST = new BlockPos(HALF, 2, 3);
+	private static final BlockPos CHEST = new BlockPos(HALF, 3, 3);
 	/** Blocks cleared above the ground inside the footprint (trees, grass, snow). */
 	private static final int CLEAR_HEIGHT = 14;
 	/** How far down a foundation is laid under a block that would otherwise float. */
@@ -111,8 +112,10 @@ public final class SpawnGazebo {
 				.setIgnoreEntities(true).setKnownShape(false);
 		template.get().placeInWorld(level, origin, origin, settings, level.getRandom(), Block.UPDATE_CLIENTS);
 		foundation(level, origin, palette.equals("sand") ? Blocks.SANDSTONE : Blocks.COBBLESTONE);
+		GazeboGuard.guard(level, new BoundingBox(origin.getX(), ground - GazeboGuard.DEPTH, origin.getZ(),
+				origin.getX() + SIZE - 1, ground + GazeboGuard.HEIGHT, origin.getZ() + SIZE - 1));
 
-		BlockPos middle = new BlockPos(cx, ground + 2, cz);
+		BlockPos middle = new BlockPos(cx, ground + 3, cz);
 		level.setRespawnData(LevelData.RespawnData.of(Level.OVERWORLD, middle, yaw(rotation), 0f));
 		// Everyone starts in the gazebo itself rather than somewhere within ten blocks of it.
 		level.getGameRules().set(GameRules.RESPAWN_RADIUS, 0, level.getServer());
