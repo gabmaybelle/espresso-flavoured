@@ -123,6 +123,11 @@ out('data/espresso_flavoured/tags/item/coffee.json', { values: ['espresso_flavou
 // Mobs whose explosions never break blocks (with creeper griefing off). Every creeper built on the
 // vanilla one is already covered in code; a pack can add creeper-like mobs from other mods here.
 out('data/espresso_flavoured/tags/entity_type/spares_blocks.json', { values: ['minecraft:creeper'] });
+// Logs that sometimes give cinnamon when an axe strips them (see CinnamonMixin, which rolls
+// loot_table/strip/cinnamon). A pack can add other mods' spicy-looking woods here.
+out('data/espresso_flavoured/tags/block/cinnamon_bark.json', {
+	values: ['minecraft:jungle_log', 'minecraft:jungle_wood', 'minecraft:acacia_log', 'minecraft:acacia_wood'],
+});
 // Pastries: a croissant (flaky with butter, so milk), biscotti (twice-baked, small) and a berry muffin.
 out('data/espresso_flavoured/recipe/croissant.json', {
 	type: 'minecraft:crafting_shapeless', category: 'misc',

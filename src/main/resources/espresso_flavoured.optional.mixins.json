@@ -7,6 +7,7 @@
 		"BucketItemMixin",
 		"BundleContentsMixin",
 		"CakeBlockMixin",
+		"CinnamonMixin",
 		"FireBlockMixin",
 		"FoodDataMixin",
 		"FoodPropertiesMixin",
