@@ -19,15 +19,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Prediction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 
 /**
  * Bean Coins: every Espresso advancement pays one, once per player, straight into the inventory.
- * A master barista takes them for the Golden Mug (8) and a couple of treats. Advancements earned
- * before coins existed are paid on the next check, so older worlds catch up.
+ * A master barista takes them for the Golden Mug (8) and a couple of treats. Every second, any
+ * Espresso advancement a player has finished but not yet been paid for pays out.
  */
-public class BeanCoin extends Item {
+public class BeanCoin extends Item implements TooltipLines {
 	/** Advancements a player has already been paid a coin for. */
 	private static final AttachmentType<List<String>> PAID = AttachmentRegistry.create(
 			Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "bean_coins_paid"),
@@ -40,7 +38,7 @@ public class BeanCoin extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+	public void addTooltipLines(ItemStack stack, Consumer<Component> tooltip) {
 		tooltip.accept(Component.translatable("item.espresso_flavoured.bean_coin.desc").withStyle(ChatFormatting.GRAY));
 	}
 

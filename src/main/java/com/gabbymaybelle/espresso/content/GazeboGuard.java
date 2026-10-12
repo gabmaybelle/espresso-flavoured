@@ -16,7 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DecoratedPotBlock;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
@@ -74,25 +73,8 @@ public final class GazeboGuard {
 		return !(entity instanceof Player player && player.isCreative()) && guards(level, pos);
 	}
 
-	/**
-	 * The saved box. Worlds whose gazebo was built before the box was saved get one if the spore
-	 * blossom still hangs four blocks above the spawn point, where every version of the gazebo put it.
-	 */
+	/** The box saved when the gazebo was built, or null when this world has none. */
 	private static BoundingBox load(ServerLevel level) {
-		BoundingBox saved = level.getAttached(BOX);
-		if (saved != null) {
-			return saved;
-		}
-		BlockPos spawn = level.getRespawnData().pos();
-		if (!level.getBlockState(spawn.above(4)).is(Blocks.SPORE_BLOSSOM)) {
-			return null;
-		}
-		// Older gazebos stood a block lower; take in both.
-		int ground = spawn.getY() - 3;
-		BoundingBox found = new BoundingBox(spawn.getX() - SpawnGazebo.HALF, ground - 1 - DEPTH, spawn.getZ() - SpawnGazebo.HALF,
-				spawn.getX() + SpawnGazebo.HALF, ground + HEIGHT, spawn.getZ() + SpawnGazebo.HALF);
-		level.setAttached(BOX, found);
-		Espresso.LOGGER.info("Found the spawn gazebo at {}; it's protected now", spawn);
-		return found;
+		return level.getAttached(BOX);
 	}
 }

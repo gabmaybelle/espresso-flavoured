@@ -54,7 +54,7 @@ public class CoffeeBarBlock extends HorizontalDirectionalBlock implements Entity
 		return hit.getDirection() == state.getValue(FACING) ? InteractionResult.TRY_WITH_EMPTY_HAND : InteractionResult.PASS;
 	}
 
-	/** Opens the cupboard. Bars placed before they had one get it now. */
+	/** Opens the cupboard, adding it first if the bar has none (placed by a structure or an editing tool, say). */
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
 		if (!level.isClientSide()) {

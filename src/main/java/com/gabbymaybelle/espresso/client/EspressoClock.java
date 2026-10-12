@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -50,7 +51,8 @@ public final class EspressoClock {
 		int minute = dayAndMinute[1];
 		int hour24 = minute / 60;
 		int hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
-		String text = String.format("Day %d · %d:%02d %s", dayAndMinute[0], hour12, minute % 60, hour24 < 12 ? "AM" : "PM");
+		Component text = Component.translatable("hud.espresso_flavoured.clock", dayAndMinute[0], hour12, String.format("%02d", minute % 60),
+				Component.translatable(hour24 < 12 ? "hud.espresso_flavoured.am" : "hud.espresso_flavoured.pm"));
 		int colour = minute >= DUSK && minute < NIGHT ? GOLD : WHITE;
 		graphics.text(mc.font, text, graphics.guiWidth() - mc.font.width(text) - MARGIN, clockY(mc), colour, true);
 	}

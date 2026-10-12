@@ -54,8 +54,7 @@ public final class HomeBeds {
 		Map<UUID, GlobalPos> homes = new HashMap<>(store(level));
 		homes.put(player.getUUID(), GlobalPos.of(level.dimension(), bed.immutable()));
 		level.getServer().overworld().setAttached(HOMES, homes);
-		player.sendOverlayMessage(Component.literal("This bed is now your home. Monsters won't spawn within "
-				+ Config.safeHomeRadius + " blocks of it."));
+		player.sendOverlayMessage(Component.translatable("message.espresso_flavoured.home_set", Config.safeHomeRadius));
 		EspressoAdvancements.award(player, "guide/safe_haven", "home");
 	}
 

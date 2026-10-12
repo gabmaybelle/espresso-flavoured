@@ -15,8 +15,8 @@ import net.fabricmc.loader.api.FabricLoader;
  */
 public final class Config {
 	private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
-	/** Bumped when an old file needs a one-off change on load (see {@link #load}). */
-	private static final int CONFIG_VERSION = 2;
+	/** Written to the file, so a later version can tell an older file apart if it ever needs to change one. */
+	private static final int CONFIG_VERSION = 1;
 
 	/** Creeper explosions break blocks (vanilla). Off: they still hurt, but spare builds. */
 	public static boolean creeperGriefing = false;
@@ -96,12 +96,6 @@ public final class Config {
 		lusherRivers = bool(props, "lusherRivers", lusherRivers);
 		spawnGazebo = bool(props, "spawnGazebo", spawnGazebo);
 		protectGazebo = bool(props, "protectGazebo", protectGazebo);
-		// Files from before 0.3.0 have lusherRivers switched off whenever Terralith was installed (the old
-		// default, not a choice). Lush shores are part of the look now, so turn it on once; it can be
-		// turned off again any time.
-		if (integer(props, "configVersion", 1) < CONFIG_VERSION) {
-			lusherRivers = true;
-		}
 		save();
 	}
 

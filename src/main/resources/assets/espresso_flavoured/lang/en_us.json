@@ -147,5 +147,12 @@
   "espresso_flavoured.options.bundleUnstackables": "Tools per Bundle",
   "espresso_flavoured.options.bundleUnstackables.tooltip": "How many tools or pieces of armour fit in one bundle (1 is vanilla). On a server, the server's setting is used.",
   "espresso_flavoured.options.blockMerchant": "Block Merchant",
-  "espresso_flavoured.options.blockMerchant.tooltip": "The wandering trader also sells building blocks from far-off biomes."
+  "espresso_flavoured.options.blockMerchant.tooltip": "The wandering trader also sells building blocks from far-off biomes.",
+  "hud.espresso_flavoured.clock": "Day %1$s · %2$s:%3$s %4$s",
+  "hud.espresso_flavoured.am": "AM",
+  "hud.espresso_flavoured.pm": "PM",
+  "message.espresso_flavoured.home_set": "This bed is now your home. Monsters won't spawn within %s blocks of it.",
+  "pack.espresso_flavoured.data": "Espresso Flavoured",
+  "pack.espresso_flavoured.look": "Espresso Flavoured Look",
+  "pack.espresso_flavoured.long_days": "Espresso Flavoured: Longer Days"
 }

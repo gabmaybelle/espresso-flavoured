@@ -1,9 +1,11 @@
 package com.gabbymaybelle.espresso.mixin;
 
 import com.gabbymaybelle.espresso.HomeBeds;
+import com.gabbymaybelle.espresso.Nights;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.LocalMobCapCalculator;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -13,7 +15,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** The safe home radius: no natural hostile spawns near a bed a player has slept in. */
+/**
+ * The safe home radius (no natural hostile spawns near a home bed), and tough nights: each spawn
+ * round is told whether its level is having a night, for the mob cap (see SpawnStateMixin).
+ */
 @Mixin(NaturalSpawner.class)
 public abstract class NaturalSpawnerMixin {
 	@Inject(method = "isValidSpawnPostitionForType", at = @At("HEAD"), cancellable = true)
@@ -23,5 +28,11 @@ public abstract class NaturalSpawnerMixin {
 		if (category == MobCategory.MONSTER && HomeBeds.isProtected(level, pos)) {
 			cir.setReturnValue(false);
 		}
+	}
+
+	@Inject(method = "createState", at = @At("RETURN"))
+	private static void espresso$noteNight(int spawnableChunkCount, ServerLevel level, NaturalSpawner.ChunkGetter chunks,
+			LocalMobCapCalculator localCaps, CallbackInfoReturnable<NaturalSpawner.SpawnState> cir) {
+		((Nights.NightSpawnState) cir.getReturnValue()).espresso$setNight(Nights.isToughNight(level));
 	}
 }

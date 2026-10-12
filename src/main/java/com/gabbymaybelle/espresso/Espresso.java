@@ -27,14 +27,14 @@ public class Espresso implements ModInitializer {
 		ModContainer mod = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow();
 		// Recipes, advancements, the starter kit, the field guide and the block merchant's trades.
 		ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_data"), mod,
-				Component.literal("Espresso Flavoured"), PackActivationType.ALWAYS_ENABLED);
+				Component.translatable("pack.espresso_flavoured.data"), PackActivationType.ALWAYS_ENABLED);
 		// "Espresso Flavoured" under the title-screen logo, and splash texts; can be switched off in the Resource Packs screen.
 		ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_look"), mod,
-				Component.literal("Espresso Flavoured Look"), PackActivationType.DEFAULT_ENABLED);
+				Component.translatable("pack.espresso_flavoured.look"), PackActivationType.DEFAULT_ENABLED);
 		// 20-minute days and 10-minute nights.
 		if (Config.longerDays) {
 			ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_long_days"), mod,
-					Component.literal("Espresso Flavoured: Longer Days"), PackActivationType.ALWAYS_ENABLED);
+					Component.translatable("pack.espresso_flavoured.long_days"), PackActivationType.ALWAYS_ENABLED);
 		}
 		LOGGER.info("Espresso Flavoured: ready (safe home radius {}, creeper griefing {}, enderman griefing {}, phantoms {})",
 				Config.safeHomeRadius, Config.creeperGriefing, Config.endermanGriefing, Config.phantoms);

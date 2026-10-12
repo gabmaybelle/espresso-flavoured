@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -24,8 +25,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.SmeltItemFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -35,7 +34,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
  * each give one gentle perk. Without Trinkets installed they work from anywhere in the inventory.
  * A master barista sells a couple for Bean Coins, and they turn up now and then in café and village chests.
  */
-public class CharmItem extends Item {
+public class CharmItem extends Item implements TooltipLines {
 	/** Which Trinkets slot it goes in, for the tooltip ("necklace", "belt", ...). */
 	private final String slot;
 
@@ -45,7 +44,7 @@ public class CharmItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+	public void addTooltipLines(ItemStack stack, Consumer<Component> tooltip) {
 		String name = stack.getItem().getDescriptionId();
 		tooltip.accept(Component.translatable(name + ".desc").withStyle(ChatFormatting.GRAY));
 		if (!TRINKETS) {
@@ -74,7 +73,7 @@ public class CharmItem extends Item {
 	/** The attribute perks: Lucky Bean, Reading Socks and Café Parasol. */
 	private record Perk(Item charm, Holder<Attribute> attribute, double amount) {
 		Identifier id() {
-			return Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "charm_" + charm.builtInRegistryHolder().key().identifier().getPath());
+			return Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "charm_" + BuiltInRegistries.ITEM.getKey(charm).getPath());
 		}
 	}
 

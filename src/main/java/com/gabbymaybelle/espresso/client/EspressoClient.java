@@ -30,6 +30,7 @@ public class EspressoClient implements ClientModInitializer {
 		BlockEntityRenderers.register(EspressoContent.CANISTER_ENTITY, CanisterRenderer::new);
 		EntityRenderers.register(EspressoContent.SEAT, NoopRenderer::new);
 		EspressoClock.register();
+		EspressoTooltips.register();
 		tintByColor(EspressoContent.PLACED_MUG, PlacedMugBlock.COLOR);
 		tintByColor(EspressoContent.CANISTER_BLOCK, CanisterBlock.COLOR);
 		// The water lily's pad: the same green as a lily pad in the world.

@@ -1069,5 +1069,14 @@ out('lang/en_us.json', {
 	"espresso_flavoured.options.bundleUnstackables.tooltip": "How many tools or pieces of armour fit in one bundle (1 is vanilla). On a server, the server's setting is used.",
 	"espresso_flavoured.options.blockMerchant": "Block Merchant",
 	"espresso_flavoured.options.blockMerchant.tooltip": "The wandering trader also sells building blocks from far-off biomes.",
+	// The clock in the top-right corner: day, hour, minute (two digits), then AM or PM.
+	"hud.espresso_flavoured.clock": "Day %1$s · %2$s:%3$s %4$s",
+	"hud.espresso_flavoured.am": "AM",
+	"hud.espresso_flavoured.pm": "PM",
+	"message.espresso_flavoured.home_set": "This bed is now your home. Monsters won't spawn within %s blocks of it.",
+	// Names of the built-in packs in the Resource Packs and Data Packs screens.
+	"pack.espresso_flavoured.data": "Espresso Flavoured",
+	"pack.espresso_flavoured.look": "Espresso Flavoured Look",
+	"pack.espresso_flavoured.long_days": "Espresso Flavoured: Longer Days",
 });
 console.log('coffee assets written');

@@ -28,7 +28,7 @@ public abstract class MobNightMixin {
 	private void espresso$toughAtNight(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
 			SpawnGroupData data, CallbackInfoReturnable<SpawnGroupData> cir) {
 		Mob mob = (Mob) (Object) this;
-		if (reason != EntitySpawnReason.NATURAL || !(mob instanceof Enemy) || !Nights.spawningAtNight) {
+		if (reason != EntitySpawnReason.NATURAL || !(mob instanceof Enemy) || !Nights.isToughNight(level.getLevel())) {
 			return;
 		}
 		espresso$buff(mob.getAttribute(Attributes.MAX_HEALTH));

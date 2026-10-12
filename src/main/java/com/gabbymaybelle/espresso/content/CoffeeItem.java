@@ -15,11 +15,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 /**
@@ -28,7 +26,7 @@ import net.minecraft.world.level.Level;
  * pumpkin spice latte still makes you Warm), and anything Cozy calms a caffeine crash. A Thermos
  * (a café charm) makes all of a drink's effects last a quarter longer.
  */
-public class CoffeeItem extends Item {
+public class CoffeeItem extends Item implements TooltipLines {
 	/** The caffeine: what decaf leaves out. */
 	private static final List<Holder<MobEffect>> CAFFEINE = List.of(MobEffects.SPEED, MobEffects.HASTE, EspressoContent.CAFFEINATED);
 	/** What the Golden Mug stretches. */
@@ -100,7 +98,7 @@ public class CoffeeItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+	public void addTooltipLines(ItemStack stack, Consumer<Component> tooltip) {
 		if (stack.getOrDefault(EspressoContent.DECAF, false)) {
 			tooltip.accept(Component.translatable("item.espresso_flavoured.decaf").withStyle(ChatFormatting.GRAY));
 		}

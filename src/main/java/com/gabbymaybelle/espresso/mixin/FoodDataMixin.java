@@ -1,11 +1,11 @@
 package com.gabbymaybelle.espresso.mixin;
 
 import com.gabbymaybelle.espresso.Config;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.food.FoodData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.At;
 
 /**
  * Vanilla slowly heals you whenever your hunger bar is at 18 or more. Here that slow
@@ -17,7 +17,7 @@ public abstract class FoodDataMixin {
 	@Shadow
 	private float saturationLevel;
 
-	@ModifyConstant(method = "tick", constant = @Constant(intValue = 18))
+	@ModifyExpressionValue(method = "tick", at = @At(value = "CONSTANT", args = "intValue=18"))
 	private int espresso$healOnlyWhenFed(int original) {
 		return Config.regenNeedsSaturation && saturationLevel <= 0.0F ? Integer.MAX_VALUE : original;
 	}
