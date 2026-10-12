@@ -37,13 +37,13 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.storage.LevelData;
 
 /**
- * A little stone gazebo at the world spawn, built once when a world is created: a stone plinth,
- * stripped-log pillars and a fence railing in the local wood, and a pitched stone roof with
- * lanterns under its eaves. The template (tools/generate-spawn.js) comes in one file per wood
- * and per palette: the wood is whatever grows around spawn, and deserts and badlands get
- * sandstone. The ground inside the footprint is cleared and anything hanging over a drop gets a
- * stone foundation under it. The spawn point moves to the middle of the gazebo, so new players
- * wake up under the spore blossom.
+ * A little round stone gazebo at the world spawn, built once when a world is created: a round
+ * plinth, eight stripped-log pillars in the local wood carrying a ring of arches, and a green
+ * copper dome with lanterns under its eaves. The template (tools/generate-spawn.js) comes in one
+ * file per wood and per palette: the wood is whatever grows around spawn, and deserts and
+ * badlands get sandstone. The ground inside the footprint is cleared and anything hanging over a
+ * drop gets a stone foundation under it. The spawn point moves to the middle of the gazebo, so
+ * new players wake up under the spore blossom.
  */
 public final class SpawnGazebo {
 	/** Set on the overworld once this world has been looked at, so the gazebo is never built twice. */
@@ -51,12 +51,12 @@ public final class SpawnGazebo {
 			Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "spawn_gazebo"),
 			builder -> builder.persistent(Codec.BOOL));
 
-	/** The template is 13 wide and 12 tall, centred on (6, y, 6), with its entrance facing south. */
-	static final int HALF = 6, SIZE = 13;
-	/** Where the starter kit chest is in the template (tools/generate-spawn.js puts it in the north railing). */
-	private static final BlockPos CHEST = new BlockPos(HALF, 3, 3);
+	/** The template is 15 wide and 15 tall, centred on (7, y, 7), with its entrance facing south. */
+	static final int HALF = 7, SIZE = 15;
+	/** Where the starter kit chest is in the template (tools/generate-spawn.js puts it in the north opening). */
+	private static final BlockPos CHEST = new BlockPos(HALF, 3, 2);
 	/** Blocks cleared above the ground inside the footprint (trees, grass, snow). */
-	private static final int CLEAR_HEIGHT = 14;
+	private static final int CLEAR_HEIGHT = 18;
 	/** How far down a foundation is laid under a block that would otherwise float. */
 	private static final int FOUNDATION_DEPTH = 12;
 	/** The woods tools/generate-spawn.js writes a template for. */

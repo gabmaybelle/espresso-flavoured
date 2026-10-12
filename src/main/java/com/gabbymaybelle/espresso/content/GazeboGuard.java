@@ -44,8 +44,8 @@ public final class GazeboGuard {
 			builder -> builder.persistent(BoundingBox.CODEC));
 	/** How far below the ground the box reaches, so nobody digs the gazebo out from underneath. */
 	static final int DEPTH = 3;
-	/** How far above the ground the box reaches: the lightning rod on the roof, with a little to spare. */
-	static final int HEIGHT = 12;
+	/** How far above the ground the box reaches: the lightning rod on the dome, with a little to spare. */
+	static final int HEIGHT = 15;
 
 	/** The running server's gazebo, or null when there's none. */
 	private static volatile BoundingBox box;
