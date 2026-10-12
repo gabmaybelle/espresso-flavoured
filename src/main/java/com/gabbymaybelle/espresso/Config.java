@@ -61,6 +61,8 @@ public final class Config {
 	 * lily pads. Read at startup.
 	 */
 	public static boolean lusherRivers = true;
+	/** A little stone gazebo at the world spawn of every new world. Read when a world is created. */
+	public static boolean spawnGazebo = true;
 
 	private Config() {
 	}
@@ -90,6 +92,7 @@ public final class Config {
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
 		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
 		lusherRivers = bool(props, "lusherRivers", lusherRivers);
+		spawnGazebo = bool(props, "spawnGazebo", spawnGazebo);
 		// Files from before 0.3.0 have lusherRivers switched off whenever Terralith was installed (the old
 		// default, not a choice). Lush shores are part of the look now, so turn it on once; it can be
 		// turned off again any time.
@@ -118,6 +121,7 @@ public final class Config {
 		props.setProperty("coffeeBarRequired", Boolean.toString(coffeeBarRequired));
 		props.setProperty("sugarCaneHeight", Integer.toString(sugarCaneHeight));
 		props.setProperty("lusherRivers", Boolean.toString(lusherRivers));
+		props.setProperty("spawnGazebo", Boolean.toString(spawnGazebo));
 		props.setProperty("configVersion", Integer.toString(CONFIG_VERSION));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
@@ -130,6 +134,7 @@ public final class Config {
 					+ "longerDays: 20-minute days and 10-minute nights\n"
 					+ "clock: a day counter and clock in the top-right corner\n"
 					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
+					+ "spawnGazebo: a little stone gazebo at the world spawn of new worlds\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"

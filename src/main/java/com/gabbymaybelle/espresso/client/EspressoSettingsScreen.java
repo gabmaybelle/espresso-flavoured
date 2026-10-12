@@ -48,7 +48,9 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 				radius("sugarCaneHeight", Config.sugarCaneHeight, 3, 8, v -> Config.sugarCaneHeight = v));
 
 		list.addHeader(Component.translatable("espresso.options.section.world"));
-		list.addSmall(toggle("lusherRivers", Config.lusherRivers, v -> Config.lusherRivers = v), null);
+		list.addSmall(
+				toggle("lusherRivers", Config.lusherRivers, v -> Config.lusherRivers = v),
+				toggle("spawnGazebo", Config.spawnGazebo, v -> Config.spawnGazebo = v));
 
 		list.addHeader(Component.translatable("espresso.options.section.storage"));
 		list.addSmall(

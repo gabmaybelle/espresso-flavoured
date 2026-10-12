@@ -292,6 +292,7 @@ public final class EspressoContent {
 		WaterLilyBlock.register();
 		CoffeeLoot.register();
 		VillageCafe.register();
+		SpawnGazebo.register();
 		ItemStorage.SIDED.registerForBlockEntity((canister, side) -> canister.storage, CANISTER_ENTITY);
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> {
 			output.accept(COFFEE_CHERRIES);

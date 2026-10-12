@@ -455,12 +455,30 @@ out('data/espresso/loot_table/starter_bundle.json', {
 		] },
 	}] }] }],
 });
-out('data/espresso/function/starter_kit.mcfunction', [
+// The same kit, as the loot table of the chest in the spawn gazebo.
+out('data/espresso/loot_table/chests/spawn_kit.json', {
+	type: 'minecraft:chest',
+	pools: [
+		{ rolls: 1, entries: [{ type: 'minecraft:loot_table', value: 'espresso:field_guide' }] },
+		{ rolls: 1, entries: [{ type: 'minecraft:loot_table', value: 'espresso:starter_bundle' }] },
+		{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'minecraft:white_bed' }] },
+	],
+});
+out('data/espresso/function/starter_kit/give.mcfunction', [
 	'# A warm welcome on a player\'s first join: the field guide, a bundle of essentials and a bed.',
 	'loot give @s loot espresso:field_guide',
 	'loot give @s loot espresso:starter_bundle',
 	'give @s minecraft:white_bed',
 	'advancement grant @s only espresso:guide/field_notes',
+	'',
+].join('\n'));
+out('data/espresso/function/starter_kit.mcfunction', [
+	'# When the spawn gazebo was built (SpawnGazebo.java sets storage espresso:spawn {chest:1b}), the kit is',
+	'# in its chest. With Lootr every player gets their own copy from it ({lootr:1b}); without it the chest',
+	'# is the first player\'s, and everyone after them is handed the kit as before.',
+	'execute unless data storage espresso:spawn {chest:1b} run function espresso:starter_kit/give',
+	'execute if data storage espresso:spawn {chest:1b} unless data storage espresso:spawn {lootr:1b} if data storage espresso:spawn {claimed:1b} run function espresso:starter_kit/give',
+	'execute if data storage espresso:spawn {chest:1b} run data merge storage espresso:spawn {claimed:1b}',
 	'',
 ].join('\n'));
 
@@ -475,8 +493,16 @@ const adv = (id, parent, icon, title, description, criteria, extra = {}, rewards
 adv('guide/root', null, 'minecraft:cocoa_beans', 'Espresso Flavoured', 'A calmer, more productive survival world',
 	{ joined: { trigger: 'minecraft:tick' } },
 	{ background: 'minecraft:block/stripped_dark_oak_log', announce_to_chat: false, show_toast: false });
-adv('guide/field_notes', 'guide/root', 'minecraft:written_book', 'Field Notes', 'Get your copy of the Espresso Flavoured field guide',
-	{ received: { trigger: 'minecraft:impossible' } });
+// Handed over by the starter kit, or picked up from the chest in the spawn gazebo.
+out('data/espresso/advancement/guide/field_notes.json', {
+	parent: 'espresso:guide/root',
+	criteria: {
+		received: { trigger: 'minecraft:impossible' },
+		picked_up: { trigger: 'minecraft:inventory_changed', conditions: { items: [{ items: 'minecraft:written_book' }] } },
+	},
+	display: { icon: { id: 'minecraft:written_book' }, title: 'Field Notes', description: 'Get your copy of the Espresso Flavoured field guide' },
+	requirements: [['received', 'picked_up']],
+});
 adv('guide/first_shot', 'guide/root', 'minecraft:oak_door', 'First Shot', 'Place a door. Every home starts somewhere',
 	{ door: { trigger: 'minecraft:placed_block', conditions: { location: { type: 'minecraft:match_block', blocks: '#minecraft:doors' } } } });
 adv('guide/safe_haven', 'guide/first_shot', 'minecraft:white_bed', 'Safe Haven', 'Crouch and use a bed with an empty hand to make it your home',
@@ -576,5 +602,7 @@ require('./generate-cafe.js');
 require('./generate-rest-spots.js');
 // Lusher rivers.
 require('./generate-rivers.js');
+// The spawn gazebo.
+require('./generate-spawn.js');
 
 console.log('espresso_data written to', ROOT);
