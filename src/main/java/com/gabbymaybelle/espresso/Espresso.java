@@ -28,7 +28,7 @@ public class Espresso implements ModInitializer {
 		// Recipes, advancements, the starter kit, the field guide and the block merchant's trades.
 		ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_data"), mod,
 				Component.literal("Espresso Flavoured"), PackActivationType.ALWAYS_ENABLED);
-		// The title-screen logo and splash texts; can be switched off in the Resource Packs screen.
+		// "Espresso Flavoured" under the title-screen logo, and splash texts; can be switched off in the Resource Packs screen.
 		ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_look"), mod,
 				Component.literal("Espresso Flavoured Look"), PackActivationType.DEFAULT_ENABLED);
 		// 20-minute days and 10-minute nights.

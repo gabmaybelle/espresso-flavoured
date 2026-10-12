@@ -1,4 +1,4 @@
-// Draws Espresso Flavoured's title logo, subtitle and mod icon, and writes the splash texts.
+// Draws Espresso Flavoured's title subtitle and mod icon, and writes the splash texts.
 //   node tools/generate-art.js
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
 const RES = path.join(__dirname, '..', 'src', 'main', 'resources');
@@ -37,12 +37,13 @@ const FONT = {
 	V: ['#...#', '#...#', '#...#', '#...#', '#...#', '.#.#.', '..#..'],
 	U: ['#...#', '#...#', '#...#', '#...#', '#...#', '#...#', '.###.'],
 	D: ['####.', '#...#', '#...#', '#...#', '#...#', '#...#', '####.'],
+	' ': ['.....', '.....', '.....', '.....', '.....', '.....', '.....'],
 };
 const CREMA_TOP = [244, 220, 172], CREMA_BOTTOM = [196, 136, 78], ESPRESSO = [74, 44, 26], OUTLINE = [28, 17, 10];
 let seed = 7; const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
 
-/** Blocky 3D text: crema face, espresso-brown extrusion, dark outline. */
-function blockText(text, scale, depth, outline, w, h, top) {
+/** Blocky 3D text: crema face, espresso-brown extrusion, dark outline. Matte drops the sheen: no highlight, no speckle, a gentler fade. */
+function blockText(text, scale, depth, outline, w, h, top, matte = false) {
 	const cells = [];
 	[...text].forEach((ch, i) => FONT[ch].forEach((row, y) => [...row].forEach((c, x) => { if (c === '#') cells.push([i * 6 + x, y]); })));
 	const cols = text.length * 6 - 1;
@@ -55,11 +56,11 @@ function blockText(text, scale, depth, outline, w, h, top) {
 		face.push([x, y, cx, cy]);
 	}
 	for (const [x, y, cx, cy] of face) {
-		const t = cy / 6;
+		const t = matte ? 0.35 + cy / 6 * 0.3 : cy / 6;
 		const base = CREMA_TOP.map((v, k) => Math.round(v * (1 - t) + CREMA_BOTTOM[k] * t));
-		const shade = 1 + (rnd() - 0.5) * 0.08;
+		const shade = matte ? 1 : 1 + (rnd() - 0.5) * 0.08;
 		mask.rect(x, y, scale, scale, [...base.map(v => Math.max(0, Math.min(255, Math.round(v * shade)))), 255]);
-		if (!cells.some(([ox, oy]) => ox === cx && oy === cy - 1)) mask.rect(x, y, scale, Math.max(2, scale >> 3), [255, 240, 210, 255]);
+		if (!matte && !cells.some(([ox, oy]) => ox === cx && oy === cy - 1)) mask.rect(x, y, scale, Math.max(2, scale >> 3), [255, 240, 210, 255]);
 	}
 	const out = canvas(w, h);
 	for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
@@ -74,8 +75,9 @@ function blockText(text, scale, depth, outline, w, h, top) {
 	return out;
 }
 
-blockText('ESPRESSO', 18, 12, 5, 1024, 256, 14).save(path.join(LOOK, 'assets/minecraft/textures/gui/title/minecraft.png'));
-blockText('FLAVOURED', 6, 3, 2, 512, 64, 8).save(path.join(LOOK, 'assets/minecraft/textures/gui/title/edition.png'));
+// The Minecraft logo stays as it is; "Espresso Flavoured" takes the place of "Java Edition" under it.
+fs.rmSync(path.join(LOOK, 'assets/minecraft/textures/gui/title/minecraft.png'), { force: true });
+blockText('ESPRESSO FLAVOURED', 8, 4, 3, 1024, 128, 16, true).save(path.join(LOOK, 'assets/minecraft/textures/gui/title/edition.png'));
 
 // ---------------------------------------------------------------- mod icon: an espresso cup
 {
@@ -126,5 +128,5 @@ const SPLASHES = [
 ];
 fs.mkdirSync(path.join(LOOK, 'assets/minecraft/texts'), { recursive: true });
 fs.writeFileSync(path.join(LOOK, 'assets/minecraft/texts/splashes.txt'), SPLASHES.join('\n') + '\n');
-fs.writeFileSync(path.join(LOOK, 'pack.mcmeta'), JSON.stringify({ pack: { description: 'Espresso Flavoured: title logo and splash texts', min_format: [97, 1], max_format: [97, 1] } }, null, 2) + '\n');
+fs.writeFileSync(path.join(LOOK, 'pack.mcmeta'), JSON.stringify({ pack: { description: 'Espresso Flavoured: title subtitle and splash texts', min_format: [97, 1], max_format: [97, 1] } }, null, 2) + '\n');
 console.log('art and splashes written');

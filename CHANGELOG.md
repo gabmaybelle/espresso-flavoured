@@ -36,6 +36,7 @@
 - Rest spots no longer have a dirt path, and village cafés keep a little potted cactus on their chest.
 
 ### Smaller things
+- The title screen keeps the Minecraft logo, with "Espresso Flavoured" underneath where "Java Edition" usually sits.
 - Coffee turns up in Towns and Towers' own village chests too (jungle, swamp, badlands, mushroom and Mediterranean houses).
 - The field guide has a Bean Coins page, and says your hotbar and armour stay with you when you fall.
 - Lusher Rivers is switched on once for everyone on this update (older settings files had it off alongside Terralith by default, not by choice); turn it off again any time.
