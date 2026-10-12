@@ -1,20 +1,13 @@
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
-	id 'maven-publish'
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
 	maven { url = 'https://maven.terraformersmc.com/releases/' }
 	maven { url = 'https://api.modrinth.com/maven' }
 }
 
 loom {
-
 	mods {
 		"espresso_flavoured" {
 			sourceSet sourceSets.main
@@ -23,12 +16,12 @@ loom {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
+	// Versions are in gradle.properties.
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 	// Mod Menu: only for the Config button; not bundled or required.
-	compileOnly "com.terraformersmc:modmenu:21.0.0"
+	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
 	compileOnly "maven.modrinth:jade:26.3.5+fabric"
 	// JEI: only for the espresso machine's page and the water lily note; not bundled or required.
@@ -37,7 +30,6 @@ dependencies {
 	// Trinkets Updated: charms go in its slots when it's installed; not bundled or required.
 	// (Modrinth version id of Trinkets Updated 4.2.1+26.3.)
 	compileOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
-
 }
 
 processResources {
@@ -54,9 +46,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
+	// Also builds a -sources jar alongside the mod.
 	withSourcesJar()
 
 	sourceCompatibility = JavaVersion.VERSION_25
@@ -72,22 +62,5 @@ jar {
 	}
 	from("LICENSE-ASSETS") {
 		rename { "${it}_$projectName"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
 	}
 }
