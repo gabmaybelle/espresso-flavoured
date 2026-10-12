@@ -4,7 +4,7 @@
   "radius": {
     "type": "minecraft:uniform",
     "min_inclusive": 1,
-    "max_inclusive": 3
+    "max_inclusive": 2
   },
   "state_provider": {
     "id": "minecraft:mud"
@@ -14,7 +14,11 @@
     "blocks": [
       "minecraft:grass_block",
       "minecraft:dirt",
-      "minecraft:coarse_dirt"
+      "minecraft:coarse_dirt",
+      "minecraft:rooted_dirt",
+      "minecraft:mud",
+      "minecraft:packed_mud",
+      "minecraft:moss_block"
     ]
   }
 }

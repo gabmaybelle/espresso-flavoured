@@ -2,10 +2,6 @@
   "feature": "minecraft:waterlily",
   "placement": [
     {
-      "type": "minecraft:rarity_filter",
-      "chance": 2
-    },
-    {
       "type": "minecraft:in_square"
     },
     {
@@ -17,7 +13,7 @@
     },
     {
       "type": "minecraft:count",
-      "count": 8
+      "count": 10
     },
     {
       "type": "minecraft:offset",

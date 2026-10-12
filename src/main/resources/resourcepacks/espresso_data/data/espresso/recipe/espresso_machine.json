@@ -2,14 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "III",
-    "IBI",
-    "SSS"
+    "CCC",
+    "LBT",
+    "TIT"
   ],
   "key": {
-    "I": "minecraft:iron_ingot",
+    "C": "minecraft:copper_ingot",
+    "L": "minecraft:lightning_rod",
     "B": "minecraft:bucket",
-    "S": "minecraft:smooth_stone"
+    "T": "minecraft:white_terracotta",
+    "I": "minecraft:iron_ingot"
   },
   "result": {
     "id": "espresso:espresso_machine"

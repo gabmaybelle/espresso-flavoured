@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0: Bean Coins and Lush Shores
 
 ### Bean Coins
 - **Bean Coins** replace the loyalty card. Every Espresso advancement pays you one, straight into your inventory. A master barista takes them: eight for the **Golden Mug**, one for three Barista's Reserve, two for sixteen bottles o' enchanting. A master always offers these three.
@@ -21,7 +21,19 @@
 - The Barista's Reserve and bottles o' enchanting now come only from Bean Coins; the emerald versions are gone, since the coin trades were always the better deal.
 - The wandering trader offers two building blocks instead of three, so its screen is less crowded.
 
+### The café and the world
+- **Coffee bars have a cupboard:** right-click one for two rows of storage, like a small chest. A hopper under a bar no longer collects drinks from the espresso machine on top; take them out by hand.
+- **Lusher water, like a lush cave come up to the light:** moss patches spread along the banks, sprouting moss carpet, grass and azaleas (some flowering); little clay pools of big and small dripleaf sit at the water's edge; there's more moss at the waterline and more lily pads. Where there's clay in the water, the bank turns to mud and fades out through patchy mud, packed mud and rooted dirt to coarse dirt among the grass.
+- **Lusher Rivers is on with Terralith too** (it used to switch itself off). Like all of it, this only changes land you haven't explored yet.
+- **Water lilies:** a lily pad with a cactus flower blooming on it, right on the water. Bone meal a lily pad to make one bloom, and look for a few among the lily pads by rivers and ponds in new land.
+- Rest spots no longer have a dirt path, and village cafés keep a little potted cactus on their chest.
+
 ### Smaller things
+- Coffee turns up in Towns and Towers' own village chests too (jungle, swamp, badlands, mushroom and Mediterranean houses).
+- The field guide has a Bean Coins page, and says your hotbar and armour stay with you when you fall.
+- Lusher Rivers is switched on once for everyone on this update (older settings files had it off alongside Terralith by default, not by choice); turn it off again any time.
+- With **JEI**: a page for what the espresso machine brews (beans, decaf beans, the Barista's Reserve and cocoa mix, with the grounds they leave), and a note on where water lilies come from.
+- The espresso machine's recipe now also shows up in the recipe book when you pick up a lightning rod.
 - Canisters and glass jars have their own sounds: a soft rustle as things go in and out, with a ceramic tink (or a glass clink) of the lid.
 
 ### Fixes

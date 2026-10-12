@@ -32,12 +32,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class EspressoMachineBlock extends HorizontalDirectionalBlock implements EntityBlock {
 	public static final BooleanProperty HAS_BEANS = BooleanProperty.create("beans");
-	/** Body, drip tray, brew head and bean hopper, facing north; rotated for the other sides. */
+	/** Upright body, the head reaching forward with its trim, the drip tray and the bean jar, facing north; rotated for the other sides. */
 	private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Shapes.or(
-			Block.box(3, 0, 6, 13, 12, 14),
-			Block.box(4, 0, 1, 12, 1, 6),
-			Block.box(4, 8, 2, 12, 11, 6),
-			Block.box(5, 12, 8, 11, 15, 13)));
+			Block.box(4, 0, 7, 12, 13, 15),
+			Block.box(4, 9, 3, 12, 13.5, 7),
+			Block.box(4, 0, 2, 12, 1.5, 7),
+			Block.box(6, 13.5, 9, 10, 16, 13)));
 
 	public EspressoMachineBlock(Properties properties) {
 		super(properties);

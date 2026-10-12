@@ -2,12 +2,8 @@
   "feature": "espresso:waterline_moss",
   "placement": [
     {
-      "type": "minecraft:rarity_filter",
-      "chance": 2
-    },
-    {
       "type": "minecraft:count",
-      "count": 2
+      "count": 5
     },
     {
       "type": "minecraft:in_square"

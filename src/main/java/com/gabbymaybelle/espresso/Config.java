@@ -15,6 +15,8 @@ import net.fabricmc.loader.api.FabricLoader;
  */
 public final class Config {
 	private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
+	/** Bumped when an old file needs a one-off change on load (see {@link #load}). */
+	private static final int CONFIG_VERSION = 2;
 
 	/** Creeper explosions break blocks (vanilla). Off: they still hurt, but spare builds. */
 	public static boolean creeperGriefing = false;
@@ -55,10 +57,10 @@ public final class Config {
 	public static int sugarCaneHeight = 5;
 	/**
 	 * Lusher rivers and ponds in new land: seagrass and kelp, plants and flowers on the banks, moss and mud
-	 * at the waterline, more firefly bushes and lily pads. Off by default alongside Terralith, which dresses
-	 * the world itself. Read at startup.
+	 * at the waterline, moss carpet and azaleas, muddy banks where there's clay, and more firefly bushes and
+	 * lily pads. Read at startup.
 	 */
-	public static boolean lusherRivers = !FabricLoader.getInstance().isModLoaded("terralith");
+	public static boolean lusherRivers = true;
 
 	private Config() {
 	}
@@ -88,6 +90,12 @@ public final class Config {
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
 		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
 		lusherRivers = bool(props, "lusherRivers", lusherRivers);
+		// Files from before 0.3.0 have lusherRivers switched off whenever Terralith was installed (the old
+		// default, not a choice). Lush shores are part of the look now, so turn it on once; it can be
+		// turned off again any time.
+		if (integer(props, "configVersion", 1) < CONFIG_VERSION) {
+			lusherRivers = true;
+		}
 		save();
 	}
 
@@ -110,6 +118,7 @@ public final class Config {
 		props.setProperty("coffeeBarRequired", Boolean.toString(coffeeBarRequired));
 		props.setProperty("sugarCaneHeight", Integer.toString(sugarCaneHeight));
 		props.setProperty("lusherRivers", Boolean.toString(lusherRivers));
+		props.setProperty("configVersion", Integer.toString(CONFIG_VERSION));
 		try (Writer writer = Files.newBufferedWriter(FILE)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
@@ -120,7 +129,7 @@ public final class Config {
 					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
 					+ "clock: a day counter and clock in the top-right corner\n"
-					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land (off by default with Terralith)\n"
+					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour and off-hand when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"

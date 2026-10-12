@@ -25,6 +25,9 @@
 		],
 		"jade": [
 			"com.gabbymaybelle.espresso.compat.EspressoJadePlugin"
+		],
+		"jei_mod_plugin": [
+			"com.gabbymaybelle.espresso.compat.EspressoJeiPlugin"
 		]
 	},
 	"mixins": [

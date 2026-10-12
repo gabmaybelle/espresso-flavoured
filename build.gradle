@@ -31,6 +31,9 @@ dependencies {
 	compileOnly "com.terraformersmc:modmenu:21.0.0"
 	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
 	compileOnly "maven.modrinth:jade:26.3.5+fabric"
+	// JEI: only for the espresso machine's page and the water lily note; not bundled or required.
+	// (Modrinth version id of JEI 31.10.0.63 for Fabric 26.3.)
+	compileOnly "maven.modrinth:jei:xx7kXPHL"
 
 }
 

@@ -70,16 +70,55 @@ out('feature/river_bank_flowers.json', {
 });
 out('placed_feature/river_bank_flowers.json', { feature: 'espresso:river_bank_flowers', placement: bankClump('minecraft:cornflower', 4, 10, 3) });
 
+// ---- 4. Mossy banks: moss carpet with the odd azalea bush (flowering or not), like a lush cave
+// come up for air. Placed after the waterline moss below, so carpets often sit on the moss.
+out('feature/river_bank_moss.json', {
+	type: 'minecraft:simple_block',
+	to_place: { type: 'minecraft:weighted', entries: [
+		{ data: 'minecraft:moss_carpet', weight: 5 }, { data: 'minecraft:azalea', weight: 3 }, { data: 'minecraft:flowering_azalea', weight: 2 },
+	] },
+});
+// Carpet would happily sit on water, so only on solid ground.
+const onGround = { type: 'minecraft:has_sturdy_face', direction: 'up', offset: [0, -1, 0] };
+// Plenty of tries for a spot by the water (most land elsewhere), and generous clumps that reach a
+// little wider and higher up the bank.
+out('placed_feature/river_bank_moss.json', { feature: 'espresso:river_bank_moss', placement: [
+	count(12), square, surface, inBiome, filter(air, survives('minecraft:moss_carpet'), byWater),
+	count(16), scatter(4, 3), filter(air, survives('minecraft:moss_carpet'), onGround)] });
+
+// ---- 4b. Lush shores, like a lush cave come up to the light: now and then vanilla's own moss patch
+// (a carpet of moss sprouting moss carpet, grass and azaleas) or a little clay pool of big and small
+// dripleaf, right at the water's edge.
+// A few tries per chunk: each only takes if it lands right at the waterline.
+out('placed_feature/lush_shore_moss.json', { feature: 'minecraft:moss_patch', placement: [count(6), square, surface, inBiome, filter(air, atWaterline)] });
+out('placed_feature/lush_shore_pool.json', { feature: 'minecraft:clay_pool_with_dripleaves', placement: [count(3), square, surface, inBiome, filter(air, atWaterline)] });
+
 // ---- 5. At the waterline: moss, clay, mud and the odd mossy boulder
 const disk = (block, min, max, targets) => ({
 	type: 'minecraft:disk', half_height: 1, radius: { type: 'minecraft:uniform', min_inclusive: min, max_inclusive: max },
 	state_provider: { id: block }, target: { type: 'minecraft:matching_blocks', blocks: targets },
 });
-out('feature/waterline_moss.json', disk('minecraft:moss_block', 1, 2, ['minecraft:grass_block', 'minecraft:dirt']));
-out('placed_feature/waterline_moss.json', { feature: 'espresso:waterline_moss', placement: [rarity(2), count(2), square, surface, inBiome, filter(air, atWaterline)] });
-// Mud only on low, earthy banks right at the water, never on sand or gravel.
-out('feature/waterline_mud.json', disk('minecraft:mud', 1, 3, ['minecraft:grass_block', 'minecraft:dirt', 'minecraft:coarse_dirt']));
-out('placed_feature/waterline_mud.json', { feature: 'espresso:waterline_mud', placement: [rarity(3), square, surface, inBiome, filter(air, atWaterline)] });
+out('feature/waterline_moss.json', disk('minecraft:moss_block', 1, 3, ['minecraft:grass_block', 'minecraft:dirt']));
+out('placed_feature/waterline_moss.json', { feature: 'espresso:waterline_moss', placement: [count(5), square, surface, inBiome, filter(air, atWaterline)] });
+// Muddy banks, only where there's clay in the water nearby, and only on earthy banks (never sand or
+// gravel). Three patches fade from the water outward, each painted over the last: a wide fringe of
+// coarse and rooted dirt among the grass, then patchy mud with packed mud and rooted dirt, then soft
+// mud right at the waterline (and the riverbed beside it). They run after the clay is placed.
+const nearClay = { type: 'minecraft:any_of', predicates: [-4, -3, -2, -1, 0, 1, 2, 3, 4].flatMap(x => [-4, -3, -2, -1, 0, 1, 2, 3, 4]
+	.filter(z => x * x + z * z <= 16).flatMap(z => [-2, -3, -4].map(y => ({ type: 'minecraft:matching_blocks', blocks: 'minecraft:clay', offset: [x, y, z] })))) };
+const mixDisk = (entries, min, max, targets) => ({
+	...disk('minecraft:mud', min, max, targets),
+	state_provider: { type: 'minecraft:weighted', entries: entries.map(([data, weight]) => ({ data, weight })) },
+});
+const earthy = ['minecraft:grass_block', 'minecraft:dirt', 'minecraft:coarse_dirt'];
+const muddy = [...earthy, 'minecraft:rooted_dirt', 'minecraft:mud', 'minecraft:packed_mud', 'minecraft:moss_block'];
+const muddyBank = (name, feature) => {
+	out(`feature/${name}.json`, feature);
+	out(`placed_feature/${name}.json`, { feature: `espresso:${name}`, placement: [count(6), square, surface, inBiome, filter(air, atWaterline, nearClay)] });
+};
+muddyBank('muddy_bank_fringe', mixDisk([['minecraft:grass_block', 4], ['minecraft:coarse_dirt', 2], ['minecraft:rooted_dirt', 2]], 3, 5, earthy));
+muddyBank('muddy_bank_mix', mixDisk([['minecraft:mud', 4], ['minecraft:packed_mud', 1], ['minecraft:rooted_dirt', 2]], 2, 3, muddy));
+muddyBank('muddy_bank_edge', disk('minecraft:mud', 1, 2, muddy));
 out('placed_feature/river_clay.json', {
 	feature: 'minecraft:disk_clay',
 	placement: [count(2), square, { type: 'minecraft:heightmap', heightmap: 'OCEAN_FLOOR_WG' }, filter(water()), inBiome],
@@ -92,5 +131,6 @@ out('placed_feature/waterline_rock.json', {
 console.log('lusher rivers written');
 module.exports = {
 	underwater: ['river_seagrass', 'river_kelp', 'river_clay'],
-	banks: ['river_bank_plants', 'river_bank_flowers', 'waterline_moss', 'waterline_mud', 'waterline_rock'],
+	banks: ['muddy_bank_fringe', 'muddy_bank_mix', 'muddy_bank_edge', 'lush_shore_moss', 'lush_shore_pool', 'river_bank_plants', 'river_bank_flowers', 'river_bank_moss',
+		'waterline_moss', 'waterline_rock'],
 };

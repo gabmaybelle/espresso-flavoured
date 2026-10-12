@@ -329,6 +329,24 @@ png('item/bean_coin', grid((x, y) => {
 	return dx + dy < -5 ? 'h' : 'c';
 }), { e: [140, 98, 38], E: [176, 130, 52], c: [214, 170, 78], h: [240, 210, 128], b: [112, 64, 34], B: [150, 92, 50], k: [56, 30, 14] });
 out('items/bean_coin.json', { model: { type: 'minecraft:model', model: 'espresso:item/bean_coin' } });
+
+// Water lily: vanilla's lily pad with vanilla's cactus flower standing right on it (only vanilla
+// textures, referenced, not copied). The pad is tinted green in the world like a lily pad.
+const crossPanel = (from, to, faces) => ({ from, to, rotation: { origin: [8, 8, 8], axis: 'y', angle: 45, rescale: true },
+	shade_direction_override: 'up', faces: Object.fromEntries(faces.map(f => [f, { uv: [0, 0, 16, 16], texture: '#flower' }])) });
+out('models/block/water_lily.json', {
+	ambientocclusion: false,
+	textures: { particle: 'minecraft:block/lily_pad', pad: 'minecraft:block/lily_pad', flower: 'minecraft:block/cactus_flower' },
+	elements: [
+		{ from: [0, 0.25, 0], to: [16, 0.25, 16], faces: {
+			down: { uv: [0, 16, 16, 0], texture: '#pad', tintindex: 0 }, up: { uv: [0, 0, 16, 16], texture: '#pad', tintindex: 0 } } },
+		crossPanel([0.8, 0.25, 8], [15.2, 16.25, 8], ['north', 'south']),
+		crossPanel([8, 0.25, 0.8], [8, 16.25, 15.2], ['east', 'west']),
+	],
+});
+out('blockstates/water_lily.json', { variants: { '': { model: 'espresso:block/water_lily' } } });
+out('models/item/water_lily.json', { parent: 'minecraft:item/generated', textures: { layer0: 'minecraft:block/lily_pad', layer1: 'minecraft:block/cactus_flower' } });
+out('items/water_lily.json', { model: { type: 'minecraft:model', model: 'espresso:item/water_lily', tints: [{ type: 'minecraft:constant', value: -9321636 }] } });
 out('models/item/bean_coin.json', { parent: 'minecraft:item/generated', textures: { layer0: 'espresso:item/bean_coin' } });
 
 // Canisters: glazed like the mugs (greys, tinted), with a lid and knob.
@@ -631,56 +649,74 @@ out('blockstates/glass_jar.json', { variants: Object.fromEntries(
 
 
 // ---------------------------------------------------------------- espresso machine
-// Drawn procedurally: brushed steel with a pressure gauge, dark fittings, a glass bean hopper.
-const STEEL = { a: [150, 155, 162], b: [176, 181, 188], c: [202, 206, 212], e: [112, 116, 124],
-	d: [52, 52, 58], D: [78, 78, 86], w: [236, 232, 220], n: [150, 40, 30], r: [184, 115, 51], R: [214, 150, 80] };
-const brushed = (x, y) => (x === 0 || x === 15 || y === 0 || y === 15) ? 'e' : ((y + (x >> 2)) % 3 === 0 ? 'c' : ((x * 7 + y * 3) % 5 === 0 ? 'a' : 'b'));
+// A retro café machine: cream enamel body (like the mugs), copper trim and brew head, a copper
+// steam wand on the side, a portafilter with a wooden handle, a drip tray, and a glass bean hopper with a copper lid.
+const MACHINE = {
+	c: [240, 228, 207], C: [250, 243, 228], s: [222, 206, 180], e: [184, 166, 140],
+	r: [184, 115, 51], R: [222, 156, 86], o: [138, 80, 34], y: [246, 196, 128],
+	d: [52, 50, 54], D: [82, 80, 86], w: [74, 48, 30], W: [104, 70, 44],
+};
+// Enamel: soft cream with a gentle highlight down the left and shade down the right.
+const enamel = (x, y) => (x <= 1 ? 'C' : x >= 14 ? 's' : 'c');
 png('block/espresso_machine_side', grid((x, y) => {
-	// A small gauge at (7..9, 8..10): copper rim, cream face, red needle.
-	if (x >= 6 && x <= 10 && y >= 7 && y <= 11) {
-		const rim = x === 6 || x === 10 || y === 7 || y === 11;
-		const corner = (x === 6 || x === 10) && (y === 7 || y === 11);
-		if (corner) return brushed(x, y);
-		if (rim) return 'r';
-		return (x === 8 && y === 9) || (x === 9 && y === 8) ? 'n' : 'w';
-	}
-	if (y === 4 || y === 15) return 'e';
-	return brushed(x, y);
-}), STEEL);
+	if (y === 15) return 'e';
+	if (y === 7) return 'r'; // level with the underside of the head
+	return enamel(x, y);
+}), MACHINE);
 png('block/espresso_machine_front', grid((x, y) => {
-	if (y >= 9 && y <= 14 && x >= 5 && x <= 10) return (x === 5 || x === 10 || y === 9) ? 'D' : 'd'; // cup alcove
-	if (y === 5 || y === 6) return x % 2 ? 'r' : 'R'; // copper band
-	if (y === 4 || y === 15) return 'e';
-	return brushed(x, y);
-}), STEEL);
-png('block/espresso_machine_top', grid((x, y) => (x === 0 || x === 15 || y === 0 || y === 15) ? 'e' : (y % 3 === 1 && x > 3 && x < 12 ? 'D' : brushed(x, y))), STEEL);
-png('block/espresso_machine_dark', grid((x, y) => (x + y) % 4 === 0 ? 'D' : ((x * y) % 7 === 1 ? 'e' : 'd')), STEEL);
-const HOPPER = { ...STEEL, g: [196, 214, 226, 150], G: [236, 244, 250, 190], ...BEAN };
+	if (y === 7) return 'r';
+	return enamel(x, y);
+}), MACHINE);
+// The face under the head, behind the cup: shaded cream.
+png('block/espresso_machine_inner', grid((x, y) => (y === 0 ? 'e' : (x <= 1 || x >= 14 ? 'e' : 's'))), MACHINE);
+// The top: a copper cup-warmer tray with a raised rim.
+png('block/espresso_machine_top', grid((x, y) => (x === 0 || x === 15 || y === 0 || y === 15) ? 'o' : (y % 3 === 0 ? 'r' : 'R')), MACHINE);
+// Polished copper for the trim, the brew head and the steam wand.
+png('block/espresso_machine_copper', grid((x, y) => (x === 0 || y === 15) ? 'r' : ((x + y) % 9 === 0 || (x + y) % 9 === 1 && y < 6 ? 'y' : 'R')), MACHINE);
+// The drip tray's grate and the dark fittings.
+png('block/espresso_machine_dark', grid((x, y) => (x % 2 === 0 ? 'd' : ((x + y) % 4 === 0 ? 'D' : 'd'))), MACHINE);
+png('block/espresso_machine_wood', grid((x, y) => ((x + y * 3) % 5 === 0 ? 'W' : 'w')), MACHINE);
+const HOPPER = { ...MACHINE, g: [196, 214, 226, 150], G: [236, 244, 250, 190], ...BEAN };
 const hopper = (filled) => grid((x, y) => {
-	if (y <= 1 || x === 0 || x === 15) return 'd';
+	if (y <= 1 || x === 0 || x === 15) return 'o';
 	if (filled && y >= 6) return (x * 3 + y * 5) % 7 === 0 ? 'k' : ((x + y) % 3 ? 'b' : 'B');
 	return (x + y) % 6 === 0 ? 'G' : 'g';
 });
 png('block/espresso_machine_hopper', hopper(false), HOPPER);
 png('block/espresso_machine_hopper_filled', hopper(true), HOPPER);
+for (const stale of ['espresso_machine_old']) fs.rmSync(path.join(A, 'textures', 'block', stale + '.png'), { force: true });
 
-const machineFaces = (front) => ({
-	north: { texture: front, uv: [3, 4, 13, 16] }, south: { texture: '#side', uv: [3, 4, 13, 16] },
-	east: { texture: '#side', uv: [4, 4, 12, 16] }, west: { texture: '#side', uv: [4, 4, 12, 16] },
-	up: { texture: '#top', uv: [3, 6, 13, 14] }, down: { texture: '#dark', uv: [3, 2, 13, 10] },
-});
 const all = (texture) => Object.fromEntries(['north', 'south', 'east', 'west', 'up', 'down'].map(f => [f, { texture }]));
+// Shaped like a small home espresso machine: a narrow upright body with the head reaching forward
+// over the cup (a C shape from the side), a portafilter with a wooden handle under it, a drip tray
+// with a grate, a copper cup-warmer tray on top with a glass bean jar, and the steam wand on the side.
 out('models/block/espresso_machine.json', {
 	parent: 'minecraft:block/block',
 	textures: { particle: 'espresso:block/espresso_machine_side', side: 'espresso:block/espresso_machine_side',
-		front: 'espresso:block/espresso_machine_front', top: 'espresso:block/espresso_machine_top',
-		dark: 'espresso:block/espresso_machine_dark', hopper: 'espresso:block/espresso_machine_hopper' },
+		front: 'espresso:block/espresso_machine_front', inner: 'espresso:block/espresso_machine_inner',
+		top: 'espresso:block/espresso_machine_top', copper: 'espresso:block/espresso_machine_copper',
+		dark: 'espresso:block/espresso_machine_dark', wood: 'espresso:block/espresso_machine_wood',
+		hopper: 'espresso:block/espresso_machine_hopper' },
 	elements: [
-		{ from: [3, 0, 6], to: [13, 12, 14], faces: machineFaces('#front') },
-		{ from: [4, 0, 1], to: [12, 1, 6], faces: all('#dark') },
-		{ from: [4, 8, 2], to: [12, 11, 6], faces: all('#dark') },
-		{ from: [7, 6, 3], to: [9, 8, 5], faces: all('#dark') },
-		{ from: [5, 12, 8], to: [11, 15, 13], faces: { ...all('#hopper'), up: { texture: '#dark' }, down: { texture: '#dark' } } },
+		// The upright body at the back, and the head reaching forward over the cup.
+		{ from: [4, 0, 7], to: [12, 13, 15], faces: { north: { texture: '#inner' }, south: { texture: '#side' }, east: { texture: '#side' },
+			west: { texture: '#side' }, up: { texture: '#top' }, down: { texture: '#dark' } } },
+		{ from: [4, 9, 3], to: [12, 13, 7], faces: { north: { texture: '#front', uv: [4, 4, 12, 8] }, east: { texture: '#side' },
+			west: { texture: '#side' }, up: { texture: '#top' }, down: { texture: '#inner' } } },
+		// A copper rim round the top, framing the cup-warmer tray.
+		{ from: [3.75, 13, 2.75], to: [12.25, 13.5, 15.25], faces: { ...all('#copper'), up: { texture: '#top' } } },
+		// The glass bean jar on the tray, with a copper lid.
+		{ from: [6, 13.5, 9], to: [10, 16, 13], faces: { ...Object.fromEntries(['north', 'south', 'east', 'west'].map(f => [f, { texture: '#hopper', uv: [0, 0, 16, 16] }])), up: { texture: '#copper' }, down: { texture: '#dark' } } },
+		// The copper group head under the head, the portafilter clipped into it, and its wooden handle.
+		{ from: [6.5, 8.25, 4], to: [9.5, 9, 7], faces: all('#copper') },
+		{ from: [6.75, 7.25, 4.25], to: [9.25, 8.25, 6.75], faces: all('#dark') },
+		{ from: [7.5, 7.5, 1], to: [8.5, 8, 4.25], faces: all('#wood') },
+		// The drip tray: a low copper-edged base with a dark grate where the cup stands.
+		{ from: [4, 0, 2], to: [12, 1.5, 7], faces: { ...all('#copper'), up: { texture: '#dark' } } },
+		// The steam wand on the east side: a small copper valve and a thin copper pipe down from it.
+		{ from: [12, 10, 5.25], to: [12.75, 10.75, 6.25], faces: all('#copper') },
+		{ from: [12.25, 3, 5.5], to: [12.75, 10, 6], faces: all('#copper') },
+		{ from: [12.25, 3, 4.5], to: [12.75, 3.5, 5.5], faces: all('#copper') },
 	],
 });
 out('models/block/espresso_machine_filled.json', {
@@ -692,28 +728,48 @@ out('blockstates/espresso_machine.json', { variants: Object.fromEntries(
 			{ model: `espresso:block/espresso_machine${beans ? '_filled' : ''}`, ...(y ? { y } : {}) }])),
 ) });
 
-// The machine's menu (176x166 in a 256x256 sheet), in the vanilla container style, with
-// the coffee drip progress bar beside it at (176, 0).
+// The machine's menu (176x166 in a 256x256 sheet): a warm café panel. A walnut frame round a cream
+// panel; copper pipes from the bean slot to the mugs, drawn round a little machine; faint icons in
+// the empty slots (beans, mugs, grounds); and the coffee stream that pours as it brews at (176, 0).
 {
 	const W = 256, H = 256, px = Array.from({ length: H }, () => Array(W).fill('.'));
 	const rect = (x0, y0, w, h, c) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) px[y][x] = c; };
-	// Panel: black outline with clipped corners, white top-left bevel, grey bottom-right bevel.
+	const dot = (x, y, c) => { px[y][x] = c; };
+	// Panel: walnut outline with clipped corners, a light top-left bevel, a warm shadow bottom-right.
 	rect(0, 0, 176, 166, 'K');
-	rect(1, 1, 174, 164, 'W');
+	rect(1, 1, 174, 164, 'L');
 	rect(3, 3, 172, 162, 'S');
 	rect(3, 3, 170, 160, 'P');
 	for (const [x, y] of [[0, 0], [1, 0], [0, 1], [175, 0], [174, 0], [175, 1], [0, 165], [1, 165], [0, 164], [175, 165], [174, 165], [175, 164]]) px[y][x] = '.';
-	const slot = (x, y) => { rect(x - 1, y - 1, 18, 18, 'D'); rect(x, y, 17, 17, 'W'); rect(x, y, 16, 16, 'M'); };
+	// A slightly deeper cream band behind the machine and the "Inventory" label.
+	rect(4, 4, 168, 76, 'Q');
+	const slot = (x, y) => { rect(x - 1, y - 1, 18, 18, 'D'); rect(x, y, 17, 17, 'L'); rect(x, y, 16, 16, 'M'); };
+	// The little machine drawn behind the brewing slots: a cream body with copper trim.
+	rect(60, 15, 56, 27, 'e'); rect(61, 16, 54, 25, 'c'); rect(60, 15, 56, 2, 'r');
+	rect(72, 41, 32, 3, 'o'); // the brew head
+	// Copper pipes: the drip channel down the middle, and branches out to the side mugs.
+	rect(83, 36, 9, 20, 'o'); rect(84, 37, 7, 18, 'g');
+	rect(64, 46, 19, 2, 'r'); rect(64, 46, 2, 5, 'r');
+	rect(92, 46, 19, 2, 'r'); rect(109, 46, 2, 5, 'r');
 	for (const [x, y] of [[56, 51], [79, 58], [102, 51], [79, 17], [17, 17]]) slot(x, y); // the last is the knock box
 	for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) slot(8 + c * 18, 84 + r * 18);
 	for (let c = 0; c < 9; c++) slot(8 + c * 18, 142);
-	// The drip channel from the beans down to the middle bottle, and little pipes to the side bottles.
-	rect(83, 36, 9, 20, 'D'); rect(84, 37, 7, 18, 'M');
-	rect(73, 48, 10, 2, 'D'); rect(92, 48, 10, 2, 'D');
-	rect(176, 0, 9, 20, 'c'); for (let y = 0; y < 20; y++) { px[y][176] = 'k'; px[y][184] = 'k'; if (y % 4 === 1) px[y][179] = 'C'; }
+	// Faint icons in the empty slots (covered as soon as something's in them).
+	const ghost = (x0, y0, rows) => rows.forEach((row, dy) => [...row].forEach((ch, dx) => { if (ch !== '.') dot(x0 + dx, y0 + dy, 'G'); }));
+	const BEAN_ICON = ['....######......', '..##########....', '.####..######...', '.#####..#####...', '..#####..####...', '...#####..##....', '.....######.....'];
+	ghost(79, 21, BEAN_ICON.map(r => r.slice(0, 16)));
+	const MUG_ICON = ['..#########.....', '..#########.##..', '..#########..#..', '..#########..#..', '..#########.##..', '..#########.....', '...#######......', '.###########....'];
+	for (const [x, y] of [[56, 51], [79, 58], [102, 51]]) ghost(x, y + 4, MUG_ICON);
+	const GROUNDS_ICON = ['................', '.....#..#.......', '...#..#...#.#...', '..###.#.##.###..', '.##############.', '.##############.'];
+	ghost(17, 26, GROUNDS_ICON);
+	// The coffee stream that fills as it brews (drawn by the screen over the channel).
+	rect(176, 0, 9, 20, 'k');
+	for (let y = 0; y < 20; y++) { for (let x = 178; x <= 182; x++) px[y][x] = (x === 179 && y % 3 === 0) ? 'h' : 'b'; }
 	png('gui/container/espresso_machine', px.map(r => r.join('')), {
-		K: [0, 0, 0], W: [255, 255, 255], S: [85, 85, 85], P: [198, 198, 198], D: [55, 55, 55], M: [139, 139, 139],
-		c: [112, 64, 34], C: [164, 104, 58], k: [64, 34, 16],
+		K: [58, 38, 26], L: [252, 246, 234], S: [190, 170, 140], P: [236, 224, 202], Q: [228, 214, 188],
+		D: [120, 94, 72], M: [206, 190, 164], G: [190, 172, 146],
+		c: [244, 234, 214], e: [184, 166, 140], r: [196, 124, 58], o: [140, 82, 36], g: [214, 200, 178],
+		k: [64, 34, 16], b: [112, 64, 34], h: [164, 104, 58],
 	});
 }
 out('items/espresso_machine.json', { model: { type: 'minecraft:model', model: 'espresso:block/espresso_machine_filled' } });
@@ -770,11 +826,15 @@ out('lang/en_us.json', {
 	'item.espresso.golden_mug': 'Golden Mug',
 	'item.espresso.loyalty_card': 'Old Loyalty Card',
 	'item.espresso.bean_coin': 'Bean Coin',
+	'block.espresso.water_lily': 'Water Lily',
+	'jei.espresso.water_lily.info': 'A lily pad in bloom. Use bone meal on a lily pad to make one, or look among the lily pads by rivers and ponds in new land.',
+	'jei.espresso.espresso_machine.needs_bar': 'Brews on top of a coffee bar',
 	'item.espresso.bean_coin.desc': 'One for each Espresso advancement. A master barista takes them',
 	'item.espresso.unfired_canister': 'Unfired Canister',
 	'block.espresso.canister': 'Canister',
 	'block.espresso.glass_jar': 'Glass Jar',
 	'container.espresso.espresso_machine.needs_bar': 'Needs a coffee bar',
+	'container.espresso.coffee_bar': 'Coffee Bar',
 	...Object.fromEntries(['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'mangrove', 'cherry', 'pale_oak', 'poplar', 'bamboo', 'crimson', 'warped'].map(w => [`block.espresso.${w}_coffee_bar`, w.split('_').map(p => p[0].toUpperCase() + p.slice(1)).join(' ') + ' Coffee Bar'])),
 	'item.espresso.baristas_reserve': 'Barista\x27s Reserve',
 	'item.espresso.ristretto': 'Ristretto',
@@ -816,7 +876,7 @@ out('lang/en_us.json', {
 	"espresso.options.section.coffee": "Coffee",
 	"espresso.options.section.world": "Out in the World",
 	"espresso.options.lusherRivers": "Lusher Rivers",
-	"espresso.options.lusherRivers.tooltip": "Seagrass and kelp, plants and flowers on the banks, moss and mud at the waterline, and more firefly bushes and lily pads, in newly explored land. Off by default with Terralith, which dresses the world itself. Takes effect after restarting the game.",
+	"espresso.options.lusherRivers.tooltip": "Seagrass and kelp, plants and flowers on the banks, moss, moss carpet and azaleas at the waterline, muddy banks where there's clay, and more firefly bushes and lily pads, in newly explored land. Takes effect after restarting the game.",
 	"espresso.options.coffeeBarRequired": "Machine Needs a Coffee Bar",
 	"espresso.options.coffeeBarRequired.tooltip": "The espresso machine only brews on top of a coffee bar.",
 	"espresso.options.bundleUnstackables": "Tools per Bundle",

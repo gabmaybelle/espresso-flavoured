@@ -19,9 +19,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper;
-import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -49,6 +47,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -59,6 +58,7 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -149,7 +149,12 @@ public final class EspressoContent {
 			BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.5F)
 					.sound(wood.equals("crimson") || wood.equals("warped") ? SoundType.NETHER_WOOD
 							: wood.equals("bamboo") ? SoundType.BAMBOO_WOOD : wood.equals("cherry") ? SoundType.CHERRY_WOOD : SoundType.WOOD))).toList();
+	/** Every coffee bar's cupboard. */
+	public static final BlockEntityType<CoffeeBarBlockEntity> COFFEE_BAR_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
+			id("coffee_bar"), new BlockEntityType<>(CoffeeBarBlockEntity::new, Set.copyOf(COFFEE_BARS)));
 	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
+	/** A lily pad with a cactus flower blooming on it (see WaterLilyBlock). */
+	public static final Block WATER_LILY = registerBlock("water_lily", WaterLilyBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.LILY_PAD));
 	public static final Block PLACED_MUG = registerBlock("placed_mug", PlacedMugBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.3F)
 					.sound(SoundType.DECORATED_POT).noOcclusion().pushReaction(PushReaction.POPPED));
@@ -157,6 +162,8 @@ public final class EspressoContent {
 			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("placed_mug"), new BlockEntityType<>(PlacedMugBlockEntity::new, Set.of(PLACED_MUG)));
 
 	// ---------------------------------------------------------------- items
+	public static final Item WATER_LILY_ITEM = registerItem("water_lily", props -> new PlaceOnWaterBlockItem(WATER_LILY, props),
+			new Item.Properties().useBlockDescriptionPrefix());
 	public static final Item COFFEE_CHERRIES = registerItem("coffee_cherries",
 			props -> new BlockItem(COFFEE_BUSH, props), new Item.Properties().useItemDescriptionPrefix());
 	public static final Item ESPRESSO_MACHINE_ITEM = registerItem("espresso_machine",
@@ -272,15 +279,14 @@ public final class EspressoContent {
 		Mugs.register();
 		BeanCoin.register();
 		Seat.register();
+		WaterLilyBlock.register();
 		CoffeeLoot.register();
 		VillageCafe.register();
 		ItemStorage.SIDED.registerForBlockEntity((canister, side) -> canister.storage, CANISTER_ENTITY);
-		// A hopper under a coffee bar takes finished drinks out of the espresso machine on top.
-		ItemStorage.SIDED.registerForBlocks((level, pos, state, entity, side) ->
-				side == Direction.DOWN && level.getBlockEntity(pos.above()) instanceof EspressoMachineBlockEntity machine
-						? ContainerStorage.of(machine, Direction.DOWN) : null,
-				COFFEE_BARS.toArray(Block[]::new));
-		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> output.accept(COFFEE_CHERRIES));
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> {
+			output.accept(COFFEE_CHERRIES);
+			output.accept(WATER_LILY_ITEM);
+		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> {
 			output.accept(ESPRESSO_MACHINE_ITEM);
 			output.accept(CANISTER);
@@ -335,6 +341,8 @@ public final class EspressoContent {
 					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_firefly_bush")));
 			BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
 					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_lily_pads")));
+			BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
+					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_water_lilies")));
 			// Lusher rivers (not frozen ones): seagrass, kelp and clay in the water; plants, flowers, moss, mud
 			// and the odd mossy boulder at the waterline. A river's banks are usually in the neighbouring biome,
 			// so the bank features also go to the temperate land around (they only grow right by water).
@@ -345,10 +353,13 @@ public final class EspressoContent {
 			for (String feature : List.of("river_seagrass", "river_kelp", "river_clay")) {
 				BiomeModifications.addFeature(rivers, GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
 			}
-			for (String feature : List.of("waterline_moss", "waterline_mud", "waterline_rock")) {
+			for (String feature : List.of("waterline_moss", "waterline_rock")) {
 				BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.LOCAL_MODIFICATIONS, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
 			}
-			for (String feature : List.of("river_bank_plants", "river_bank_flowers")) {
+			// Muddy banks where there's clay in the water, fading out through mixed mud to rooted and coarse
+			// dirt. After the clay (vanilla's and ours) and before the bank plants, which then grow on them.
+			for (String feature : List.of("muddy_bank_fringe", "muddy_bank_mix", "muddy_bank_edge", "lush_shore_moss", "lush_shore_pool",
+					"river_bank_plants", "river_bank_flowers", "river_bank_moss")) {
 				BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
 			}
 		}

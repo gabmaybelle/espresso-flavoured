@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:disk",
+  "half_height": 1,
+  "radius": {
+    "type": "minecraft:uniform",
+    "min_inclusive": 3,
+    "max_inclusive": 5
+  },
+  "state_provider": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": "minecraft:grass_block",
+        "weight": 4
+      },
+      {
+        "data": "minecraft:coarse_dirt",
+        "weight": 2
+      },
+      {
+        "data": "minecraft:rooted_dirt",
+        "weight": 2
+      }
+    ]
+  },
+  "target": {
+    "type": "minecraft:matching_blocks",
+    "blocks": [
+      "minecraft:grass_block",
+      "minecraft:dirt",
+      "minecraft:coarse_dirt"
+    ]
+  }
+}

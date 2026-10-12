@@ -1,0 +1,1411 @@
+{
+  "feature": "espresso:muddy_bank_edge",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 6
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING_NO_LEAVES"
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:all_of",
+        "predicates": [
+          {
+            "type": "minecraft:replaceable"
+          },
+          {
+            "type": "minecraft:any_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_fluids",
+                "fluids": [
+                  "minecraft:water",
+                  "minecraft:flowing_water"
+                ],
+                "offset": [
+                  1,
+                  -1,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_fluids",
+                "fluids": [
+                  "minecraft:water",
+                  "minecraft:flowing_water"
+                ],
+                "offset": [
+                  -1,
+                  -1,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_fluids",
+                "fluids": [
+                  "minecraft:water",
+                  "minecraft:flowing_water"
+                ],
+                "offset": [
+                  0,
+                  -1,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_fluids",
+                "fluids": [
+                  "minecraft:water",
+                  "minecraft:flowing_water"
+                ],
+                "offset": [
+                  0,
+                  -1,
+                  -1
+                ]
+              }
+            ]
+          },
+          {
+            "type": "minecraft:any_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -4,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -4,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -4,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -2,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -3,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -4,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -2,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -3,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -4,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -2,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -3,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -4,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -2,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -3,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -3,
+                  -4,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -2,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -3,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -4,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -2,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -3,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -4,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -2,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -3,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -4,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -2,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -3,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -4,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -2,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -3,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -4,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -2,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -3,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -2,
+                  -4,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -2,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -3,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -4,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -2,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -3,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -4,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -2,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -3,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -4,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -2,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -3,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -4,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -2,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -3,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -4,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -2,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -3,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  -1,
+                  -4,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  -4
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  -4
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  -4
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -2,
+                  4
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -3,
+                  4
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  0,
+                  -4,
+                  4
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -2,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -3,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -4,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -2,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -3,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -4,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -2,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -3,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -4,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -2,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -3,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -4,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -2,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -3,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -4,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -2,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -3,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  1,
+                  -4,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -2,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -3,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -4,
+                  -3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -2,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -3,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -4,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -2,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -3,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -4,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -2,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -3,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -4,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -2,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -3,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -4,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -2,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -3,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  2,
+                  -4,
+                  3
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -2,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -3,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -4,
+                  -2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -2,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -3,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -4,
+                  -1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -4,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -2,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -3,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -4,
+                  1
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -2,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -3,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  3,
+                  -4,
+                  2
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  4,
+                  -2,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  4,
+                  -3,
+                  0
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:clay",
+                "offset": [
+                  4,
+                  -4,
+                  0
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

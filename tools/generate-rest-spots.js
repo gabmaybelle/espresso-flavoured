@@ -55,7 +55,6 @@ function pondSpot(wood) {
 	spot.set(1, 1, 3, 'minecraft:firefly_bush');
 	bench(spot, 3, 5, 'south', wood); // looking north, over the water
 	lampPost(spot, 7, 6, 'west', wood);
-	for (const z of [6, 7, 8]) spot.set(4, 0, z, 'minecraft:dirt_path');
 	spot.set(1, 1, 5, 'minecraft:poppy');
 	spot.set(2, 1, 6, 'minecraft:oxeye_daisy');
 	spot.set(7, 1, 4, 'minecraft:cornflower');
@@ -80,7 +79,6 @@ function treeSpot(wood) {
 	for (let y = 1; y <= 5; y++) spot.set(tx, y, tz, `minecraft:${wood}_log[axis=y]`);
 	bench(spot, 3, 5, 'north', wood); // its back to the tree
 	lampPost(spot, 7, 5, 'west', wood);
-	for (const [x, z] of [[4, 6], [3, 6], [5, 6], [4, 7], [4, 8]]) spot.set(x, 0, z, 'minecraft:dirt_path');
 	spot.set(3, 1, 3, 'minecraft:dandelion');
 	spot.set(5, 1, 2, 'minecraft:poppy');
 	spot.set(5, 1, 3, 'minecraft:azure_bluet');
@@ -147,13 +145,28 @@ out('espresso/worldgen/placed_feature/waterside_firefly_bush.json', {
 out('espresso/worldgen/placed_feature/waterside_lily_pads.json', {
 	feature: 'minecraft:waterlily',
 	placement: [
-		{ type: 'minecraft:rarity_filter', chance: 2 },
 		{ type: 'minecraft:in_square' },
 		{ type: 'minecraft:heightmap', heightmap: 'WORLD_SURFACE_WG' },
 		{ type: 'minecraft:biome' },
-		{ type: 'minecraft:count', count: 8 },
+		{ type: 'minecraft:count', count: 10 },
 		scatter(6),
 		{ type: 'minecraft:block_predicate_filter', predicate: { type: 'minecraft:matching_block_tag', tag: 'minecraft:air' } },
+	],
+});
+// Water lilies (lily pads in bloom) among them: about one for every two or three lily pads.
+out('espresso/worldgen/feature/waterside_water_lily.json', { type: 'minecraft:simple_block', to_place: { id: 'espresso:water_lily' } });
+out('espresso/worldgen/placed_feature/waterside_water_lilies.json', {
+	feature: 'espresso:waterside_water_lily',
+	placement: [
+		{ type: 'minecraft:in_square' },
+		{ type: 'minecraft:heightmap', heightmap: 'WORLD_SURFACE_WG' },
+		{ type: 'minecraft:biome' },
+		{ type: 'minecraft:count', count: 4 },
+		scatter(6),
+		{ type: 'minecraft:block_predicate_filter', predicate: { type: 'minecraft:all_of', predicates: [
+			{ type: 'minecraft:matching_block_tag', tag: 'minecraft:air' },
+			{ type: 'minecraft:would_survive', state: 'espresso:water_lily' },
+		] } },
 	],
 });
 console.log('rest spots and waterside plants written');

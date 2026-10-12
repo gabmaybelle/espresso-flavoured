@@ -154,6 +154,7 @@ function build(biome, s) {
 	set(9, 2, 6, 'espresso:placed_mug[facing=west,contents=empty,color=0]', { id: 'espresso:placed_mug', Mug: { id: 'espresso:mug', count: 1 } });
 	set(9, 2, 7, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
 	set(9, 1, 3, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso:chests/village_cafe' });
+	set(9, 2, 3, 'minecraft:potted_cactus'); // a little cactus on the chest, by the cake
 	set(9, 1, 9, 'minecraft:barrel[facing=up,open=false]');
 	set(9, 2, 9, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
 	for (const z of [3, 9]) {
@@ -255,6 +256,7 @@ function buildTeahouse() {
 	set(8, 2, 6, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:roasted_coffee_beans' }, amount: { __nbt: T.LONG, value: 12n } });
 	set(8, 2, 7, 'espresso:canister[facing=west]', { id: 'espresso:canister', variant: { item: 'espresso:coffee_cherries' }, amount: { __nbt: T.LONG, value: 8n } });
 	set(8, 1, 2, 'minecraft:chest[facing=west,type=single,waterlogged=false]', { id: 'minecraft:chest', LootTable: 'espresso:chests/village_cafe' });
+	set(8, 2, 2, 'minecraft:potted_cactus'); // a little cactus on the chest
 	set(8, 1, 8, 'minecraft:barrel[facing=up,open=false]');
 	for (const z of [3, 7]) {
 		set(5, 1, z, 'minecraft:spruce_slab[type=bottom,waterlogged=false]');

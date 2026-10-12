@@ -38,9 +38,14 @@ for (const [type, suffix, time] of [['minecraft:smelting', '', 200], ['minecraft
 // Espresso is only brewed in the espresso machine (beans on top, mugs below).
 out('data/espresso/recipe/espresso_machine.json', {
 	type: 'minecraft:crafting_shaped', category: 'misc',
-	pattern: ['III', 'IBI', 'SSS'],
-	key: { I: 'minecraft:iron_ingot', B: 'minecraft:bucket', S: 'minecraft:smooth_stone' },
+	// What it's made of: copper trim on top, a steam wand (lightning rod) on the side, the water tank
+	// (bucket), a cream enamel body (white terracotta) and the pump inside (iron). Mirrored works too.
+	pattern: ['CCC', 'LBT', 'TIT'],
+	key: { C: 'minecraft:copper_ingot', L: 'minecraft:lightning_rod', B: 'minecraft:bucket', T: 'minecraft:white_terracotta', I: 'minecraft:iron_ingot' },
 	result: { id: 'espresso:espresso_machine' },
+});
+out('data/espresso/loot_table/blocks/water_lily.json', {
+	type: 'minecraft:block', pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'espresso:water_lily' }], condition: { type: 'minecraft:survives_explosion' } }],
 });
 out('data/espresso/loot_table/blocks/espresso_machine.json', {
 	type: 'minecraft:block',
@@ -364,7 +369,9 @@ const unlock = (name, items, recipes) => {
 };
 unlock('roasted_coffee_beans', ['espresso:coffee_cherries'],
 	['roasted_coffee_beans', 'roasted_coffee_beans_from_smoking', 'roasted_coffee_beans_from_campfire_cooking']);
-unlock('espresso_machine', ['espresso:roasted_coffee_beans'], ['espresso_machine', 'decaf_coffee_beans']);
+// The machine shows up for coffee growers and for builders who pick up a lightning rod (its steam wand).
+unlock('espresso_machine', ['espresso:roasted_coffee_beans', 'minecraft:lightning_rod'], ['espresso_machine']);
+unlock('decaf_coffee_beans', ['espresso:roasted_coffee_beans'], ['decaf_coffee_beans']);
 unlock('coffee_bars', ['minecraft:smooth_stone_slab', 'espresso:espresso_machine'], COFFEE_BARS.map(w => `${w}_coffee_bar`));
 unlock('clay_pottery', ['minecraft:clay_ball'], ['unfired_mug', 'unfired_canister']);
 unlock('mug', ['espresso:unfired_mug'], ['mug']);
@@ -395,7 +402,8 @@ const PAGES = [
 	'Your Safe Haven\n\nCrouch and use a bed with an empty hand to make it your home. Monsters won\'t spawn within 32 blocks of it.\n\nSleeping elsewhere won\'t move it. Break the bed and the protection goes. Only a night at home leaves you truly rested.',
 	'Builds Stay Built\n\nCreepers still bite, but their blasts no longer break blocks.\n\nEndermen leave your walls alone, and phantoms never visit, so rest whenever you like.',
 	'Coffee Corner\n\nRoast coffee cherries, then brew them in an espresso machine on a coffee bar. Mugs are fired clay.\n\nAway two days? Only your own bed leaves you rested. Decaf helps you sleep well.',
-	'If You Fall\n\nPlaying the Espresso Flavoured pack? Your things wait for you in a grave where you fell. Head back, open it, and carry on.\n\nHappy building!',
+	'Bean Coins\n\nEvery advancement in the Espresso Flavoured tab pays you a Bean Coin.\n\nA master barista (a villager with an espresso machine) takes them: eight buy the Golden Mug, and one or two buy a treat.',
+	'If You Fall\n\nYour hotbar, armour and off-hand stay with you. In the Espresso Flavoured pack, the rest waits in a grave where you fell. Head back, open it, and carry on.\n\nHappy building!',
 ];
 out('data/espresso/loot_table/field_guide.json', {
 	type: 'minecraft:command',
@@ -516,6 +524,9 @@ out('data/espresso/loot_table/chests/village_cafe.json', {
 const villageCoffee = [{ rolls: 1, entries: [loot('espresso:coffee_cherries', 2, 1, 4), loot('espresso:roasted_coffee_beans', 1, 1, 3), nothing(4)] }];
 const inject = {
 	...Object.fromEntries(['plains', 'desert', 'savanna', 'taiga', 'snowy'].map(b => [`minecraft:chests/village/village_${b}_house`, villageCoffee])),
+	// Towns and Towers houses mostly reuse the vanilla tables above; these are its own (skipped without it).
+	...Object.fromEntries(['village_jungle_house', 'village_swamp_house', 'village_badlands_house', 'village_mushroom_house',
+		'exclusives/village_mediterranean_house'].map(t => [`kaisyn:village/${t}`, villageCoffee])),
 	'minecraft:chests/jungle_temple': [{ rolls: 1, entries: [loot('espresso:coffee_cherries', 4, 3, 8), loot('espresso:roasted_coffee_beans', 2, 2, 5),
 		loot('espresso:baristas_reserve', 1), nothing(3)] }],
 	'minecraft:chests/shipwreck_supply': [{ rolls: 1, entries: [loot('espresso:roasted_coffee_beans', 2, 2, 6), loot('espresso:coffee_cherries', 1, 2, 5), nothing(4)] }],
