@@ -72,7 +72,7 @@ You need JDK 25.
 
 The jar is written to `build/libs/`. The scripts in `tools/` regenerate the data pack, the art and the longer-day timelines.
 
-`./gradlew runClientGameTest` starts the game and plays through the main rules: the settings file (typos, unknown settings, safe saving), the spawn gazebo and its starter chest, brewing in the espresso machine (and not off a coffee bar), the Ristretto's Speed II and Haste II, the safe home radius, Drowsy and how coffee and sleeping at home deal with it, tougher nights, the block merchant, the village café, keeping the hotbar and off-hand on death, creepers sparing builds, four tools to a bundle, and the settings screen. Screenshots land in `build/run/clientGameTest/screenshots`.
+`./gradlew runClientGameTest` starts the game and plays through the main rules: the settings file (typos, unknown settings, safe saving), the spawn gazebo and its starter chest, brewing in the espresso machine (and not off a coffee bar), the Ristretto's Speed II and Haste II, the safe home radius, Drowsy and how coffee and sleeping at home deal with it, tougher nights, the block merchant, the village café, every café charm's perk, keeping the hotbar and off-hand on death, creepers sparing builds, four tools to a bundle, and the settings screen. Add `-PtestTrinkets` to run it with Trinkets Updated installed, so the charms are worn in their slots rather than the off-hand. Screenshots land in `build/run/clientGameTest/screenshots`.
 
 ## Licences
 

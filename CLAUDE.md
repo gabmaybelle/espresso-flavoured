@@ -21,8 +21,9 @@ Minecraft 26.3. See README.md for what players get.
 - `./gradlew build`: jar in `build/libs/`.
 - `./gradlew runClientGameTest`: plays through the main rules in a real game (about 1.5 minutes): settings file,
   gazebo, brewing, Ristretto, safe home, Drowsy, tough nights, block merchant, village café,
-  keep-on-death, creepers, bundles, settings screen.
-  Screenshots go to `build/run/clientGameTest/screenshots/`.
+  café charms, keep-on-death, creepers, bundles, settings screen.
+  Add `-PtestTrinkets` to run it with Trinkets Updated (charms in slots, not the off-hand); CI
+  runs both. Screenshots go to `build/run/clientGameTest/screenshots/`.
 
 ## Gotchas
 

@@ -30,6 +30,11 @@ dependencies {
 	// Trinkets Updated: charms go in its slots when it's installed; not bundled or required.
 	// (Modrinth version id of Trinkets Updated 4.2.1+26.3.)
 	compileOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
+	// `./gradlew runClientGameTest -PtestTrinkets` runs the game test with Trinkets Updated installed,
+	// so the charms are worn in their slots instead of the off-hand.
+	if (project.hasProperty("testTrinkets")) {
+		runtimeOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
+	}
 }
 
 processResources {

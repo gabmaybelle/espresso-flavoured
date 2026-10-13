@@ -1,6 +1,8 @@
 package com.gabbymaybelle.espresso;
 
 import com.gabbymaybelle.espresso.client.EspressoSettingsScreen;
+import com.gabbymaybelle.espresso.compat.TrinketsCompat;
+import com.gabbymaybelle.espresso.content.CharmItem;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import com.gabbymaybelle.espresso.content.EspressoMachineBlockEntity;
 import com.gabbymaybelle.espresso.mixin.StructureTemplatePoolAccessor;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -19,6 +22,7 @@ import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
@@ -30,6 +34,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
@@ -71,6 +77,7 @@ public class EspressoClientTest implements FabricClientGameTest {
 			toughNights(ctx, server, work);
 			blockMerchant(server, work);
 			villageCafe(server);
+			charms(ctx, server, work.offset(-12, 0, 0));
 			keepOnDeath(ctx, server, work.offset(0, 0, -12));
 		}
 	}
@@ -359,6 +366,143 @@ public class EspressoClientTest implements FabricClientGameTest {
 		});
 	}
 
+	/**
+	 * Each café charm's perk, worn the way this game wears them: in its Trinkets slot when Trinkets
+	 * Updated is installed (`-PtestTrinkets`), otherwise in the off-hand. Each is checked on, then
+	 * off again.
+	 */
+	private static void charms(ClientGameTestContext ctx, TestServerContext server, BlockPos at) {
+		server.runCommand("gamemode survival @a");
+		server.runOnServer(s -> {
+			ServerPlayer player = player(s);
+			player.getInventory().clearContent();
+			player.removeAllEffects();
+			player.teleportTo(at.getX() + 0.5, at.getY() + 1, at.getZ() + 0.5);
+		});
+
+		// The attribute perks, refreshed every ten ticks.
+		expectAttribute(ctx, server, EspressoContent.LUCKY_BEAN, Attributes.LUCK, 1);
+		expectAttribute(ctx, server, EspressoContent.READING_SOCKS, Attributes.STEP_HEIGHT, 0.5);
+		expectAttribute(ctx, server, EspressoContent.CAFE_PARASOL, Attributes.SAFE_FALL_DISTANCE, 3);
+
+		// Thermos: a drink's effects last a quarter longer (an Espresso's 90 seconds become 112.5).
+		int thermos = server.computeOnServer(s -> {
+			ServerPlayer player = player(s);
+			wear(player, EspressoContent.THERMOS);
+			player.removeAllEffects();
+			new ItemStack(EspressoContent.ESPRESSO).finishUsingItem(s.overworld(), player);
+			int duration = player.getEffect(MobEffects.SPEED).getDuration();
+			takeOff(player);
+			player.removeAllEffects();
+			return duration;
+		});
+		check(thermos > 2200 && thermos <= 2250, "with a Thermos an Espresso's Speed lasts 2250 ticks (got " + thermos + ")");
+
+		// Pocket Hearth: powder snow can't freeze you.
+		server.runOnServer(s -> {
+			ServerPlayer player = player(s);
+			check(player.canFreeze(), "without a Pocket Hearth you can freeze");
+			wear(player, EspressoContent.POCKET_HEARTH);
+			check(!player.canFreeze(), "a Pocket Hearth stops you freezing");
+			takeOff(player);
+		});
+
+		// Copper Tamper: 15% more damage to hostile mobs.
+		float[] hits = server.computeOnServer(s -> {
+			ServerPlayer player = player(s);
+			float plain = hitZombie(s.overworld(), player, at);
+			wear(player, EspressoContent.COPPER_TAMPER);
+			float tamped = hitZombie(s.overworld(), player, at);
+			takeOff(player);
+			return new float[] { plain, tamped };
+		});
+		check(Math.abs(hits[1] - hits[0] * 1.15F) < 0.01F, "a Copper Tamper adds 15% damage (" + hits[0] + " plain, " + hits[1] + " tamped)");
+
+		// Knit Beanie: Cozy heals away from home too.
+		server.runOnServer(s -> {
+			ServerPlayer player = player(s);
+			player.removeAllEffects();
+			wear(player, EspressoContent.KNIT_BEANIE);
+			player.addEffect(new MobEffectInstance(EspressoContent.COZY, 600));
+		});
+		waitForServer(ctx, server, s -> player(s).hasEffect(MobEffects.REGENERATION), 60,
+				"a Knit Beanie lets Cozy heal you away from home");
+		server.runOnServer(s -> {
+			takeOff(player(s));
+			player(s).removeAllEffects();
+		});
+
+		// Ember Glove: a log broken by hand drops charcoal, unless you're crouching.
+		server.runOnServer(s -> {
+			ServerLevel level = s.overworld();
+			ServerPlayer player = player(s);
+			wear(player, EspressoContent.EMBER_GLOVE);
+			check(dropsFromLog(level, player, at.offset(2, 1, 0), false).is(Items.CHARCOAL), "an Ember Glove turns a log into charcoal");
+			check(dropsFromLog(level, player, at.offset(2, 1, 2), true).is(Items.OAK_LOG), "crouching keeps the log a log");
+			takeOff(player);
+			check(dropsFromLog(level, player, at.offset(2, 1, -2), false).is(Items.OAK_LOG), "without the glove a log is a log");
+		});
+		server.runCommand("gamemode creative @a");
+	}
+
+	/** Wearing the charm gives the attribute bonus; taking it off removes it again. */
+	private static void expectAttribute(ClientGameTestContext ctx, TestServerContext server, net.minecraft.world.item.Item charm,
+			Holder<Attribute> attribute, double bonus) {
+		double base = server.computeOnServer(s -> player(s).getAttributeValue(attribute));
+		server.runOnServer(s -> wear(player(s), charm));
+		waitForServer(ctx, server, s -> Math.abs(player(s).getAttributeValue(attribute) - (base + bonus)) < 0.001, 40,
+				charm + " gives " + bonus + " more " + attribute.getRegisteredName());
+		server.runOnServer(s -> takeOff(player(s)));
+		waitForServer(ctx, server, s -> Math.abs(player(s).getAttributeValue(attribute) - base) < 0.001, 40,
+				"taking off " + charm + " takes the bonus away");
+	}
+
+	/** Puts a charm on: right-clicked into its slot with Trinkets, otherwise held in the off-hand. */
+	private static void wear(ServerPlayer player, net.minecraft.world.item.Item charm) {
+		ItemStack stack = new ItemStack(charm);
+		if (CharmItem.TRINKETS) {
+			player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			player.gameMode.useItem(player, player.level(), stack, InteractionHand.MAIN_HAND);
+			check(TrinketsCompat.isEquipped(player, charm), "right-clicking " + charm + " puts it in its Trinkets slot");
+			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+		} else {
+			player.setItemInHand(InteractionHand.OFF_HAND, stack);
+		}
+		check(CharmItem.isWorn(player, charm), charm + " counts as worn");
+	}
+
+	/** Takes every charm off again. */
+	private static void takeOff(ServerPlayer player) {
+		if (CharmItem.TRINKETS) {
+			TrinketsCompat.takeCharms(player);
+		}
+		player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+	}
+
+	/** How much health a zombie loses to a 10-point hit from the player. */
+	private static float hitZombie(ServerLevel level, ServerPlayer player, BlockPos at) {
+		Zombie zombie = EntityTypes.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
+		zombie.snapTo(at.getX() + 3.5, at.getY() + 1, at.getZ() + 0.5);
+		level.addFreshEntity(zombie);
+		float before = zombie.getHealth();
+		zombie.hurtServer(level, player.damageSources().playerAttack(player), 10.0F);
+		float lost = before - zombie.getHealth();
+		zombie.discard();
+		return lost;
+	}
+
+	/** Breaks an oak log as the player (crouching or not) and returns what dropped. */
+	private static ItemStack dropsFromLog(ServerLevel level, ServerPlayer player, BlockPos pos, boolean crouching) {
+		level.setBlockAndUpdate(pos, Blocks.OAK_LOG.defaultBlockState());
+		player.setShiftKeyDown(crouching);
+		player.gameMode.destroyBlock(pos);
+		player.setShiftKeyDown(false);
+		List<ItemEntity> drops = level.getEntitiesOfClass(ItemEntity.class, new AABB(pos).inflate(1));
+		ItemStack dropped = drops.isEmpty() ? ItemStack.EMPTY : drops.getFirst().getItem().copy();
+		drops.forEach(ItemEntity::discard);
+		return dropped;
+	}
+
 	/** The hotbar, armour and off-hand stay with you; the rest of the inventory drops where you fell. */
 	private static void keepOnDeath(ClientGameTestContext ctx, TestServerContext server, BlockPos at) {
 		server.runCommand("gamemode survival @a");
@@ -369,6 +513,14 @@ public class EspressoClientTest implements FabricClientGameTest {
 			player.getInventory().setItem(0, new ItemStack(Items.DIAMOND_PICKAXE));
 			player.getInventory().setItem(20, new ItemStack(Items.COBBLESTONE, 10));
 			player.getInventory().setItem(40, new ItemStack(Items.SHIELD));
+			if (CharmItem.TRINKETS) {
+				// A charm worn in its Trinkets slot goes back into that slot after respawning.
+				ItemStack bean = new ItemStack(EspressoContent.LUCKY_BEAN);
+				player.setItemInHand(InteractionHand.MAIN_HAND, bean);
+				player.gameMode.useItem(player, player.level(), bean, InteractionHand.MAIN_HAND);
+				player.getInventory().setItem(0, new ItemStack(Items.DIAMOND_PICKAXE));
+				check(TrinketsCompat.isEquipped(player, EspressoContent.LUCKY_BEAN), "the Lucky Bean is worn before dying");
+			}
 		});
 		ctx.waitTicks(5);
 		server.runCommand("kill @a");
@@ -396,6 +548,9 @@ public class EspressoClientTest implements FabricClientGameTest {
 		server.runOnServer(s -> {
 			ServerPlayer player = player(s);
 			check(player.getInventory().getItem(40).is(Items.SHIELD), "the off-hand shield came back too");
+			if (CharmItem.TRINKETS) {
+				check(TrinketsCompat.isEquipped(player, EspressoContent.LUCKY_BEAN), "the worn Lucky Bean is back in its slot after respawning");
+			}
 			check(!player.getInventory().contains(new ItemStack(Items.COBBLESTONE)), "the rest of the inventory didn't come back");
 		});
 		ctx.waitForScreen(null);
