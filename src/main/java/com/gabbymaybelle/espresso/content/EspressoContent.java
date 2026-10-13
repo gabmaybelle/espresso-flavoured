@@ -10,9 +10,12 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import java.util.function.Predicate;
 import net.minecraft.world.level.biome.Biomes;
@@ -63,12 +66,17 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
 /** Espresso Flavoured's blocks, items and effects. */
 public final class EspressoContent {
 	private EspressoContent() {
+	}
+
+	private static ResourceKey<PlacedFeature> placed(String path) {
+		return ResourceKey.create(Registries.PLACED_FEATURE, id(path));
 	}
 
 	private static Identifier id(String path) {
@@ -350,12 +358,6 @@ public final class EspressoContent {
 					.or(BiomeSelectors.tag(BiomeTags.IS_RIVER)).or(BiomeSelectors.tag(ConventionalBiomeTags.IS_PLAINS))
 					.or(BiomeSelectors.includeByKey(Biomes.MEADOW, Biomes.CHERRY_GROVE))
 					.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate());
-			BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
-					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_firefly_bush")));
-			BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
-					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_lily_pads")));
-			BiomeModifications.addFeature(temperate, GenerationStep.Decoration.VEGETAL_DECORATION,
-					ResourceKey.create(Registries.PLACED_FEATURE, id("waterside_water_lilies")));
 			// Lusher rivers (not frozen ones): seagrass, kelp and clay in the water; plants, flowers, moss, mud
 			// and the odd mossy boulder at the waterline. A river's banks are usually in the neighbouring biome,
 			// so the bank features also go to the temperate land around (they only grow right by water).
@@ -363,18 +365,33 @@ public final class EspressoContent {
 			Predicate<BiomeSelectionContext> rivers = BiomeSelectors.tag(BiomeTags.IS_RIVER)
 					.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate())
 					.and(context -> !context.getBiomeKey().equals(Biomes.FROZEN_RIVER));
-			for (String feature : List.of("river_seagrass", "river_kelp", "river_clay")) {
-				BiomeModifications.addFeature(rivers, GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
-			}
-			for (String feature : List.of("waterline_moss", "waterline_rock")) {
-				BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.LOCAL_MODIFICATIONS, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
-			}
-			// Muddy banks where there's clay in the water, fading out through mixed mud to rooted and coarse
-			// dirt. After the clay (vanilla's and ours) and before the bank plants, which then grow on them.
-			for (String feature : List.of("muddy_bank_fringe", "muddy_bank_mix", "muddy_bank_edge", "lush_shore_moss", "lush_shore_pool",
-					"river_bank_plants", "river_bank_flowers", "river_bank_moss")) {
-				BiomeModifications.addFeature(rivers.or(temperate), GenerationStep.Decoration.VEGETAL_DECORATION, ResourceKey.create(Registries.PLACED_FEATURE, id(feature)));
-			}
+			// All in ONE modification, so they run in this order. Fabric applies separate modifications
+			// in the order of their ids (alphabetical), which put the muddy banks after the moss patches
+			// and the bank plants before the clay, and the ground shifted under things already planted.
+			BiomeModifications.create(id("lusher_rivers")).add(ModificationPhase.ADDITIONS, rivers.or(temperate), (selection, context) -> {
+				BiomeModificationContext.GenerationSettingsContext generation = context.getGenerationSettings();
+				BiConsumer<GenerationStep.Decoration, String> add = (step, feature) -> generation.addFeature(step, placed(feature));
+				if (temperate.test(selection)) {
+					for (String feature : List.of("waterside_firefly_bush", "waterside_lily_pads", "waterside_water_lilies")) {
+						add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
+					}
+				}
+				if (rivers.test(selection)) {
+					for (String feature : List.of("river_seagrass", "river_kelp", "river_clay")) {
+						add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
+					}
+				}
+				for (String feature : List.of("waterline_moss", "waterline_rock")) {
+					add.accept(GenerationStep.Decoration.LOCAL_MODIFICATIONS, feature);
+				}
+				// Muddy banks where there's clay in the water, fading out through mixed mud to rooted and coarse
+				// dirt. After the clay (vanilla's and ours), then the lush patches, then the plants, flowers and
+				// moss that grow on all of it.
+				for (String feature : List.of("muddy_bank_fringe", "muddy_bank_mix", "muddy_bank_edge", "lush_shore_moss", "lush_shore_pool",
+						"river_bank_plants", "river_bank_flowers", "river_bank_moss")) {
+					add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
+				}
+			});
 		}
 	}
 

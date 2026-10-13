@@ -18,8 +18,10 @@ const water = (offset) => ({ type: 'minecraft:matching_fluids', fluids: ['minecr
 const atWaterline = { type: 'minecraft:any_of', predicates: [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([x, z]) => water([x, -1, z])) };
 // Or a block above it: the usual riverbank, for plants and flowers.
 const byWater = { type: 'minecraft:any_of', predicates: [[1, 0], [-1, 0], [0, 1], [0, -1]].flatMap(([x, z]) => [water([x, -1, z]), water([x, -2, z])]) };
-// Open ground: air, or short grass and the like (vanilla grass already covers most banks).
-const air = { type: 'minecraft:replaceable' };
+// Open ground: air, or short grass and the like (vanilla grass already covers most banks). Never
+// water, though it's replaceable too: a plant set into a river cell is flooded again as soon as the
+// chunk goes live, and drops as an item.
+const air = { type: 'minecraft:all_of', predicates: [{ type: 'minecraft:replaceable' }, { type: 'minecraft:not', predicate: water() }] };
 const survives = (state) => ({ type: 'minecraft:would_survive', state });
 const filter = (...predicates) => ({ type: 'minecraft:block_predicate_filter', predicate: predicates.length === 1 ? predicates[0] : { type: 'minecraft:all_of', predicates } });
 const scatter = (r, y = 2) => ({ type: 'minecraft:offset',
