@@ -68,7 +68,14 @@ public final class SpawnGazebo {
 	private SpawnGazebo() {
 	}
 
+	/** True when the standalone Spawn Gazebo mod is here: it builds and protects the gazebo, so Espresso's own stays out of its way. */
+	public static final boolean STANDALONE = FabricLoader.getInstance().isModLoaded("spawn_gazebo");
+
 	static void register() {
+		if (STANDALONE) {
+			Espresso.LOGGER.info("Spawn Gazebo is installed, so it builds the gazebo at spawn; Espresso's own is off");
+			return;
+		}
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			ServerLevel level = server.overworld();
 			if (level.getAttachedOrElse(DONE, false)) {

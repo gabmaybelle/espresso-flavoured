@@ -3,6 +3,7 @@ package com.gabbymaybelle.espresso.client;
 import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.ServerSettings;
 import com.gabbymaybelle.espresso.content.GazeboGuard;
+import com.gabbymaybelle.espresso.content.SpawnGazebo;
 import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +71,23 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 				server(radius("sugarCaneHeight", Config.sugarCaneHeight, 3, 8, v -> Config.sugarCaneHeight = v)));
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.world"));
+		if (SpawnGazebo.STANDALONE) {
+			list.addHeader(Component.translatable("espresso_flavoured.options.spawn_gazebo_installed"));
+		}
+		OptionInstance<Boolean> spawnGazebo = server(toggle("spawnGazebo", Config.spawnGazebo, v -> Config.spawnGazebo = v));
+		OptionInstance<Boolean> protectGazebo = server(toggle("protectGazebo", Config.protectGazebo, v -> Config.protectGazebo = v));
 		list.addSmall(
 				server(toggle("lusherRivers", Config.lusherRivers, v -> Config.lusherRivers = v)),
-				server(toggle("spawnGazebo", Config.spawnGazebo, v -> Config.spawnGazebo = v)),
-				server(toggle("protectGazebo", Config.protectGazebo, v -> Config.protectGazebo = v)));
+				spawnGazebo, protectGazebo);
+		if (SpawnGazebo.STANDALONE) {
+			// The standalone mod's settings decide; these two do nothing while it's installed.
+			for (OptionInstance<?> option : List.of(spawnGazebo, protectGazebo)) {
+				AbstractWidget widget = list.findOption(option);
+				if (widget != null) {
+					widget.active = false;
+				}
+			}
+		}
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.storage"));
 		list.addSmall(
