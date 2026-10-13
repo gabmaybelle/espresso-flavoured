@@ -3,6 +3,7 @@ package com.gabbymaybelle.espresso.content;
 import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.Espresso;
 import com.mojang.serialization.Codec;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -69,6 +71,12 @@ public final class SpawnGazebo {
 	private static final int FOUNDATION_DEPTH = 12;
 	/** How far past the footprint a felled tree's canopy can reach (acacia and dark oak spread the widest). */
 	private static final int CANOPY_REACH = 8;
+	/** Lava is set to stone this far from the gazebo's middle. */
+	private static final int LAVA_REACH = 16;
+	/** How far under the surface lava counts as near enough to step or dig into. */
+	private static final int LAVA_DEPTH = 4;
+	/** A cap on how much lava one world's gazebo cools, in case spawn is by a lava lake. */
+	private static final int MAX_LAVA = 8192;
 	/** The woods tools/generate-spawn.js writes a template for. */
 	private static final List<String> WOODS = List.of("oak", "spruce", "birch", "jungle", "acacia", "dark_oak",
 			"mangrove", "cherry", "pale_oak", "bamboo", "poplar");
@@ -133,6 +141,7 @@ public final class SpawnGazebo {
 		// No drops: a plant under the plinth whose other half or support goes would otherwise litter the floor.
 		template.get().placeInWorld(level, origin, origin, settings, level.getRandom(), Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
 		foundation(level, origin, palette.equals("sand") ? Blocks.SANDSTONE : Blocks.COBBLESTONE);
+		coolLava(level, cx, ground, cz, palette.equals("sand") ? Blocks.SANDSTONE : Blocks.STONE);
 		GazeboGuard.guard(level, new BoundingBox(origin.getX(), ground - GazeboGuard.DEPTH, origin.getZ(),
 				origin.getX() + SIZE - 1, ground + GazeboGuard.HEIGHT, origin.getZ() + SIZE - 1));
 
@@ -268,6 +277,56 @@ public final class SpawnGazebo {
 				}
 			}
 		}
+	}
+
+	/**
+	 * A new player's first steps out of the gazebo shouldn't be into a lava pool. Lava near the
+	 * surface within {@link #LAVA_REACH} blocks of the gazebo's middle sets to stone, and so does
+	 * the rest of any pool it belongs to, so no pool is left half cooled. Lava that was only
+	 * flowing from it goes.
+	 */
+	private static void coolLava(ServerLevel level, int cx, int ground, int cz, Block stone) {
+		// A pool is followed out to twice LAVA_REACH, still inside the chunks place() loaded.
+		int poolReach = 2 * LAVA_REACH;
+		ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+		Set<BlockPos> seen = new HashSet<>();
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		for (int x = cx - LAVA_REACH; x <= cx + LAVA_REACH; x++) {
+			for (int z = cz - LAVA_REACH; z <= cz + LAVA_REACH; z++) {
+				// The ground can rise or fall away round the gazebo, so follow it in each column.
+				int top = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
+				int from = Math.min(top, ground) - LAVA_DEPTH;
+				int to = Math.max(top, ground + 1);
+				for (int y = from; y <= to; y++) {
+					pos.set(x, y, z);
+					if (isLava(level, pos) && seen.add(pos.immutable())) {
+						queue.add(pos.immutable());
+					}
+				}
+			}
+		}
+		int flags = Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS;
+		int cooled = 0;
+		while (!queue.isEmpty() && cooled < MAX_LAVA) {
+			BlockPos lava = queue.poll();
+			boolean source = level.getFluidState(lava).isSource();
+			level.setBlock(lava, source ? stone.defaultBlockState() : Blocks.AIR.defaultBlockState(), flags);
+			cooled++;
+			for (Direction direction : Direction.values()) {
+				BlockPos next = lava.relative(direction);
+				if (Math.abs(next.getX() - cx) <= poolReach && Math.abs(next.getZ() - cz) <= poolReach
+						&& next.getY() >= ground - 2 * LAVA_DEPTH && isLava(level, next) && seen.add(next)) {
+					queue.add(next);
+				}
+			}
+		}
+		if (cooled > 0) {
+			Espresso.LOGGER.info("Set {} blocks of lava near the gazebo to stone", cooled);
+		}
+	}
+
+	private static boolean isLava(ServerLevel level, BlockPos pos) {
+		return level.getFluidState(pos).is(FluidTags.LAVA) && level.getBlockState(pos).is(Blocks.LAVA);
 	}
 
 	private static boolean dry(Holder<Biome> biome) {
