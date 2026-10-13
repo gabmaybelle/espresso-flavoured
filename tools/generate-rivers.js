@@ -84,15 +84,20 @@ out('feature/river_bank_moss.json', {
 const onGround = { type: 'minecraft:has_sturdy_face', direction: 'up', offset: [0, -1, 0] };
 // Plenty of tries for a spot by the water (most land elsewhere), and generous clumps that reach a
 // little wider and higher up the bank.
+// Not right at the water's lip either: water at the same height creeps sideways into a carpet's
+// cell (carpets don't hold it back) and breaks it.
+const notAtLip = { type: 'minecraft:not', predicate: { type: 'minecraft:any_of', predicates: [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([x, z]) => water([x, 0, z])) } };
+// Only every third chunk or so gets the moss, so rivers are mostly grass and flowers with the odd
+// lush green stretch, rather than mossy the whole way along.
 out('placed_feature/river_bank_moss.json', { feature: 'espresso_flavoured:river_bank_moss', placement: [
-	count(12), square, surface, inBiome, filter(air, survives('minecraft:moss_carpet'), byWater),
-	count(16), scatter(4, 3), filter(air, survives('minecraft:moss_carpet'), onGround)] });
+	rarity(3), count(12), square, surface, inBiome, filter(air, survives('minecraft:moss_carpet'), byWater, notAtLip),
+	count(10), scatter(4, 3), filter(air, survives('minecraft:moss_carpet'), onGround, notAtLip)] });
 
 // ---- 4b. Lush shores, like a lush cave come up to the light: now and then vanilla's own moss patch
 // (a carpet of moss sprouting moss carpet, grass and azaleas) or a little clay pool of big and small
 // dripleaf, right at the water's edge.
 // A few tries per chunk: each only takes if it lands right at the waterline.
-out('placed_feature/lush_shore_moss.json', { feature: 'minecraft:moss_patch', placement: [count(6), square, surface, inBiome, filter(air, atWaterline)] });
+out('placed_feature/lush_shore_moss.json', { feature: 'minecraft:moss_patch', placement: [rarity(3), count(6), square, surface, inBiome, filter(air, atWaterline)] });
 out('placed_feature/lush_shore_pool.json', { feature: 'minecraft:clay_pool_with_dripleaves', placement: [count(3), square, surface, inBiome, filter(air, atWaterline)] });
 
 // ---- 5. At the waterline: moss, clay, mud and the odd mossy boulder
