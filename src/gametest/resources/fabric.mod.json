@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "espresso_flavoured_gametest",
+	"version": "1.0.0",
+	"name": "Espresso Flavoured Core game tests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"com.gabbymaybelle.espresso.EspressoClientTest"
+		]
+	},
+	"depends": {
+		"espresso_flavoured": "*"
+	}
+}

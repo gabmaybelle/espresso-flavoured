@@ -64,3 +64,16 @@ jar {
 		rename { "${it}_$projectName"}
 	}
 }
+
+// Client game tests: `./gradlew runClientGameTest` starts a real game and plays through the main
+// rules (the gazebo, brewing, keeping the hotbar on death, creepers, bundles, the settings screen).
+// The tests live in src/gametest; nothing there ships in the jar.
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "espresso_flavoured_gametest"
+		enableGameTests = false
+		enableClientGameTests = true
+		eula = true
+	}
+}

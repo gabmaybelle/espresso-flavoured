@@ -72,6 +72,8 @@ You need JDK 25.
 
 The jar is written to `build/libs/`. The scripts in `tools/` regenerate the data pack, the art and the longer-day timelines.
 
+`./gradlew runClientGameTest` starts the game and plays through the main rules: the spawn gazebo and its starter chest, brewing in the espresso machine (and not off a coffee bar), the Ristretto's Speed II and Haste II, keeping the hotbar and off-hand on death, creepers sparing builds, four tools to a bundle, and the settings screen. Screenshots land in `build/run/clientGameTest/screenshots`.
+
 ## Licences
 
 Espresso Flavoured uses two licences:
