@@ -21,6 +21,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +29,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DecoratedPotBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 /**
@@ -91,11 +94,18 @@ public final class GazeboGuard {
 		});
 		PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) ->
 				state.getBlock() instanceof DecoratedPotBlock || !protects(level, player, pos));
-		// Tools that turn one block into another: stripping, paths, farmland.
+		// Tools that turn one block into another: stripping, scraping the copper dome, paths, farmland.
+		// The chest, the pots and anything else you open or take from still works with a tool in
+		// hand, and so do the benches (wooden stairs, which no tool changes; see Seat).
 		UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
 			ItemStack stack = player.getItemInHand(hand);
 			boolean reshapes = stack.is(ItemTags.AXES) || stack.is(ItemTags.SHOVELS) || stack.is(ItemTags.HOES);
-			return reshapes && protects(level, player, hit.getBlockPos()) ? InteractionResult.FAIL : InteractionResult.PASS;
+			if (!reshapes || !protects(level, player, hit.getBlockPos())) {
+				return InteractionResult.PASS;
+			}
+			BlockState state = level.getBlockState(hit.getBlockPos());
+			boolean harmless = state.hasBlockEntity() || state.getBlock() instanceof FlowerPotBlock || state.is(BlockTags.WOODEN_STAIRS);
+			return harmless ? InteractionResult.PASS : InteractionResult.FAIL;
 		});
 	}
 
