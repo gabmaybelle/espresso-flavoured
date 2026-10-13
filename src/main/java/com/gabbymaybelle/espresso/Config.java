@@ -3,21 +3,33 @@ package com.gabbymaybelle.espresso;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import net.fabricmc.loader.api.FabricLoader;
 
 /**
- * Settings in {@code config/espresso.properties}. Missing keys get their defaults and
- * the file is rewritten with every key, so players can see what exists. Read at startup;
- * the settings screen changes them as you play (only longerDays needs a restart).
+ * Settings in {@code config/espresso_flavoured.properties}. Missing keys get their defaults, and
+ * the file is only written when it's missing a setting (so players can see what exists) or the
+ * settings screen changes one; a value that can't be read keeps its default and says so in the
+ * log. Settings this version doesn't know are kept. Read at startup; the settings screen changes
+ * them as you play (only longerDays needs a restart).
  */
 public final class Config {
 	private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
 	/** Written to the file, so a later version can tell an older file apart if it ever needs to change one. */
 	private static final int CONFIG_VERSION = 2;
+	/** Every setting the file should have; the file is written when one is missing. */
+	private static final List<String> KEYS = List.of("creeperGriefing", "endermanGriefing", "phantoms", "safeHomeRadius",
+			"blockMerchant", "bundleUnstackables", "longerDays", "clock", "clockPosition", "duskWarning", "keepHotbarOnDeath",
+			"regenNeedsSaturation", "toughNights", "drowsiness", "caffeineCrash", "coffeeBarRequired", "sugarCaneHeight",
+			"lusherRivers", "spawnGazebo", "protectGazebo", "configVersion");
+	/** The file as it was read, so settings from a newer version (or added by hand) survive a save. */
+	private static Properties loaded = new Properties();
 
 	/** Creeper explosions break blocks (vanilla). Off: they still hurt, but spare builds. */
 	public static boolean creeperGriefing = false;
@@ -117,12 +129,17 @@ public final class Config {
 		lusherRivers = bool(props, "lusherRivers", lusherRivers);
 		spawnGazebo = bool(props, "spawnGazebo", spawnGazebo);
 		protectGazebo = bool(props, "protectGazebo", protectGazebo);
-		save();
+		loaded = props;
+		// Only write when there's something to add: a new file, a new setting, or an older version.
+		if (!KEYS.stream().allMatch(props::containsKey) || integer(props, "configVersion", CONFIG_VERSION) < CONFIG_VERSION) {
+			save();
+		}
 	}
 
 	/** Writes every setting back to the file (called after loading and from the settings screen). */
 	public static void save() {
 		Properties props = new Properties();
+		props.putAll(loaded);
 		props.setProperty("creeperGriefing", Boolean.toString(creeperGriefing));
 		props.setProperty("endermanGriefing", Boolean.toString(endermanGriefing));
 		props.setProperty("phantoms", Boolean.toString(phantoms));
@@ -144,7 +161,10 @@ public final class Config {
 		props.setProperty("spawnGazebo", Boolean.toString(spawnGazebo));
 		props.setProperty("protectGazebo", Boolean.toString(protectGazebo));
 		props.setProperty("configVersion", Integer.toString(CONFIG_VERSION));
-		try (Writer writer = Files.newBufferedWriter(FILE)) {
+		// Written to a temporary file first and then swapped in, so a crash part-way through never
+		// leaves a half-written or empty settings file.
+		Path temp = FILE.resolveSibling(FILE.getFileName() + ".tmp");
+		try (Writer writer = Files.newBufferedWriter(temp)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
 					+ "endermanGriefing: endermen pick up blocks (vanilla behaviour)\n"
@@ -169,12 +189,36 @@ public final class Config {
 					+ "longerDays needs a restart; everything else applies straight away");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);
+			return;
+		}
+		try {
+			replace(temp, FILE);
+		} catch (IOException e) {
+			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);
+		}
+	}
+
+	/** Moves {@code from} over {@code to} in one step where the file system allows it. */
+	static void replace(Path from, Path to) throws IOException {
+		try {
+			Files.move(from, to, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+		} catch (AtomicMoveNotSupportedException e) {
+			Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
 		}
 	}
 
 	private static boolean bool(Properties props, String key, boolean fallback) {
 		String value = props.getProperty(key);
-		return value == null ? fallback : Boolean.parseBoolean(value.trim());
+		if (value == null) {
+			return fallback;
+		}
+		String v = value.trim().toLowerCase(Locale.ROOT);
+		if (v.equals("true") || v.equals("false")) {
+			return v.equals("true");
+		}
+		// A typo shouldn't quietly switch a setting off: keep the default and say so.
+		Espresso.LOGGER.warn("Espresso Flavoured: {} should be true or false, not \"{}\"; using {}", key, value.trim(), fallback);
+		return fallback;
 	}
 
 	private static <E extends Enum<E>> E choice(Properties props, String key, E fallback) {
@@ -198,6 +242,7 @@ public final class Config {
 		try {
 			return Math.max(0, Integer.parseInt(value.trim()));
 		} catch (NumberFormatException e) {
+			Espresso.LOGGER.warn("Espresso Flavoured: {} should be a whole number, not \"{}\"; using {}", key, value.trim(), fallback);
 			return fallback;
 		}
 	}

@@ -19,7 +19,9 @@ Minecraft 26.3. See README.md for what players get.
 ## Build and test
 
 - `./gradlew build`: jar in `build/libs/`.
-- `./gradlew runClientGameTest`: plays through the main rules in a real game (about 1.5 minutes).
+- `./gradlew runClientGameTest`: plays through the main rules in a real game (about 1.5 minutes): settings file,
+  gazebo, brewing, Ristretto, safe home, Drowsy, tough nights, block merchant, village café,
+  keep-on-death, creepers, bundles, settings screen.
   Screenshots go to `build/run/clientGameTest/screenshots/`.
 
 ## Gotchas
@@ -33,6 +35,8 @@ Minecraft 26.3. See README.md for what players get.
 - **The modpack carries a copy of this jar** (espresso-flavoured-pack, `overrides/mods/`).
   After a change players should get, the pack needs a jar built from a clean, committed `main`.
 - Keep the mod ID `espresso_flavoured`: worlds and configs depend on it.
+- **Longer days:** a day is 36000 ticks (24000 of daylight, then night; midnight is 30000), so
+  vanilla tick numbers for times of day are wrong here. Tests that need night use 30000.
 
 ## Working on Gabby's mods (the same in every repo)
 

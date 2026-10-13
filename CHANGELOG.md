@@ -60,6 +60,7 @@
 - Building the spawn gazebo no longer litters the ground: the parts of felled trees' canopies that hung outside its footprint used to rot away afterwards, scattering sticks and saplings, and two-block flowers dropped as they were cleared. Both go cleanly now.
 - No lava on the spawn gazebo's doorstep: a lava pool at the surface within 16 blocks of it is set to stone when it's built, the whole pool rather than just the part that close.
 - A full hunger bar with no saturation left no longer locks you out of both eating and healing (the game refuses food at a full bar, and the "regen needs saturation" rule refused to heal). A full bar now counts as fed: you heal slowly, that costs hunger as in vanilla, and a notch soon frees up to eat.
+- Safer settings: the settings file can't be left half-written or empty if the game crashes while saving it; a typo in a setting ("ture") keeps its default instead of quietly switching it off, with a note in the log saying which setting; and settings the mod doesn't know about, or notes you've added, are no longer wiped each time the game starts.
 - Breaking a ripe coffee bush no longer drops its cherries twice.
 - Decaf drinks keep their extras: a decaf pumpkin spice latte still makes you Warm, decaf iced coffee still gives Fire Resistance, and so on. Only the caffeine is swapped for Cozy.
 - The Golden Mug now stretches Cozy too, and hot chocolate calms a caffeine crash like decaf does.

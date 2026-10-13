@@ -3,28 +3,46 @@ package com.gabbymaybelle.espresso;
 import com.gabbymaybelle.espresso.client.EspressoSettingsScreen;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import com.gabbymaybelle.espresso.content.EspressoMachineBlockEntity;
+import com.gabbymaybelle.espresso.mixin.StructureTemplatePoolAccessor;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Function;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Plays through Espresso Flavoured Core's main rules in a real game: the spawn gazebo and its
@@ -35,6 +53,7 @@ import net.minecraft.world.phys.AABB;
 public class EspressoClientTest implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext ctx) {
+		settingsFile();
 		settingsScreen(ctx);
 		try (TestSingleplayerContext world = ctx.worldBuilder().create()) {
 			world.getConnection().waitForChunksRender();
@@ -46,7 +65,43 @@ public class EspressoClientTest implements FabricClientGameTest {
 			ristretto(server);
 			bundles(server);
 			creepers(ctx, server, work.offset(0, 0, 12));
+			BlockPos home = work.offset(12, 0, 0);
+			safeHome(server, home);
+			drowsiness(ctx, server, home);
+			toughNights(ctx, server, work);
+			blockMerchant(server, work);
+			villageCafe(server);
 			keepOnDeath(ctx, server, work.offset(0, 0, -12));
+		}
+	}
+
+	/**
+	 * The settings file: a typo keeps the default instead of switching a setting off, case and
+	 * spaces don't matter, a setting from a newer version survives, no temporary file is left
+	 * behind, and a complete file isn't rewritten just by loading it (so notes added by hand stay).
+	 */
+	private static void settingsFile() {
+		Path file = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
+		try {
+			Files.writeString(file, "protectGazebo=ture\ncreeperGriefing= TRUE \nfutureSetting=hello\n");
+			Config.load();
+			check(Config.protectGazebo, "a typo (\"ture\") leaves Protect the Gazebo on, its default");
+			check(Config.creeperGriefing, "\" TRUE \" reads as true");
+			String written = Files.readString(file);
+			check(written.contains("futureSetting=hello"), "a setting this version doesn't know is kept");
+			check(written.contains("keepHotbarOnDeath=true"), "missing settings are written with their defaults");
+			check(!Files.exists(file.resolveSibling(file.getFileName() + ".tmp")), "no temporary file is left behind");
+
+			String complete = "# a note added by hand\n" + written;
+			Files.writeString(file, complete);
+			Config.load();
+			check(Files.readString(file).equals(complete), "loading a complete file leaves it exactly as it was");
+		} catch (IOException e) {
+			throw new AssertionError("couldn't use the settings file", e);
+		} finally {
+			Config.creeperGriefing = false;
+			Config.protectGazebo = true;
+			Config.save();
 		}
 	}
 
@@ -91,7 +146,8 @@ public class EspressoClientTest implements FabricClientGameTest {
 		check(steaming, "the machine on a coffee bar starts brewing");
 		ctx.takeScreenshot("espresso_machine_brewing");
 		waitForServer(ctx, server, s -> machineAt(s, machine).brewTime() == 0
-				&& machineAt(s, machine).getItem(0).is(EspressoContent.ESPRESSO), EspressoMachineBlockEntity.BREW_TIME + 100);
+				&& machineAt(s, machine).getItem(0).is(EspressoContent.ESPRESSO), EspressoMachineBlockEntity.BREW_TIME + 100,
+				"the machine on a coffee bar brews three Espressos");
 		server.runOnServer(s -> {
 			EspressoMachineBlockEntity m = machineAt(s, machine);
 			for (int slot = 0; slot < 3; slot++) {
@@ -109,7 +165,8 @@ public class EspressoClientTest implements FabricClientGameTest {
 			}
 			fill(s.overworld(), machine, new ItemStack(EspressoContent.BARISTAS_RESERVE, 3));
 		});
-		waitForServer(ctx, server, s -> machineAt(s, machine).getItem(0).is(EspressoContent.RISTRETTO), EspressoMachineBlockEntity.BREW_TIME + 100);
+		waitForServer(ctx, server, s -> machineAt(s, machine).getItem(0).is(EspressoContent.RISTRETTO), EspressoMachineBlockEntity.BREW_TIME + 100,
+				"the Barista's Reserve brews a Ristretto");
 	}
 
 	/** One minute of Speed II and Haste II, the only ones in the mod, plus Caffeinated. */
@@ -165,6 +222,143 @@ public class EspressoClientTest implements FabricClientGameTest {
 		});
 	}
 
+	/**
+	 * Crouching and using a bed with an empty hand makes it home: hostile mobs then can't spawn
+	 * naturally inside the safe home radius (32 by default) but can outside it, and a broken bed
+	 * protects nothing.
+	 */
+	private static void safeHome(TestServerContext server, BlockPos floor) {
+		server.runOnServer(s -> {
+			ServerLevel level = s.overworld();
+			ServerPlayer player = player(s);
+			level.setBlockAndUpdate(floor, Blocks.STONE.defaultBlockState());
+			level.setBlockAndUpdate(floor.above(), Blocks.AIR.defaultBlockState());
+			level.setBlockAndUpdate(floor.above().south(), Blocks.AIR.defaultBlockState());
+			player.teleportTo(floor.getX() + 0.5, floor.getY() + 1, floor.getZ() - 1.5);
+			ItemStack bed = new ItemStack(Items.BED.white());
+			player.setItemInHand(InteractionHand.MAIN_HAND, bed);
+			player.gameMode.useItemOn(player, level, bed, InteractionHand.MAIN_HAND,
+					new BlockHitResult(Vec3.atCenterOf(floor).add(0, 0.5, 0), Direction.UP, floor, false));
+			BlockPos bedPos = floor.above();
+			check(level.getBlockState(bedPos).getBlock() instanceof BedBlock, "the bed was placed (got " + level.getBlockState(bedPos) + ")");
+			check(!HomeBeds.isProtected(level, bedPos.east(10)), "nothing is protected before a home is chosen");
+
+			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+			player.setShiftKeyDown(true);
+			player.gameMode.useItemOn(player, level, ItemStack.EMPTY, InteractionHand.MAIN_HAND,
+					new BlockHitResult(Vec3.atCenterOf(bedPos), Direction.UP, bedPos, false));
+			player.setShiftKeyDown(false);
+			check(HomeBeds.isProtected(level, bedPos.east(20)), "crouch-using the bed makes it home: 20 blocks away is protected");
+			check(!HomeBeds.isProtected(level, bedPos.east(40)), "40 blocks away is outside the safe home radius");
+			check(HomeBeds.isAtHome(player, level, bedPos), "sleeping in that bed counts as sleeping at home");
+		});
+	}
+
+	/**
+	 * Three days without sleeping at home makes you Drowsy, coffee holds it off, and lying down in
+	 * your home bed starts the count again.
+	 */
+	private static void drowsiness(ClientGameTestContext ctx, TestServerContext server, BlockPos floor) {
+		server.runCommand("gamemode survival @a");
+		server.runOnServer(s -> {
+			ServerPlayer player = player(s);
+			player.removeAllEffects();
+			player.setAttached(sinceHomeRest(), 1_000_000);
+		});
+		waitForServer(ctx, server, s -> player(s).hasEffect(EspressoContent.DROWSY), 60, "three days away from home makes you Drowsy");
+
+		server.runOnServer(s -> {
+			ServerPlayer player = player(s);
+			player.removeAllEffects();
+			player.addEffect(new MobEffectInstance(EspressoContent.CAFFEINATED, 1200));
+		});
+		ctx.waitTicks(45);
+		check(!server.computeOnServer(s -> player(s).hasEffect(EspressoContent.DROWSY)), "being Caffeinated holds Drowsy off");
+
+		server.runOnServer(s -> {
+			ServerPlayer player = player(s);
+			player.removeAllEffects();
+			player.startSleeping(floor.above());
+			int since = player.getAttachedOrElse(sinceHomeRest(), -1);
+			player.stopSleeping();
+			check(since == 0, "lying down in the home bed starts the count again (got " + since + ")");
+		});
+		ctx.waitTicks(45);
+		check(!server.computeOnServer(s -> player(s).hasEffect(EspressoContent.DROWSY)), "after sleeping at home there's no Drowsy");
+		server.runCommand("gamemode creative @a");
+	}
+
+	@SuppressWarnings("unchecked")
+	private static AttachmentType<Integer> sinceHomeRest() {
+		try {
+			Field field = Wellbeing.class.getDeclaredField("SINCE_HOME_REST");
+			field.setAccessible(true);
+			return (AttachmentType<Integer>) field.get(null);
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	/** A hostile mob that spawns naturally at night has 20% more health; by day it doesn't. */
+	private static void toughNights(ClientGameTestContext ctx, TestServerContext server, BlockPos at) {
+		server.runCommand("time set 6000");
+		ctx.waitTicks(3);
+		float day = server.computeOnServer(s -> naturalZombieHealth(s.overworld(), at));
+		// Espresso's longer day: 24000 ticks of daylight, then night, with midnight at 30000.
+		server.runCommand("time set 30000");
+		ctx.waitTicks(3);
+		check(server.computeOnServer(s -> s.overworld().isDarkOutside()), "it's dark outside at tick 30000");
+		float night = server.computeOnServer(s -> naturalZombieHealth(s.overworld(), at));
+		server.runCommand("time set 6000");
+		check(day == 20.0F, "a zombie spawning by day has its usual 20 health (got " + day + ")");
+		check(night == 24.0F, "a zombie spawning at night has 20% more health (got " + night + ")");
+	}
+
+	private static float naturalZombieHealth(ServerLevel level, BlockPos at) {
+		Zombie zombie = EntityTypes.ZOMBIE.create(level, EntitySpawnReason.NATURAL);
+		zombie.snapTo(at.getX() + 0.5, at.getY() + 1, at.getZ() + 0.5);
+		zombie.finalizeSpawn(level, level.getCurrentDifficultyAt(at), EntitySpawnReason.NATURAL, null);
+		float health = zombie.getMaxHealth();
+		zombie.discard();
+		return health;
+	}
+
+	/** The wandering trader has extra building-block trades with the Block Merchant on, and always buys roasted beans. */
+	private static void blockMerchant(TestServerContext server, BlockPos at) {
+		server.runOnServer(s -> {
+			ServerLevel level = s.overworld();
+			int with = traderOffers(level, at, true);
+			int without = traderOffers(level, at, false);
+			Config.blockMerchant = true;
+			check(with > without, "the Block Merchant adds trades (" + with + " with it, " + without + " without)");
+		});
+	}
+
+	/** How many trades a new wandering trader offers; checks it buys roasted coffee beans either way. */
+	private static int traderOffers(ServerLevel level, BlockPos at, boolean blockMerchant) {
+		Config.blockMerchant = blockMerchant;
+		WanderingTrader trader = EntityTypes.WANDERING_TRADER.create(level, EntitySpawnReason.COMMAND);
+		trader.snapTo(at.getX() + 0.5, at.getY() + 1, at.getZ() + 0.5);
+		int offers = trader.getOffers().size();
+		boolean buysBeans = trader.getOffers().stream().anyMatch(offer -> offer.getCostA().is(EspressoContent.ROASTED_COFFEE_BEANS));
+		trader.discard();
+		check(buysBeans, "the wandering trader buys roasted coffee beans");
+		return offers;
+	}
+
+	/** The café is one of the houses a plains village can build, and its structure file is there. */
+	private static void villageCafe(TestServerContext server) {
+		server.runOnServer(s -> {
+			StructureTemplatePool pool = s.registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL)
+					.getValue(Identifier.withDefaultNamespace("village/plains/houses"));
+			boolean inPool = ((StructureTemplatePoolAccessor) pool).espresso$templates().stream()
+					.anyMatch(element -> element.toString().contains(Espresso.MOD_ID + ":village/plains/cafe"));
+			check(inPool, "the café is in the plains village houses pool");
+			check(s.getStructureTemplateManager().get(Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "village/plains/cafe")).isPresent(),
+					"the café's structure file loads");
+		});
+	}
+
 	/** The hotbar, armour and off-hand stay with you; the rest of the inventory drops where you fell. */
 	private static void keepOnDeath(ClientGameTestContext ctx, TestServerContext server, BlockPos at) {
 		server.runCommand("gamemode survival @a");
@@ -179,15 +373,26 @@ public class EspressoClientTest implements FabricClientGameTest {
 		ctx.waitTicks(5);
 		server.runCommand("kill @a");
 		ctx.waitForScreen(DeathScreen.class);
-		server.runOnServer(s -> {
+		AssertionError whileDead = null;
+		try {
+			server.runOnServer(s -> {
 			boolean dropped = !s.overworld().getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(4),
 					item -> item.getItem().is(Items.COBBLESTONE)).isEmpty();
 			check(dropped, "the cobblestone from the inventory dropped where the player fell");
 			check(s.overworld().getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(4),
 					item -> item.getItem().is(Items.DIAMOND_PICKAXE)).isEmpty(), "the hotbar's pickaxe didn't drop");
-		});
+			});
+		} catch (AssertionError e) {
+			// Respawn first either way: a test world can't close while its player is dead.
+			whileDead = e;
+		}
 		ctx.runOnClient(mc -> mc.player.respawn());
-		waitForServer(ctx, server, s -> player(s).isAlive() && player(s).getInventory().getItem(0).is(Items.DIAMOND_PICKAXE), 200);
+		if (whileDead != null) {
+			ctx.waitForScreen(null);
+			throw whileDead;
+		}
+		waitForServer(ctx, server, s -> player(s).isAlive() && player(s).getInventory().getItem(0).is(Items.DIAMOND_PICKAXE), 200,
+				"the player respawns with the hotbar's pickaxe");
 		server.runOnServer(s -> {
 			ServerPlayer player = player(s);
 			check(player.getInventory().getItem(40).is(Items.SHIELD), "the off-hand shield came back too");
@@ -217,15 +422,15 @@ public class EspressoClientTest implements FabricClientGameTest {
 		return server.getPlayerList().getPlayers().getFirst();
 	}
 
-	/** Waits (up to {@code ticks}) until the condition holds on the server. */
-	private static void waitForServer(ClientGameTestContext ctx, TestServerContext server, Function<MinecraftServer, Boolean> condition, int ticks) {
+	/** Waits (up to {@code ticks}) until the condition holds on the server; {@code what} says what it's waiting for. */
+	private static void waitForServer(ClientGameTestContext ctx, TestServerContext server, Function<MinecraftServer, Boolean> condition, int ticks, String what) {
 		for (int i = 0; i < ticks; i++) {
 			if (server.computeOnServer(condition::apply)) {
 				return;
 			}
 			ctx.waitTick();
 		}
-		throw new AssertionError("Failed: timed out after " + ticks + " ticks");
+		throw new AssertionError("Failed: " + what + " (waited " + ticks + " ticks)");
 	}
 
 	private static void check(boolean ok, String what) {
