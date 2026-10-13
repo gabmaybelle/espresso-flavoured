@@ -3,8 +3,10 @@ package com.gabbymaybelle.espresso;
 import com.gabbymaybelle.espresso.client.EspressoSettingsScreen;
 import com.gabbymaybelle.espresso.compat.TrinketsCompat;
 import com.gabbymaybelle.espresso.content.CharmItem;
+import com.gabbymaybelle.espresso.content.CoffeeBushBlock;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import com.gabbymaybelle.espresso.content.EspressoMachineBlockEntity;
+import com.gabbymaybelle.espresso.content.Seat;
 import com.gabbymaybelle.espresso.mixin.StructureTemplatePoolAccessor;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -32,13 +34,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
+import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
@@ -78,6 +83,7 @@ public class EspressoClientTest implements FabricClientGameTest {
 			blockMerchant(server, work);
 			villageCafe(server);
 			charms(ctx, server, work.offset(-12, 0, 0));
+			cafeLife(ctx, server, work.offset(-12, 0, 12), home);
 			keepOnDeath(ctx, server, work.offset(0, 0, -12));
 		}
 	}
@@ -501,6 +507,117 @@ public class EspressoClientTest implements FabricClientGameTest {
 		ItemStack dropped = drops.isEmpty() ? ItemStack.EMPTY : drops.getFirst().getItem().copy();
 		drops.forEach(ItemEntity::discard);
 		return dropped;
+	}
+
+	/**
+	 * The everyday café things: sitting on stairs, growing and picking a coffee bush, setting a mug
+	 * down and picking it up, a canister of beans, waking Well Rested after sleeping while Cozy,
+	 * Bean Coins for advancements, and a master barista's coin trades.
+	 */
+	private static void cafeLife(ClientGameTestContext ctx, TestServerContext server, BlockPos at, BlockPos home) {
+		server.runCommand("gamemode survival @a");
+		server.runOnServer(s -> {
+			ServerLevel level = s.overworld();
+			ServerPlayer player = player(s);
+			player.getInventory().clearContent();
+			player.teleportTo(at.getX() + 0.5, at.getY() + 1, at.getZ() - 1.5);
+			for (BlockPos pos : BlockPos.betweenClosed(at.offset(-3, 0, -3), at.offset(6, 0, 3))) {
+				level.setBlockAndUpdate(pos, Blocks.GRASS_BLOCK.defaultBlockState());
+				level.setBlockAndUpdate(pos.above(), Blocks.AIR.defaultBlockState());
+				level.setBlockAndUpdate(pos.above(2), Blocks.AIR.defaultBlockState());
+			}
+
+			// Sitting: an upright stair with an empty hand, and crouching (standing up) ends it.
+			BlockPos stair = at.above();
+			level.setBlockAndUpdate(stair, Blocks.OAK_STAIRS.defaultBlockState());
+			use(player, level, ItemStack.EMPTY, stair);
+			check(player.getVehicle() instanceof Seat, "using stairs with an empty hand sits you down (riding " + player.getVehicle() + ")");
+			Entity seat = player.getVehicle();
+			player.stopRiding();
+			seat.tick();
+			check(!seat.isAlive(), "the seat goes away when you stand up");
+
+			// A coffee bush: plant the cherries, bone meal it to full size, pick it.
+			BlockPos bush = at.offset(3, 1, 0);
+			use(player, level, new ItemStack(EspressoContent.COFFEE_CHERRIES), bush.below());
+			check(level.getBlockState(bush).is(EspressoContent.COFFEE_BUSH), "coffee cherries plant a coffee bush");
+			for (int i = 0; i < CoffeeBushBlock.MAX_AGE; i++) {
+				BoneMealItem.growCrop(new ItemStack(Items.BONE_MEAL), level, bush);
+			}
+			check(level.getBlockState(bush).getValue(CoffeeBushBlock.AGE) == CoffeeBushBlock.MAX_AGE, "bone meal grows the bush to full size");
+			check(level.getBlockState(bush.above()).is(EspressoContent.COFFEE_BUSH), "a grown bush is two blocks tall");
+			use(player, level, ItemStack.EMPTY, bush);
+			List<ItemEntity> picked = level.getEntitiesOfClass(ItemEntity.class, new AABB(bush).inflate(2),
+					item -> item.getItem().is(EspressoContent.COFFEE_CHERRIES));
+			int cherries = picked.stream().mapToInt(item -> item.getItem().getCount()).sum();
+			picked.forEach(ItemEntity::discard);
+			check(cherries >= 2 && cherries <= 3, "picking a full bush gives two or three cherries (got " + cherries + ")");
+			check(level.getBlockState(bush).getValue(CoffeeBushBlock.AGE) == CoffeeBushBlock.TALL_AGE, "a picked bush goes back to growing");
+
+			// A mug: crouch and use it on a surface to set it down; use it again to pick it up.
+			BlockPos table = at.offset(-2, 1, 0);
+			level.setBlockAndUpdate(table, Blocks.OAK_PLANKS.defaultBlockState());
+			ItemStack mug = new ItemStack(EspressoContent.ESPRESSO);
+			player.setShiftKeyDown(true);
+			use(player, level, mug, table);
+			player.setShiftKeyDown(false);
+			check(level.getBlockState(table.above()).is(EspressoContent.PLACED_MUG), "crouch-using an Espresso sets the mug down");
+			use(player, level, ItemStack.EMPTY, table.above());
+			check(level.getBlockState(table.above()).isAir(), "using the set-down mug picks it up");
+			check(player.getMainHandItem().is(EspressoContent.ESPRESSO), "and the same Espresso comes back (got " + player.getMainHandItem() + ")");
+			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+
+			// A canister: put beans in, take them out again.
+			BlockPos canister = at.offset(-2, 1, 2);
+			level.setBlockAndUpdate(canister, EspressoContent.CANISTER_BLOCK.defaultBlockState());
+			use(player, level, new ItemStack(EspressoContent.ROASTED_COFFEE_BEANS, 20), canister);
+			check(player.getMainHandItem().isEmpty(), "the canister takes the beans");
+			use(player, level, ItemStack.EMPTY, canister);
+			check(player.getInventory().countItem(EspressoContent.ROASTED_COFFEE_BEANS) == 20, "an empty hand takes the beans back out ("
+					+ player.getInventory().countItem(EspressoContent.ROASTED_COFFEE_BEANS) + ")");
+		});
+		// Stocked Up (the canister) is an Espresso advancement, so it pays a Bean Coin.
+		waitForServer(ctx, server, s -> player(s).getInventory().countItem(EspressoContent.BEAN_COIN) >= 1, 60,
+				"an Espresso advancement (Stocked Up) pays a Bean Coin");
+
+		// Sleeping while Cozy wakes you Well Rested.
+		server.runCommand("time set 30000");
+		server.runOnServer(s -> {
+			ServerPlayer player = player(s);
+			player.addEffect(new MobEffectInstance(EspressoContent.COZY, 2400));
+			player.startSleeping(home.above());
+		});
+		// Lying down this way doesn't count towards skipping the night, so wake up as morning would,
+		// once the player has slept long enough for the game to count it (100 ticks).
+		waitForServer(ctx, server, s -> player(s).isSleepingLongEnough(), 200, "the player sleeps long enough to count");
+		server.runOnServer(s -> {
+			player(s).stopSleepInBed(false, true);
+			check(player(s).hasEffect(EspressoContent.WELL_RESTED), "sleeping the night through while Cozy wakes you Well Rested");
+		});
+		server.runCommand("time set 6000");
+
+		// A master barista takes Bean Coins: the Golden Mug for 8, and three Barista's Reserve for 1.
+		server.runOnServer(s -> {
+			ServerLevel level = s.overworld();
+			Villager barista = EntityTypes.VILLAGER.create(level, EntitySpawnReason.COMMAND);
+			barista.snapTo(at.getX() + 0.5, at.getY() + 1, at.getZ() + 3.5);
+			barista.setVillagerData(barista.getVillagerData().withProfession(s.registryAccess(), EspressoContent.BARISTA).withLevel(5));
+			boolean goldenMug = barista.getOffers().stream().anyMatch(offer -> offer.getResult().is(EspressoContent.GOLDEN_MUG)
+					&& offer.getCostA().is(EspressoContent.BEAN_COIN) && offer.getCostA().getCount() == 8);
+			boolean reserve = barista.getOffers().stream().anyMatch(offer -> offer.getResult().is(EspressoContent.BARISTAS_RESERVE)
+					&& offer.getResult().getCount() == 3 && offer.getCostA().is(EspressoContent.BEAN_COIN) && offer.getCostA().getCount() == 1);
+			barista.discard();
+			check(goldenMug, "a master barista sells the Golden Mug for 8 Bean Coins");
+			check(reserve, "a master barista sells three Barista's Reserve for a Bean Coin");
+		});
+		server.runCommand("gamemode creative @a");
+	}
+
+	/** Right-clicks the top of a block with this item, as a player would. */
+	private static void use(ServerPlayer player, ServerLevel level, ItemStack stack, BlockPos pos) {
+		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+		player.gameMode.useItemOn(player, level, stack, InteractionHand.MAIN_HAND,
+				new BlockHitResult(Vec3.atCenterOf(pos).add(0, 0.5, 0), Direction.UP, pos, false));
 	}
 
 	/** The hotbar, armour and off-hand stay with you; the rest of the inventory drops where you fell. */
