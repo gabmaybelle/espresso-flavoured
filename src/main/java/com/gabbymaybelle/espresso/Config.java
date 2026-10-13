@@ -17,7 +17,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public final class Config {
 	private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
 	/** Written to the file, so a later version can tell an older file apart if it ever needs to change one. */
-	private static final int CONFIG_VERSION = 1;
+	private static final int CONFIG_VERSION = 2;
 
 	/** Creeper explosions break blocks (vanilla). Off: they still hurt, but spare builds. */
 	public static boolean creeperGriefing = false;
@@ -68,7 +68,7 @@ public final class Config {
 	/** Drowsy after three days without sleeping at home; Hungry too if you haven't eaten in that time. */
 	public static boolean drowsiness = true;
 	/** After three days away, coffee only holds Drowsy off for a while, then you crash. Off: coffee holds it off for as long as you keep drinking. */
-	public static boolean caffeineCrash = true;
+	public static boolean caffeineCrash = false;
 	/** The espresso machine only brews on a coffee bar. */
 	public static boolean coffeeBarRequired = true;
 	/** How tall sugar cane grows (vanilla: 3). */
@@ -110,7 +110,8 @@ public final class Config {
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
 		toughNights = bool(props, "toughNights", toughNights);
 		drowsiness = bool(props, "drowsiness", drowsiness);
-		caffeineCrash = bool(props, "caffeineCrash", caffeineCrash);
+		// Version 2 made the caffeine crash (and Hungry with it) an opt-in, so older files get it off once.
+		caffeineCrash = integer(props, "configVersion", CONFIG_VERSION) < 2 ? false : bool(props, "caffeineCrash", caffeineCrash);
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
 		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
 		lusherRivers = bool(props, "lusherRivers", lusherRivers);
@@ -161,8 +162,8 @@ public final class Config {
 					+ "keepHotbarOnDeath: keep your hotbar, armour, off-hand and worn charms when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
-					+ "drowsiness: Drowsy after three days without sleeping at home (any bed within your safe home radius), and Hungry if you haven't eaten in that time either\n"
-					+ "caffeineCrash: past three days away, coffee holds off Drowsy for a while and then you crash (off: it holds it off as long as you keep drinking)\n"
+					+ "drowsiness: Drowsy after three days without sleeping at home (any bed within your safe home radius); coffee holds it off while it lasts\n"
+					+ "caffeineCrash: a harder Drowsy: coffee only holds it off for a day and then you crash, and three days without eating as well makes you Hungry\n"
 					+ "coffeeBarRequired: the espresso machine only brews on top of a coffee bar\n"
 					+ "sugarCaneHeight: how tall sugar cane grows (vanilla 3)\n"
 					+ "longerDays needs a restart; everything else applies straight away");

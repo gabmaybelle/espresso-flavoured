@@ -13,7 +13,7 @@
 
 ### Café charms
 - Eight small charms, each with one gentle perk: the **Lucky Bean** (+1 Luck), the **Thermos** (coffee and cocoa effects last a quarter longer), the **Pocket Hearth** (powder snow can't freeze you, and you can walk on it), **Reading Socks** (step up a full block without jumping), the **Café Parasol** (fall three more blocks before it hurts), the **Knit Beanie** (Cozy heals you anywhere, not just near home), the **Ember Glove** (ores, sand, cobblestone and logs drop smelted as you mine them; crouch to mine normally, and there's no furnace XP) and the **Copper Tamper** (15% more damage to hostile mobs, and only them).
-- With **Trinkets Updated** installed (it's in the Espresso Flavoured pack), they're worn in trinket slots: right-click one to put it on. The Pocket Hearth and Copper Tamper share a new two-deep Pocket slot. The Lucky Bean, Thermos, Parasol and Beanie show on your character. Without Trinkets, a charm works from anywhere in your inventory.
+- With **Trinkets Updated** installed (it's in the Espresso Flavoured pack), they're worn in trinket slots: right-click one to put it on. The Pocket Hearth and Copper Tamper share a new two-deep Pocket slot. The Lucky Bean, Thermos, Parasol and Beanie show on your character. Without Trinkets, a charm works in your off-hand, so you pick one at a time, and All Dressed Up asks you to carry all eight instead.
 - Each master barista sells one cosy charm for 2 Bean Coins and one of the Glove or Tamper for 3, picked when they reach master, so different cafés have different charms. Café chests hold one about one time in five, and village houses now and then.
 - A new advancement, **All Dressed Up**: wear all eight at once. The field guide has a page on them.
 
@@ -36,8 +36,8 @@
 - **Lusher water, like a lush cave come up to the light:** moss patches spread along the banks, sprouting moss carpet, grass and azaleas (some flowering); little clay pools of big and small dripleaf sit at the water's edge; there's more moss at the waterline, and the odd small cluster of lily pads (not so many that they get in the way of boats). Where there's clay in the water, the bank turns to mud and fades out through patchy mud, packed mud and rooted dirt to coarse dirt among the grass.
 - **Lusher Rivers is on with Terralith too** (it used to switch itself off). Like all of it, this only changes land you haven't explored yet.
 - **Water lilies:** a lily pad with a cactus flower blooming on it, right on the water. Bone meal a lily pad to make one bloom, and look for the odd one among the lily pads by rivers and ponds in new land.
-- **Spawn Gazebo:** with the standalone Spawn Gazebo mod installed, Espresso leaves the gazebo and its protection to it (its two gazebo settings are greyed out) and hands the starter kit straight to each player.
 - **A gazebo at spawn:** new worlds start in a little round stone gazebo, built from whatever wood grows nearby (sandstone in deserts and badlands): eight stripped-log pillars of that wood on a round plinth, a ring of arches, a weathered copper dome with azaleas creeping over it and a lightning rod on top, and lanterns hanging under the eaves and flanking the steps. A spore blossom hangs over a glowstone floor, flower pots hold saplings and a cactus for your first garden, four decorated pots hide mangrove propagules, bamboo and seeds, and the starter kit waits in the chest. It's protected: outside creative it can't be broken or built on, and explosions, fire and pistons leave it alone. Switch off "Protect the Gazebo" in the settings to remodel it. Building it also moves the world spawn to the middle of the gazebo and sets the `spawn_radius` game rule to 0, so everyone starts inside it.
+- **Spawn Gazebo:** with the standalone Spawn Gazebo mod installed, Espresso leaves the gazebo and its protection to it (its two gazebo settings are greyed out) and hands the starter kit straight to each player.
 - Rest spots no longer have a dirt path, and they keep to dry land (one could end up standing in a lake). Village cafés keep a little potted cactus on their chest.
 - **The espresso machine looks busy while it brews:** wisps of steam rise under the brew head, it hisses softly now and then, and it gives off a little light, so a café at night has a glow behind the counter.
 
@@ -50,6 +50,9 @@
 - With **JEI**: a page for what the espresso machine brews (beans, decaf beans, the Barista's Reserve and cocoa mix, with the grounds they leave), and a note on where water lilies come from.
 - The espresso machine's recipe now also shows up in the recipe book when you pick up a lightning rod.
 - Canisters and glass jars have their own sounds: a soft rustle as things go in and out, with a ceramic tink (or a glass clink) of the lid.
+
+### Looking after yourself
+- Drowsy is simpler: three days away from home makes you Drowsy, and coffee holds it off for as long as it lasts. The caffeine crash, and Hungry from not eating, now only happen with the **Caffeine Crash** setting, which is off by default (and switched off once in existing settings files).
 
 ### Fixes
 - Breaking a ripe coffee bush no longer drops its cherries twice.

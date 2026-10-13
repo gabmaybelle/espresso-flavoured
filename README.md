@@ -14,15 +14,15 @@ Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival k
 
 **Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher. A clock in the corner of your choice keeps the time, and at 6 PM, an hour before dark, "The sun's getting real low" appears above your hotbar.
 
-**Looking after yourself.** Natural healing needs you to have eaten recently. Spend three days without sleeping in your own bed and you become Drowsy: too tired to sprint, and slower to mine and walk. A bed in the mine won't fix it; only a night at home will, so long trips end with the walk back. Coffee can buy you up to a day more, but when it wears off you crash, and only home will fix that. Go those three days without eating as well, and you'll get Hungry too.
+**Looking after yourself.** Natural healing needs you to have eaten recently. Spend three days without sleeping in your own bed and you become Drowsy: too tired to sprint, and slower to mine and walk. A bed in the mine won't fix it; only a night at home will, so long trips end with the walk back. Coffee holds it off while it lasts. For more of a challenge, the Caffeine Crash setting makes coffee only buy a day before you crash, and makes you Hungry too if you also go those three days without eating.
 
 **Coffee.** Coffee bushes grow wild in jungles and savannas. Roast the cherries, then set an espresso machine on a coffee bar (a stone-topped cabinet counter, in every wood) and brew Espresso in it: beans on top, mugs below, just like a brewing stand (hoppers work too). Mugs are shaped from clay, fired in a furnace, and dyed any colour; your coffee stays in the mug you chose, from Espresso to Latte (add milk) to Mocha (add cocoa), and you get the mug back when you drink. Crouch to set a mug down on a table or shelf, empty or full. Sweeten things up with Vanilla Syrup (honey and sugar) for the house special, a Vanilla Latte.
 
 **The café.** Every Espresso advancement pays you a Bean Coin, and a master barista takes them: eight buy the Golden Mug (coffee lasts longer from it), and a coin or two buys a treat. Clay canisters, dyeable like mugs, hold four stacks of anything that stacks, show what is inside on a little label, and work with hoppers. Glass jars do the same, and you can see what is inside; fill one with honey bottles for a honey jar.
 
-**Decaf.** Wash roasted beans in water for decaf beans, and any coffee you brew from them is decaf all the way to a vanilla latte. Decaf makes you Cozy: you heal slowly near your home bed, sleeping while Cozy wakes you Well Rested with two golden hearts, and a decaf after a caffeine crash softens it.
+**Decaf.** Wash roasted beans in water for decaf beans, and any coffee you brew from them is decaf all the way to a vanilla latte. Decaf makes you Cozy: you heal slowly near your home bed, sleeping while Cozy wakes you Well Rested with two golden hearts, and with Caffeine Crash on, a decaf softens a crash.
 
-**Café charms.** Eight small charms, each with one gentle perk: a Lucky Bean, a Thermos that makes coffee last longer, a Pocket Hearth against the cold, Reading Socks that step up full blocks, a Café Parasol that softens falls, a Knit Beanie that keeps Cozy healing you away from home, an Ember Glove that smelts what you mine, and a Copper Tamper that hits monsters harder. A master barista sells a couple for Bean Coins, and they turn up in café and village chests. With Trinkets Updated they go in trinket slots; without it they work from your inventory.
+**Café charms.** Eight small charms, each with one gentle perk: a Lucky Bean, a Thermos that makes coffee last longer, a Pocket Hearth against the cold, Reading Socks that step up full blocks, a Café Parasol that softens falls, a Knit Beanie that keeps Cozy healing you away from home, an Ember Glove that smelts what you mine, and a Copper Tamper that hits monsters harder. A master barista sells a couple for Bean Coins, and they turn up in café and village chests. With Trinkets Updated they go in trinket slots; without it, a charm works in your off-hand, one at a time.
 
 **The barista.** Villagers can take an espresso machine as their workstation and become baristas. They trade in beans, mugs, drinks, bakes and café decor, and a master barista sells the Barista's Reserve for Bean Coins: rare beans that brew a Ristretto, the only coffee strong enough for Speed II and Haste II. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
 
@@ -40,7 +40,7 @@ Every rule can be switched off or adjusted in `config/espresso_flavoured.propert
 
 Espresso Flavoured Core needs only Fabric API. It notices a few other mods when they're there:
 
-- **Trinkets Updated:** the café charms go in trinket slots (right-click to wear one) and stay with you on death. Without it, charms work from anywhere in your inventory.
+- **Trinkets Updated:** the café charms go in trinket slots (right-click to wear one) and stay with you on death. Without it, a charm works in your off-hand, so you choose one at a time.
 - **Jade:** placed mugs show their drink, coffee bushes how ripe they are, and the espresso machine how its brew is going.
 - **JEI:** a page for what the espresso machine brews, and a note on where water lilies come from.
 - **Iris:** shaders keep time with the longer days (and with any other mod's or datapack's day length).

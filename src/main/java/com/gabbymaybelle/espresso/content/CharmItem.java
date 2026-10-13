@@ -31,7 +31,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 /**
  * Café charms: small things worn in Trinkets slots (necklace, belt, back, shoes, glove, pocket) that
- * each give one gentle perk. Without Trinkets installed they work from anywhere in the inventory.
+ * each give one gentle perk. Without Trinkets installed, a charm works in your off-hand, so you pick one at a time.
  * A master barista sells a couple for Bean Coins, and they turn up now and then in café and village chests.
  */
 public class CharmItem extends Item implements TooltipLines {
@@ -54,16 +54,22 @@ public class CharmItem extends Item implements TooltipLines {
 	 * Trinkets Updated is installed: charms only work when worn in their slot. This checks for Trinkets
 	 * Updated itself, not just "trinkets": the original Trinkets, and Accessories' compatibility layer,
 	 * also call themselves "trinkets" but don't have the API TrinketsCompat uses, so with them charms
-	 * work from the inventory instead of crashing the game.
+	 * work from the off-hand instead of crashing the game.
 	 */
 	public static final boolean TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets_updated");
 
-	/** Whether this player is wearing (or, without Trinkets, carrying) a charm. */
+	/** Whether this player is wearing (or, without Trinkets, holding in the off-hand) a charm. */
 	public static boolean isWorn(LivingEntity entity, Item charm) {
 		if (!(entity instanceof Player player)) {
 			return false;
 		}
-		return TRINKETS ? TrinketsCompat.isEquipped(player, charm) : player.getInventory().contains(new ItemStack(charm));
+		return TRINKETS ? TrinketsCompat.isEquipped(player, charm) : player.getOffhandItem().is(charm);
+	}
+
+	/** Without Trinkets only one charm can be held at a time, so All Dressed Up asks you to carry all eight instead. */
+	private static boolean allDressedUp(Player player) {
+		return EspressoContent.CHARMS.stream().allMatch(charm -> TRINKETS ? TrinketsCompat.isEquipped(player, charm)
+				: player.getInventory().contains(new ItemStack(charm)));
 	}
 
 	/** Drops the Ember Glove smelts as they fall: raw ores, sand, cobblestone and logs (data/espresso_flavoured/tags/item/ember_glove_smelts.json). */
@@ -106,7 +112,7 @@ public class CharmItem extends Item implements TooltipLines {
 						attribute.removeModifier(perk.id());
 					}
 				}
-				if (server.getTickCount() % 40 == 0 && EspressoContent.CHARMS.stream().allMatch(charm -> isWorn(player, charm))) {
+				if (server.getTickCount() % 40 == 0 && allDressedUp(player)) {
 					EspressoAdvancements.award(player, "guide/all_dressed_up", "dressed");
 				}
 			}
