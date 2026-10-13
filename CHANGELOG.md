@@ -55,6 +55,7 @@
 - Drowsy is simpler: three days away from home makes you Drowsy, and coffee holds it off for as long as it lasts. The caffeine crash, and Hungry from not eating, now only happen with the **Caffeine Crash** setting, which is off by default (and switched off once in existing settings files).
 
 ### Fixes
+- Building the spawn gazebo no longer litters the ground: the parts of felled trees' canopies that hung outside its footprint used to rot away afterwards, scattering sticks and saplings, and two-block flowers dropped as they were cleared. Both go cleanly now.
 - A full hunger bar with no saturation left no longer locks you out of both eating and healing (the game refuses food at a full bar, and the "regen needs saturation" rule refused to heal). A full bar now counts as fed: you heal slowly, that costs hunger as in vanilla, and a notch soon frees up to eat.
 - Breaking a ripe coffee bush no longer drops its cherries twice.
 - Decaf drinks keep their extras: a decaf pumpkin spice latte still makes you Warm, decaf iced coffee still gives Fire Resistance, and so on. Only the caffeine is swapped for Cozy.
