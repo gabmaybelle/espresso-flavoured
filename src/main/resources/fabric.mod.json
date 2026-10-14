@@ -41,10 +41,16 @@
 		"espresso_flavoured.client.mixins.json"
 	],
 	"depends": {
+		"spawn_gazebo": ">=1.1.0",
 		"fabricloader": ">=0.19.5",
 		"fabric-api": "*",
 		"minecraft": "~26.3",
 		"java": ">=25"
+	},
+	"custom": {
+		"spawn_gazebo": {
+			"starter_kit": "espresso_flavoured:chests/spawn_kit"
+		}
 	},
 	"suggests": {
 		"trinkets_updated": "*",

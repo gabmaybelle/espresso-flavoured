@@ -2,8 +2,7 @@ package com.gabbymaybelle.espresso.client;
 
 import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.ServerSettings;
-import com.gabbymaybelle.espresso.content.GazeboGuard;
-import com.gabbymaybelle.espresso.content.SpawnGazebo;
+import com.gabbymaybelle.spawngazebo.client.SettingsScreen;
 import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,8 @@ import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.server.IntegratedServer;
@@ -71,23 +72,12 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 				server(radius("sugarCaneHeight", Config.sugarCaneHeight, 3, 8, v -> Config.sugarCaneHeight = v)));
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.world"));
-		if (SpawnGazebo.STANDALONE) {
-			list.addHeader(Component.translatable("espresso_flavoured.options.spawn_gazebo_installed"));
-		}
-		OptionInstance<Boolean> spawnGazebo = server(toggle("spawnGazebo", Config.spawnGazebo, v -> Config.spawnGazebo = v));
-		OptionInstance<Boolean> protectGazebo = server(toggle("protectGazebo", Config.protectGazebo, v -> Config.protectGazebo = v));
-		list.addSmall(
-				server(toggle("lusherRivers", Config.lusherRivers, v -> Config.lusherRivers = v)),
-				spawnGazebo, protectGazebo);
-		if (SpawnGazebo.STANDALONE) {
-			// The standalone mod's settings decide; these two do nothing while it's installed.
-			for (OptionInstance<?> option : List.of(spawnGazebo, protectGazebo)) {
-				AbstractWidget widget = list.findOption(option);
-				if (widget != null) {
-					widget.active = false;
-				}
-			}
-		}
+		// The gazebo at spawn is Spawn Gazebo's (bundled), with its own settings screen.
+		list.addSmall(server(toggle("lusherRivers", Config.lusherRivers, v -> Config.lusherRivers = v)));
+		list.addBig(Button.builder(Component.translatable("espresso_flavoured.options.gazeboSettings"),
+						button -> minecraft.gui.setScreen(new SettingsScreen(this)))
+				.tooltip(Tooltip.create(Component.translatable("espresso_flavoured.options.gazeboSettings.tooltip")))
+				.build());
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.storage"));
 		list.addSmall(
@@ -116,11 +106,8 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		Config.save();
 		IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
 		if (server != null) {
-			// Hosting a LAN world: guests use the host's bundle setting, and hear whether the gazebo is protected.
-			server.execute(() -> {
-				ServerSettings.broadcast(server);
-				GazeboGuard.broadcast(server);
-			});
+			// Hosting a LAN world: guests use the host's bundle setting.
+			server.execute(() -> ServerSettings.broadcast(server));
 		}
 	}
 

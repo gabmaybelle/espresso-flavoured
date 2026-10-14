@@ -96,9 +96,9 @@ public class EspressoClientTest implements FabricClientGameTest {
 	private static void settingsFile() {
 		Path file = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
 		try {
-			Files.writeString(file, "protectGazebo=ture\ncreeperGriefing= TRUE \nfutureSetting=hello\n");
+			Files.writeString(file, "keepHotbarOnDeath=ture\ncreeperGriefing= TRUE \nfutureSetting=hello\n");
 			Config.load();
-			check(Config.protectGazebo, "a typo (\"ture\") leaves Protect the Gazebo on, its default");
+			check(Config.keepHotbarOnDeath, "a typo (\"ture\") leaves Keep Hotbar on Death on, its default");
 			check(Config.creeperGriefing, "\" TRUE \" reads as true");
 			String written = Files.readString(file);
 			check(written.contains("futureSetting=hello"), "a setting this version doesn't know is kept");
@@ -113,7 +113,7 @@ public class EspressoClientTest implements FabricClientGameTest {
 			throw new AssertionError("couldn't use the settings file", e);
 		} finally {
 			Config.creeperGriefing = false;
-			Config.protectGazebo = true;
+			Config.keepHotbarOnDeath = true;
 			Config.save();
 		}
 	}
@@ -127,11 +127,16 @@ public class EspressoClientTest implements FabricClientGameTest {
 		ctx.waitForScreen(TitleScreen.class);
 	}
 
-	/** A new world gets the gazebo, the first player's starter kit is in its chest, and everyone starts inside it. */
+	/**
+	 * A new world gets Spawn Gazebo's gazebo, its chest holds Espresso's kit (not Spawn Gazebo's own),
+	 * the first player claims it, and everyone starts inside the gazebo.
+	 */
 	private static void gazebo(ClientGameTestContext ctx, TestServerContext server) {
 		ctx.waitTicks(10);
-		CompoundTag spawn = server.computeOnServer(s -> s.getCommandStorage().get(Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "spawn")));
+		CompoundTag spawn = server.computeOnServer(s -> s.getCommandStorage().get(Identifier.fromNamespaceAndPath("spawn_gazebo", "spawn")));
 		check(spawn.getBooleanOr("chest", false), "a new world gets the gazebo with its starter chest");
+		check((Espresso.MOD_ID + ":chests/spawn_kit").equals(spawn.getStringOr("table", "")),
+				"the chest holds Espresso's starter kit (got " + spawn.getStringOr("table", "nothing") + ")");
 		check(spawn.getBooleanOr("claimed", false), "the first player to join claims the chest's kit");
 		int radius = server.computeOnServer(s -> s.overworld().getGameRules().get(GameRules.RESPAWN_RADIUS));
 		check(radius == 0, "the spawn radius is 0 (got " + radius + ")");

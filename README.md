@@ -47,7 +47,7 @@ Espresso Flavoured Core needs only Fabric API. It notices a few other mods when 
 - **Graves mods** (Universal Graves and others that take over death drops): your hotbar, armour, off-hand and worn charms are set aside first; the grave gets the rest.
 - **Towns and Towers:** its villages get cafés too, in the closest of Espresso's styles, and coffee turns up in its chests.
 - **Lootr:** the starter kit chest in the spawn gazebo is shared out per player.
-- **Spawn Gazebo** (the gazebo as a mod of its own): when it's installed, Espresso leaves the gazebo and its protection to it and hands the starter kit straight to each player; Spawn Gazebo's own chest is on top of that.
+- **Spawn Gazebo** is included: Espresso comes with Gabby's own Spawn Gazebo mod inside it, so there's nothing extra to install. Its settings (whether the gazebo is built, its starter chest, how far its protection reaches) are in Spawn Gazebo's own screen, reached from Espresso's settings with the Gazebo Settings button, or in `config/spawn_gazebo.properties`.
 - **Nightfall Clock:** hides its own clock and dusk message, since Espresso draws them.
 
 A few things are data, so a pack can change them without code:

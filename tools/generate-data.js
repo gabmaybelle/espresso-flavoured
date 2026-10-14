@@ -482,12 +482,10 @@ out('data/espresso_flavoured/function/starter_kit/give.mcfunction', [
 	'',
 ].join('\n'));
 out('data/espresso_flavoured/function/starter_kit.mcfunction', [
-	'# When the spawn gazebo was built (SpawnGazebo.java sets storage espresso_flavoured:spawn {chest:1b}), the kit is',
-	'# in its chest. With Lootr every player gets their own copy from it ({lootr:1b}); without it the chest',
-	'# is the first player\'s, and everyone after them is handed the kit as before.',
-	'execute unless data storage espresso_flavoured:spawn {chest:1b} run function espresso_flavoured:starter_kit/give',
-	'execute if data storage espresso_flavoured:spawn {chest:1b} unless data storage espresso_flavoured:spawn {lootr:1b} if data storage espresso_flavoured:spawn {claimed:1b} run function espresso_flavoured:starter_kit/give',
-	'execute if data storage espresso_flavoured:spawn {chest:1b} run data merge storage espresso_flavoured:spawn {claimed:1b}',
+	'# The gazebo at spawn is Spawn Gazebo\'s (bundled with Espresso). When it built the gazebo with its chest it',
+	'# sets storage spawn_gazebo:spawn {chest:1b}; the chest holds this kit (fabric.mod.json names it as the starter',
+	'# kit) and Spawn Gazebo hands later players a roll of it. Without the chest, everyone is handed the kit here.',
+	'execute unless data storage spawn_gazebo:spawn {chest:1b} run function espresso_flavoured:starter_kit/give',
 	'',
 ].join('\n'));
 
@@ -616,7 +614,5 @@ require('./generate-cafe.js');
 require('./generate-rest-spots.js');
 // Lusher rivers.
 require('./generate-rivers.js');
-// The spawn gazebo.
-require('./generate-spawn.js');
 
 console.log('espresso_data written to', ROOT);

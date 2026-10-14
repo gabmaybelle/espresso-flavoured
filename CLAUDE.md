@@ -2,14 +2,14 @@
 
 The mod at the heart of the Espresso Flavoured modpack (mod ID `espresso_flavoured`): a safe home
 radius, builds creepers can't wreck, longer days, keep-your-hotbar deaths, roomier bundles, a block
-merchant, the spawn gazebo, and a café (coffee you grow and brew, mugs, a barista). Fabric,
+merchant, the gazebo at spawn (Spawn Gazebo, bundled), and a café (coffee you grow and brew, mugs, a barista). Fabric,
 Minecraft 26.3. See README.md for what players get.
 
 ## Layout
 
 - `src/main/java/com/gabbymaybelle/espresso/`: `Espresso.java` (entrypoint, built-in packs),
   `Config.java` (`config/espresso_flavoured.properties`), the rules (`HomeBeds`, `KeepOnDeath`,
-  `Wellbeing`, `Nights`), `content/` (blocks, items, the espresso machine, the gazebo),
+  `Wellbeing`, `Nights`), `content/` (blocks, items, the espresso machine),
   `mixin/`, `client/` and `compat/` (Jade, JEI, Trinkets: all optional, compile-only).
 - `src/main/resources/resourcepacks/`: the built-in packs. `espresso_data` (recipes,
   advancements, the starter kit, trades) is always on.
@@ -29,11 +29,15 @@ Minecraft 26.3. See README.md for what players get.
 ## Gotchas
 
 - **`resourcepacks/espresso_data` is generated.** `node tools/generate-data.js` deletes the
-  whole folder and writes it again, running the café, rest-spot, river and gazebo generators
+  whole folder and writes it again, running the café, rest-spot and river generators
   (`generate-cafe.js` and so on) as it goes. Edit the scripts, never the generated files.
-- **The gazebo builder has a twin.** `content/SpawnGazebo.java` and `GazeboGuard.java` are also
-  the standalone Spawn Gazebo mod (github.com/gabmaybelle/spawn-gazebo). A fix to one usually
-  belongs in the other too. When Spawn Gazebo is installed, Core leaves the gazebo to it.
+- **The gazebo is Spawn Gazebo's.** `libs/spawn-gazebo-<version>.jar` (Gabby's own mod,
+  github.com/gabmaybelle/spawn-gazebo) is bundled jar-in-jar (`include` in build.gradle) and
+  required in fabric.mod.json; Espresso has no gazebo code of its own any more. fabric.mod.json's
+  `custom.spawn_gazebo.starter_kit` makes its chest hold Espresso's kit, and the starter kit
+  function reads storage `spawn_gazebo:spawn`. To take a new Spawn Gazebo: build it, copy the jar
+  into libs/, update the version in build.gradle and fabric.mod.json. (Until 2026-10-13 the two
+  carried duplicate copies of the builder, which had drifted.)
 - **The modpack carries a copy of this jar** (espresso-flavoured-pack, `overrides/mods/`).
   After a change players should get, the pack needs a jar built from a clean, committed `main`.
 - Keep the mod ID `espresso_flavoured`: worlds and configs depend on it.

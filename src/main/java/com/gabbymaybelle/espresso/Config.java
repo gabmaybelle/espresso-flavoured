@@ -27,7 +27,7 @@ public final class Config {
 	private static final List<String> KEYS = List.of("creeperGriefing", "endermanGriefing", "phantoms", "safeHomeRadius",
 			"blockMerchant", "bundleUnstackables", "longerDays", "clock", "clockPosition", "duskWarning", "keepHotbarOnDeath",
 			"regenNeedsSaturation", "toughNights", "drowsiness", "caffeineCrash", "coffeeBarRequired", "sugarCaneHeight",
-			"lusherRivers", "spawnGazebo", "protectGazebo", "configVersion");
+			"lusherRivers", "configVersion");
 	/** The file as it was read, so settings from a newer version (or added by hand) survive a save. */
 	private static Properties loaded = new Properties();
 
@@ -91,10 +91,7 @@ public final class Config {
 	 * lily pads. Read at startup.
 	 */
 	public static boolean lusherRivers = true;
-	/** A little stone gazebo at the world spawn of every new world. Read when a world is created. */
-	public static boolean spawnGazebo = true;
-	/** Nobody outside creative can break or build in the spawn gazebo, and explosions, fire and pistons leave it alone. */
-	public static boolean protectGazebo = true;
+	// The gazebo at spawn and its protection are Spawn Gazebo's (bundled): its settings are in config/spawn_gazebo.properties.
 
 	private Config() {
 	}
@@ -127,8 +124,6 @@ public final class Config {
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
 		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
 		lusherRivers = bool(props, "lusherRivers", lusherRivers);
-		spawnGazebo = bool(props, "spawnGazebo", spawnGazebo);
-		protectGazebo = bool(props, "protectGazebo", protectGazebo);
 		loaded = props;
 		// Only write when there's something to add: a new file, a new setting, or an older version.
 		if (!KEYS.stream().allMatch(props::containsKey) || integer(props, "configVersion", CONFIG_VERSION) < CONFIG_VERSION) {
@@ -158,8 +153,6 @@ public final class Config {
 		props.setProperty("coffeeBarRequired", Boolean.toString(coffeeBarRequired));
 		props.setProperty("sugarCaneHeight", Integer.toString(sugarCaneHeight));
 		props.setProperty("lusherRivers", Boolean.toString(lusherRivers));
-		props.setProperty("spawnGazebo", Boolean.toString(spawnGazebo));
-		props.setProperty("protectGazebo", Boolean.toString(protectGazebo));
 		props.setProperty("configVersion", Integer.toString(CONFIG_VERSION));
 		// Written to a temporary file first and then swapped in, so a crash part-way through never
 		// leaves a half-written or empty settings file.
@@ -177,8 +170,7 @@ public final class Config {
 					+ "clockPosition: top_right, top_left, bottom_right or bottom_left\n"
 					+ "duskWarning: \"The sun's getting real low\" above the hotbar at 6:00 PM, an hour before night\n"
 					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
-					+ "spawnGazebo: a little stone gazebo at the world spawn of new worlds\n"
-					+ "protectGazebo: the spawn gazebo can only be changed in creative, and explosions, fire and pistons leave it alone\n"
+					+ "(the gazebo at spawn is Spawn Gazebo's, bundled with Espresso: its settings are in spawn_gazebo.properties)\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour, off-hand and worn charms when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
