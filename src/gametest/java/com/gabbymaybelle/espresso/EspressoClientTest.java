@@ -97,7 +97,8 @@ public class EspressoClientTest implements FabricClientGameTest {
 	/**
 	 * The settings file: a typo keeps the default instead of switching a setting off, case and
 	 * spaces don't matter, a setting from a newer version survives, no temporary file is left
-	 * behind, and a complete file isn't rewritten just by loading it (so notes added by hand stay).
+	 * behind, a complete file isn't rewritten just by loading it (so notes added by hand stay), and
+	 * numbers past the sliders' limits are brought back to them.
 	 */
 	private static void settingsFile() {
 		Path file = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
@@ -115,11 +116,24 @@ public class EspressoClientTest implements FabricClientGameTest {
 			Files.writeString(file, complete);
 			Config.load();
 			check(Files.readString(file).equals(complete), "loading a complete file leaves it exactly as it was");
+
+			Files.writeString(file, "sugarCaneHeight=40\nbundleUnstackables=99\nsafeHomeRadius=500\n");
+			Config.load();
+			check(Config.sugarCaneHeight == 8 && Config.bundleUnstackables == 8 && Config.safeHomeRadius == 64,
+					"numbers past the sliders' limits are brought back to them (got " + Config.sugarCaneHeight + ", "
+							+ Config.bundleUnstackables + ", " + Config.safeHomeRadius + ")");
+			Files.writeString(file, "sugarCaneHeight=1\nbundleUnstackables=0\n");
+			Config.load();
+			check(Config.sugarCaneHeight == 3 && Config.bundleUnstackables == 1,
+					"numbers below the sliders' limits are brought up to them (got " + Config.sugarCaneHeight + ", " + Config.bundleUnstackables + ")");
 		} catch (IOException e) {
 			throw new AssertionError("couldn't use the settings file", e);
 		} finally {
 			Config.creeperGriefing = false;
 			Config.keepHotbarOnDeath = true;
+			Config.sugarCaneHeight = 5;
+			Config.bundleUnstackables = 4;
+			Config.safeHomeRadius = 32;
 			Config.save();
 		}
 	}

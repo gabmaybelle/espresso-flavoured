@@ -57,6 +57,7 @@
 ### Fixes
 - A full hunger bar with no saturation left no longer locks you out of both eating and healing (the game refuses food at a full bar, and the "regen needs saturation" rule refused to heal). A full bar now counts as fed: you heal slowly, that costs hunger as in vanilla, and a notch soon frees up to eat.
 - Safer settings: the settings file can't be left half-written or empty if the game crashes while saving it; a typo in a setting ("ture") keeps its default instead of quietly switching it off, with a note in the log saying which setting; and settings the mod doesn't know about, or notes you've added, are no longer wiped each time the game starts.
+- A number typed into the settings file beyond its slider's range (sugar cane height, bundle room, safe home radius) is brought back to the range when the game loads, instead of going past what the screen can show.
 - Breaking a ripe coffee bush no longer drops its cherries twice.
 - Decaf drinks keep their extras: a decaf pumpkin spice latte still makes you Warm, decaf iced coffee still gives Fire Resistance, and so on. Only the caffeine is swapped for Cozy.
 - The Golden Mug now stretches Cozy too, and hot chocolate calms a caffeine crash like decaf does.

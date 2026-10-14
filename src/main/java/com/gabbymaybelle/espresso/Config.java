@@ -27,6 +27,11 @@ public final class Config {
 	private static final List<String> KEYS = List.of("creeperGriefing", "endermanGriefing", "phantoms", "safeHomeRadius",
 			"blockMerchant", "bundleUnstackables", "longerDays", "keepHotbarOnDeath",
 			"regenNeedsSaturation", "toughNights", "drowsiness", "caffeineCrash", "coffeeBarRequired", "sugarCaneHeight", "configVersion");
+	/** The sliders' limits on the settings screen; the file is held to the same ones. */
+	public static final int MAX_SAFE_HOME_RADIUS = 64;
+	public static final int MAX_BUNDLE_UNSTACKABLES = 8;
+	public static final int MIN_SUGAR_CANE_HEIGHT = 3;
+	public static final int MAX_SUGAR_CANE_HEIGHT = 8;
 	/** The file as it was read, so settings from a newer version (or added by hand) survive a save. */
 	private static Properties loaded = new Properties();
 
@@ -82,9 +87,9 @@ public final class Config {
 		creeperGriefing = bool(props, "creeperGriefing", creeperGriefing);
 		endermanGriefing = bool(props, "endermanGriefing", endermanGriefing);
 		phantoms = bool(props, "phantoms", phantoms);
-		safeHomeRadius = integer(props, "safeHomeRadius", safeHomeRadius);
+		safeHomeRadius = Math.min(MAX_SAFE_HOME_RADIUS, integer(props, "safeHomeRadius", safeHomeRadius));
 		blockMerchant = bool(props, "blockMerchant", blockMerchant);
-		bundleUnstackables = Math.max(1, integer(props, "bundleUnstackables", bundleUnstackables));
+		bundleUnstackables = Math.max(1, Math.min(MAX_BUNDLE_UNSTACKABLES, integer(props, "bundleUnstackables", bundleUnstackables)));
 		longerDays = bool(props, "longerDays", longerDays);
 		keepHotbarOnDeath = bool(props, "keepHotbarOnDeath", keepHotbarOnDeath);
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
@@ -93,7 +98,7 @@ public final class Config {
 		// Version 2 made the caffeine crash (and Hungry with it) an opt-in, so older files get it off once.
 		caffeineCrash = integer(props, "configVersion", CONFIG_VERSION) < 2 ? false : bool(props, "caffeineCrash", caffeineCrash);
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
-		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
+		sugarCaneHeight = Math.max(MIN_SUGAR_CANE_HEIGHT, Math.min(MAX_SUGAR_CANE_HEIGHT, integer(props, "sugarCaneHeight", sugarCaneHeight)));
 		loaded = props;
 		// Only write when there's something to add: a new file, a new setting, or an older version.
 		if (!KEYS.stream().allMatch(props::containsKey) || integer(props, "configVersion", CONFIG_VERSION) < CONFIG_VERSION) {
@@ -128,9 +133,9 @@ public final class Config {
 					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
 					+ "endermanGriefing: endermen pick up blocks (vanilla behaviour)\n"
 					+ "phantoms: phantoms spawn for players who haven't slept (vanilla behaviour)\n"
-					+ "safeHomeRadius: no natural hostile spawns within this many blocks of your home bed (crouch + use a bed with an empty hand; 0 = off)\n"
+					+ "safeHomeRadius: no natural hostile spawns within this many blocks of your home bed (crouch + use a bed with an empty hand; 0 = off, up to 64)\n"
 					+ "blockMerchant: the wandering trader also sells building blocks\n"
-					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
+					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla, up to 8)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
 					+ "(the gazebo at spawn is Spawn Gazebo's, bundled with Espresso: its settings are in spawn_gazebo.properties)\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour, off-hand and worn charms when you die\n"
@@ -139,7 +144,7 @@ public final class Config {
 					+ "drowsiness: Drowsy after three days without sleeping at home (any bed within your safe home radius); coffee holds it off while it lasts\n"
 					+ "caffeineCrash: a harder Drowsy: coffee only holds it off for a day and then you crash, and three days without eating as well makes you Hungry\n"
 					+ "coffeeBarRequired: the espresso machine only brews on top of a coffee bar\n"
-					+ "sugarCaneHeight: how tall sugar cane grows (vanilla 3)\n"
+					+ "sugarCaneHeight: how tall sugar cane grows (3, as in vanilla, to 8)\n"
 					+ "longerDays needs a restart; everything else applies straight away");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);

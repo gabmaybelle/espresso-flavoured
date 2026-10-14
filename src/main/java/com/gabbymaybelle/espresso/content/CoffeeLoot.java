@@ -34,7 +34,7 @@ public final class CoffeeLoot {
 			RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
 			for (JsonElement json : pools.getAsJsonArray()) {
 				LootPool.CODEC.parse(ops, json)
-						.resultOrPartial(error -> Espresso.LOGGER.warn("Couldn't add coffee to {}: {}", key.identifier(), error))
+						.resultOrPartial(error -> Espresso.LOGGER.warn("Espresso Flavoured: couldn't add coffee to {}: {}", key.identifier(), error))
 						.ifPresent(table::pool);
 			}
 		});
@@ -44,7 +44,7 @@ public final class CoffeeLoot {
 		Map<Identifier, JsonElement> extras = new HashMap<>();
 		try (InputStream in = CoffeeLoot.class.getResourceAsStream("/espresso_flavoured/loot_inject.json")) {
 			if (in == null) {
-				Espresso.LOGGER.warn("espresso_flavoured/loot_inject.json is missing; no coffee in chests");
+				Espresso.LOGGER.warn("Espresso Flavoured: espresso_flavoured/loot_inject.json is missing; no coffee in chests");
 				return extras;
 			}
 			JsonObject root = JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject();
@@ -52,7 +52,7 @@ public final class CoffeeLoot {
 				extras.put(Identifier.parse(entry.getKey()), entry.getValue());
 			}
 		} catch (Exception e) {
-			Espresso.LOGGER.warn("Couldn't read espresso/loot_inject.json", e);
+			Espresso.LOGGER.warn("Espresso Flavoured: couldn't read espresso_flavoured/loot_inject.json", e);
 		}
 		return extras;
 	}

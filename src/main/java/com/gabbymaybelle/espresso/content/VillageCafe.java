@@ -91,7 +91,7 @@ public final class VillageCafe {
 				access.espresso$setRawTemplates(raw);
 				added++;
 			}
-			Espresso.LOGGER.info("Village cafés added to {} village houses pools{}", added, TEST_WEIGHT != null ? " (test weight " + TEST_WEIGHT + ")" : "");
+			Espresso.LOGGER.info("Espresso Flavoured: cafés added to {} village houses pools{}", added, TEST_WEIGHT != null ? " (test weight " + TEST_WEIGHT + ")" : "");
 		});
 	}
 }

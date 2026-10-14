@@ -43,7 +43,7 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		}
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.home"));
 		list.addSmall(
-				server(radius("safeHomeRadius", Config.safeHomeRadius, 0, 64, v -> Config.safeHomeRadius = v)),
+				server(radius("safeHomeRadius", Config.safeHomeRadius, 0, Config.MAX_SAFE_HOME_RADIUS, v -> Config.safeHomeRadius = v)),
 				server(toggle("keepHotbarOnDeath", Config.keepHotbarOnDeath, v -> Config.keepHotbarOnDeath = v)),
 				server(toggle("creeperGriefing", Config.creeperGriefing, v -> Config.creeperGriefing = v)),
 				server(toggle("endermanGriefing", Config.endermanGriefing, v -> Config.endermanGriefing = v)));
@@ -63,7 +63,7 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.coffee"));
 		list.addSmall(
 				server(toggle("coffeeBarRequired", Config.coffeeBarRequired, v -> Config.coffeeBarRequired = v)),
-				server(slider("sugarCaneHeight", Config.sugarCaneHeight, 3, 8, v -> Config.sugarCaneHeight = v)));
+				server(slider("sugarCaneHeight", Config.sugarCaneHeight, Config.MIN_SUGAR_CANE_HEIGHT, Config.MAX_SUGAR_CANE_HEIGHT, v -> Config.sugarCaneHeight = v)));
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.world"));
 		// The gazebo at spawn is Spawn Gazebo's (bundled), with its own settings screen.
@@ -74,7 +74,7 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.storage"));
 		list.addSmall(
-				server(slider("bundleUnstackables", Config.bundleUnstackables, 1, 8, v -> Config.bundleUnstackables = v)),
+				server(slider("bundleUnstackables", Config.bundleUnstackables, 1, Config.MAX_BUNDLE_UNSTACKABLES, v -> Config.bundleUnstackables = v)),
 				server(toggle("blockMerchant", Config.blockMerchant, v -> Config.blockMerchant = v)));
 
 		if (onServer) {
