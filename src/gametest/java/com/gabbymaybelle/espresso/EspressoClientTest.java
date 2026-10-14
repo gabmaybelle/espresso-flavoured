@@ -31,12 +31,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -44,11 +46,14 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.phys.AABB;
@@ -83,7 +88,8 @@ public class EspressoClientTest implements FabricClientGameTest {
 			blockMerchant(server, work);
 			villageCafe(server);
 			charms(ctx, server, work.offset(-12, 0, 0));
-			cafeLife(ctx, server, work.offset(-12, 0, 12), home);
+			// Clear of the gazebo's protected area (12 blocks from spawn), since this part places blocks as a player.
+			cafeLife(ctx, server, work.offset(-6, 0, 12), home);
 			keepOnDeath(ctx, server, work.offset(0, 0, -12));
 		}
 	}
@@ -138,6 +144,14 @@ public class EspressoClientTest implements FabricClientGameTest {
 		check((Espresso.MOD_ID + ":chests/spawn_kit").equals(spawn.getStringOr("table", "")),
 				"the chest holds Espresso's starter kit (got " + spawn.getStringOr("table", "nothing") + ")");
 		check(spawn.getBooleanOr("claimed", false), "the first player to join claims the chest's kit");
+		// A chestLoot in Spawn Gazebo's file that isn't a loot table id falls back to Espresso's kit, not Spawn Gazebo's.
+		String fallback = server.computeOnServer(s -> {
+			com.gabbymaybelle.spawngazebo.Config.chestLoot = "not a loot table id";
+			String table = com.gabbymaybelle.spawngazebo.Config.chestLootTable().toString();
+			com.gabbymaybelle.spawngazebo.Config.chestLoot = com.gabbymaybelle.spawngazebo.Config.STARTER_KIT;
+			return table;
+		});
+		check((Espresso.MOD_ID + ":chests/spawn_kit").equals(fallback), "a chestLoot that isn't an id falls back to Espresso's kit (got " + fallback + ")");
 		int radius = server.computeOnServer(s -> s.overworld().getGameRules().get(GameRules.RESPAWN_RADIUS));
 		check(radius == 0, "the spawn radius is 0 (got " + radius + ")");
 		ctx.takeScreenshot("espresso_gazebo");
@@ -236,7 +250,7 @@ public class EspressoClientTest implements FabricClientGameTest {
 				}
 			}
 			check(planks == 48, "the creeper's walls are all still there (" + planks + " of 48 planks)");
-			check(level.getEntitiesOfClass(net.minecraft.world.entity.monster.Creeper.class, new AABB(at).inflate(4)).isEmpty(), "the creeper exploded");
+			check(level.getEntitiesOfClass(Creeper.class, new AABB(at).inflate(4)).isEmpty(), "the creeper exploded");
 		});
 	}
 
@@ -457,7 +471,7 @@ public class EspressoClientTest implements FabricClientGameTest {
 	}
 
 	/** Wearing the charm gives the attribute bonus; taking it off removes it again. */
-	private static void expectAttribute(ClientGameTestContext ctx, TestServerContext server, net.minecraft.world.item.Item charm,
+	private static void expectAttribute(ClientGameTestContext ctx, TestServerContext server, Item charm,
 			Holder<Attribute> attribute, double bonus) {
 		double base = server.computeOnServer(s -> player(s).getAttributeValue(attribute));
 		server.runOnServer(s -> wear(player(s), charm));
@@ -469,7 +483,7 @@ public class EspressoClientTest implements FabricClientGameTest {
 	}
 
 	/** Puts a charm on: right-clicked into its slot with Trinkets, otherwise held in the off-hand. */
-	private static void wear(ServerPlayer player, net.minecraft.world.item.Item charm) {
+	private static void wear(ServerPlayer player, Item charm) {
 		ItemStack stack = new ItemStack(charm);
 		if (CharmItem.TRINKETS) {
 			player.setItemInHand(InteractionHand.MAIN_HAND, stack);
@@ -541,6 +555,31 @@ public class EspressoClientTest implements FabricClientGameTest {
 			player.stopRiding();
 			seat.tick();
 			check(!seat.isAlive(), "the seat goes away when you stand up");
+			// A tool in hand sits you down too; a block in hand places it instead.
+			use(player, level, new ItemStack(Items.IRON_AXE), stair);
+			check(player.getVehicle() instanceof Seat, "using stairs with an axe in hand sits you down");
+			seat = player.getVehicle();
+			player.stopRiding();
+			seat.tick();
+			// Standing up puts you on top of the bench, where the block would go: step off first.
+			player.teleportTo(at.getX() + 0.5, at.getY() + 1, at.getZ() - 1.5);
+			use(player, level, new ItemStack(Items.COBBLESTONE), stair);
+			check(player.getVehicle() == null && level.getBlockState(stair.above()).is(Blocks.COBBLESTONE),
+					"using stairs with a block in hand places the block instead (riding " + player.getVehicle() + ", above the stair: " + level.getBlockState(stair.above()) + ")");
+			level.setBlockAndUpdate(stair.above(), Blocks.AIR.defaultBlockState());
+			// The gazebo's own benches (wooden stairs), inside Spawn Gazebo's protected area, with a tool in hand.
+			BlockPos middle = level.getRespawnData().pos();
+			BlockPos bench = BlockPos.betweenClosedStream(middle.offset(-7, -3, -7), middle.offset(7, 3, 7))
+					.filter(pos -> level.getBlockState(pos).is(BlockTags.WOODEN_STAIRS) && level.getBlockState(pos).getValue(StairBlock.HALF) == Half.BOTTOM)
+					.map(BlockPos::immutable).findFirst().orElse(null);
+			check(bench != null, "the gazebo has a bench");
+			player.teleportTo(bench.getX() + 0.5, bench.getY() + 1, bench.getZ() - 1.5);
+			use(player, level, new ItemStack(Items.IRON_AXE), bench);
+			check(player.getVehicle() instanceof Seat, "the gazebo's bench seats you with an axe in hand, inside the protected area");
+			seat = player.getVehicle();
+			player.stopRiding();
+			seat.tick();
+			player.teleportTo(at.getX() + 0.5, at.getY() + 1, at.getZ() - 1.5);
 
 			// A coffee bush: plant the cherries, bone meal it to full size, pick it.
 			BlockPos bush = at.offset(3, 1, 0);

@@ -43,32 +43,14 @@ public final class Config {
 	public static boolean blockMerchant = true;
 	/** How many tools, armour pieces and other non-stacking items fit in one bundle. 1 is vanilla. */
 	public static int bundleUnstackables = 4;
-	/** The server's bundleUnstackables while playing on one (0 = not on a server, use our own). */
+	/** The server's bundleUnstackables while playing on one (0 = not on a server, use our own). Not a setting: set by ServerSettings. */
 	public static int serverBundleUnstackables = 0;
-
-	/** Tools per bundle right now: the server's setting when on a server, otherwise this game's. */
-	public static int bundleUnstackables() {
-		return serverBundleUnstackables > 0 ? serverBundleUnstackables : bundleUnstackables;
-	}
 	/** 20-minute days and 10-minute nights (vanilla: 10 and 10). */
 	public static boolean longerDays = true;
 	/** A day counter and clock in a corner of the screen (client side). */
 	public static boolean clock = true;
 	/** Which corner the clock sits in (client side). */
 	public static ClockPosition clockPosition = ClockPosition.TOP_RIGHT;
-
-	/** The corner of the screen the clock sits in. */
-	public enum ClockPosition {
-		TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT;
-
-		public boolean top() {
-			return this == TOP_RIGHT || this == TOP_LEFT;
-		}
-
-		public boolean right() {
-			return this == TOP_RIGHT || this == BOTTOM_RIGHT;
-		}
-	}
 	/** "The sun's getting real low" above the hotbar at 6:00 PM, an hour before night (client side). */
 	public static boolean duskWarning = true;
 	/** Keep the hotbar, armour, off-hand and (with Trinkets) worn charms on death; everything else drops. */
@@ -93,7 +75,25 @@ public final class Config {
 	public static boolean lusherRivers = true;
 	// The gazebo at spawn and its protection are Spawn Gazebo's (bundled): its settings are in config/spawn_gazebo.properties.
 
+	/** The corner of the screen the clock sits in. */
+	public enum ClockPosition {
+		TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT;
+
+		public boolean top() {
+			return this == TOP_RIGHT || this == TOP_LEFT;
+		}
+
+		public boolean right() {
+			return this == TOP_RIGHT || this == BOTTOM_RIGHT;
+		}
+	}
+
 	private Config() {
+	}
+
+	/** Tools per bundle right now: the server's setting when on a server, otherwise this game's. */
+	public static int bundleUnstackables() {
+		return serverBundleUnstackables > 0 ? serverBundleUnstackables : bundleUnstackables;
 	}
 
 	static void load() {

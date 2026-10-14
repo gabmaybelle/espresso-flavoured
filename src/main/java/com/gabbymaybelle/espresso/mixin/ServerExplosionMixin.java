@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * With creeper griefing off, no creeper's explosion breaks blocks: vanilla's (also handled in
- * CreeperMixin), any mod's creeper built on it, and any mob listed in the
- * {@code espresso_flavoured:spares_blocks} entity tag, for creeper-like mobs that aren't. This hooks
- * the step that breaks the blocks rather than the one that finds them, which Lithium replaces.
+ * With creeper griefing off, no creeper's explosion breaks blocks: vanilla's, any mod's creeper
+ * built on it, and any mob listed in the {@code espresso_flavoured:spares_blocks} entity tag, for
+ * creeper-like mobs that aren't. This hooks the step that breaks the blocks rather than the one
+ * that finds them, which Lithium replaces. The explosion still happens, so it still hurts.
  */
 @Mixin(ServerExplosion.class)
 public abstract class ServerExplosionMixin {

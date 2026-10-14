@@ -15,10 +15,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.timeline.Timelines;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.timeline.Timelines;
 
 /**
  * {@link #DAYS_AWAY} days away from your own bed (unless you're Caffeinated) make you Drowsy:
@@ -38,17 +38,28 @@ import net.minecraft.world.effect.MobEffects;
  */
 public final class Wellbeing {
 	private static final int CHECK_EVERY = 20;
+	/** How many in-game days away from home (or without a meal) before Drowsy (or Hungry) sets in. */
+	private static final int DAYS_AWAY = 3;
+	private static final int WELL_RESTED_TICKS = 6000;
+	/** For testing only: {@code -Despresso.testDayTicks=600} makes a "day" 30 seconds long. */
+	private static final int TEST_DAY = Integer.getInteger("espresso.testDayTicks", 0);
 
 	/** Ticks since the player last slept at home, counted while they're online. */
 	private static final AttachmentType<Integer> SINCE_HOME_REST = counter("time_since_home_rest");
+	/** Ticks since the player last ate, counted while they're online. */
+	private static final AttachmentType<Integer> SINCE_MEAL = counter("time_since_meal");
 	/** 0 = rested, 1 = holding off Drowsy with coffee, 2 = crashed, 3 = crashed but calmed by a decaf. Cleared by sleeping at home. */
 	private static final AttachmentType<Integer> CAFFEINE = counter("caffeine_state");
 	private static final int BORROWING = 1, CRASHED = 2, CALMED = 3;
 	/** Players who lay down while Cozy; they wake up Well Rested if they sleep the night through. */
 	private static final Set<UUID> COZY_SLEEPERS = new HashSet<>();
-	private static final int WELL_RESTED_TICKS = 6000;
-	/** Ticks since the player last ate, counted while they're online. */
-	private static final AttachmentType<Integer> SINCE_MEAL = counter("time_since_meal");
+
+	/**
+	 * One in-game day in ticks, read from the overworld's day timeline when the server starts or
+	 * reloads its data: 36000 with Espresso's longer days, 24000 in vanilla, or whatever another
+	 * mod's or datapack's timeline says.
+	 */
+	private static int dayTicks = 24000;
 
 	private Wellbeing() {
 	}
@@ -58,18 +69,12 @@ public final class Wellbeing {
 				builder -> builder.persistent(Codec.INT).initializer(() -> 0));
 	}
 
-	/** For testing only: {@code -Despresso.testDayTicks=600} makes a "day" 30 seconds long. */
-	private static final int TEST_DAY = Integer.getInteger("espresso.testDayTicks", 0);
-
-	/**
-	 * One in-game day in ticks, read from the overworld's day timeline when the server starts or
-	 * reloads its data: 36000 with Espresso's longer days, 24000 in vanilla, or whatever another
-	 * mod's or datapack's timeline says.
-	 */
-	private static int dayTicks = 24000;
-
 	private static int oneDay() {
 		return TEST_DAY > 0 ? TEST_DAY : dayTicks;
+	}
+
+	private static int daysAway() {
+		return DAYS_AWAY * oneDay();
 	}
 
 	/** The overworld day's length from the server's timeline data (vanilla's 24000 if it can't be read). */
@@ -81,13 +86,6 @@ public final class Wellbeing {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't read the day length; assuming 24000 ticks", e);
 			return 24000;
 		}
-	}
-
-	/** How many in-game days away from home (or without a meal) before Drowsy (or Hungry) sets in. */
-	private static final int DAYS_AWAY = 3;
-
-	private static int daysAway() {
-		return DAYS_AWAY * oneDay();
 	}
 
 	public static void ate(ServerPlayer player) {

@@ -135,9 +135,16 @@ out('placed_feature/waterline_rock.json', {
 	placement: [rarity(6), square, { type: 'minecraft:heightmap', heightmap: 'OCEAN_FLOOR' }, inBiome, filter(air, atWaterline)],
 });
 
+// Which placed features go where, in order, for EspressoContent (which reads this file at startup):
+// "temperate" by any water in temperate biomes (written by generate-rest-spots.js), "rivers" in the
+// water of rivers, "waterline" as local modifications before the plants, and "banks" last. The muddy
+// banks come first among the banks: after the clay (vanilla's and ours), then the lush patches, then
+// the plants, flowers and moss that grow on all of it.
+fs.writeFileSync(path.join(__dirname, '..', 'src', 'main', 'resources', 'espresso_flavoured', 'lusher_rivers.json'), JSON.stringify({
+	temperate: ['waterside_firefly_bush', 'waterside_lily_pads', 'waterside_water_lilies'],
+	rivers: ['river_seagrass', 'river_kelp', 'river_clay'],
+	waterline: ['waterline_moss', 'waterline_rock'],
+	banks: ['muddy_bank_fringe', 'muddy_bank_mix', 'muddy_bank_edge', 'lush_shore_moss', 'lush_shore_pool',
+		'river_bank_plants', 'river_bank_flowers', 'river_bank_moss'],
+}, null, 2) + '\n');
 console.log('lusher rivers written');
-module.exports = {
-	underwater: ['river_seagrass', 'river_kelp', 'river_clay'],
-	banks: ['muddy_bank_fringe', 'muddy_bank_mix', 'muddy_bank_edge', 'lush_shore_moss', 'lush_shore_pool', 'river_bank_plants', 'river_bank_flowers', 'river_bank_moss',
-		'waterline_moss', 'waterline_rock'],
-};

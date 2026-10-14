@@ -1,65 +1,71 @@
 package com.gabbymaybelle.espresso.content;
 
 import com.gabbymaybelle.espresso.Config;
-
 import com.gabbymaybelle.espresso.Espresso;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
-import java.util.function.Predicate;
-import net.minecraft.world.level.biome.Biomes;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.trading.TradeSet;
 import net.minecraft.world.item.component.Consumable;
-import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.trading.TradeSet;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -69,6 +75,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 /** Espresso Flavoured's blocks, items and effects. */
 public final class EspressoContent {
@@ -124,8 +131,7 @@ public final class EspressoContent {
 	public static final BlockEntityType<CanisterBlockEntity> CANISTER_ENTITY = Registry.register(
 			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("canister"), new BlockEntityType<>(CanisterBlockEntity::new, Set.of(CANISTER_BLOCK, GLASS_JAR_BLOCK)));
 
-	// ---------------------------------------------------------------- the barista
-	/** The espresso machine is the barista's workstation. */
+	// ---------------------------------------------------------------- sitting down
 	/**
 	 * The invisible seat you ride when sitting on stairs (see Seat). It has to be savable to be ridden;
 	 * an empty one removes itself straight away.
@@ -134,6 +140,8 @@ public final class EspressoContent {
 	public static final EntityType<Seat> SEAT = Registry.register(BuiltInRegistries.ENTITY_TYPE, SEAT_KEY,
 			EntityType.Builder.<Seat>of(Seat::new, MobCategory.MISC).sized(0.001F, 0.001F).noSummon().clientTrackingRange(10).build(SEAT_KEY));
 
+	// ---------------------------------------------------------------- the barista
+	/** The espresso machine is the barista's workstation. */
 	public static final ResourceKey<PoiType> BARISTA_POI = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id("barista"));
 	static {
 		PoiHelper.register(BARISTA_POI.identifier(), 1, 1, ESPRESSO_MACHINE);
@@ -160,9 +168,9 @@ public final class EspressoContent {
 	/** Every coffee bar's cupboard. */
 	public static final BlockEntityType<CoffeeBarBlockEntity> COFFEE_BAR_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
 			id("coffee_bar"), new BlockEntityType<>(CoffeeBarBlockEntity::new, Set.copyOf(COFFEE_BARS)));
-	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
 	/** A lily pad with a cactus flower blooming on it (see WaterLilyBlock). */
 	public static final Block WATER_LILY = registerBlock("water_lily", WaterLilyBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.LILY_PAD));
+	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
 	public static final Block PLACED_MUG = registerBlock("placed_mug", PlacedMugBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.3F)
 					.sound(SoundType.DECORATED_POT).noOcclusion().pushReaction(PushReaction.POPPED));
@@ -366,31 +374,51 @@ public final class EspressoContent {
 			// All in ONE modification, so they run in this order. Fabric applies separate modifications
 			// in the order of their ids (alphabetical), which put the muddy banks after the moss patches
 			// and the bank plants before the clay, and the ground shifted under things already planted.
+			// Which features go where, in order, from the generator that writes them (so the two can't
+			// drift apart): "temperate" by any water, "rivers" in the water, "waterline" first and "banks" last.
+			Map<String, List<String>> features = lusherRiverFeatures();
 			BiomeModifications.create(id("lusher_rivers")).add(ModificationPhase.ADDITIONS, rivers.or(temperate), (selection, context) -> {
 				BiomeModificationContext.GenerationSettingsContext generation = context.getGenerationSettings();
 				BiConsumer<GenerationStep.Decoration, String> add = (step, feature) -> generation.addFeature(step, placed(feature));
 				if (temperate.test(selection)) {
-					for (String feature : List.of("waterside_firefly_bush", "waterside_lily_pads", "waterside_water_lilies")) {
-						add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
-					}
+					features.get("temperate").forEach(feature -> add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature));
 				}
 				if (rivers.test(selection)) {
-					for (String feature : List.of("river_seagrass", "river_kelp", "river_clay")) {
-						add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
-					}
+					features.get("rivers").forEach(feature -> add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature));
 				}
-				for (String feature : List.of("waterline_moss", "waterline_rock")) {
-					add.accept(GenerationStep.Decoration.LOCAL_MODIFICATIONS, feature);
-				}
-				// Muddy banks where there's clay in the water, fading out through mixed mud to rooted and coarse
-				// dirt. After the clay (vanilla's and ours), then the lush patches, then the plants, flowers and
-				// moss that grow on all of it.
-				for (String feature : List.of("muddy_bank_fringe", "muddy_bank_mix", "muddy_bank_edge", "lush_shore_moss", "lush_shore_pool",
-						"river_bank_plants", "river_bank_flowers", "river_bank_moss")) {
-					add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature);
-				}
+				features.get("waterline").forEach(feature -> add.accept(GenerationStep.Decoration.LOCAL_MODIFICATIONS, feature));
+				features.get("banks").forEach(feature -> add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature));
 			});
 		}
+	}
+
+	/**
+	 * The lusher-rivers placed features by group, read from espresso_flavoured/lusher_rivers.json
+	 * (written by tools/generate-rivers.js alongside the features themselves). Empty groups if the
+	 * file is missing, so the rest of the mod still loads.
+	 */
+	private static Map<String, List<String>> lusherRiverFeatures() {
+		Map<String, List<String>> groups = new HashMap<>();
+		for (String group : List.of("temperate", "rivers", "waterline", "banks")) {
+			groups.put(group, List.of());
+		}
+		try (InputStream in = EspressoContent.class.getResourceAsStream("/espresso_flavoured/lusher_rivers.json")) {
+			if (in == null) {
+				Espresso.LOGGER.warn("espresso_flavoured/lusher_rivers.json is missing; no lusher rivers");
+				return groups;
+			}
+			JsonObject root = JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject();
+			for (String group : groups.keySet()) {
+				List<String> names = new ArrayList<>();
+				for (JsonElement name : root.getAsJsonArray(group)) {
+					names.add(name.getAsString());
+				}
+				groups.put(group, List.copyOf(names));
+			}
+		} catch (Exception e) {
+			Espresso.LOGGER.warn("Couldn't read espresso_flavoured/lusher_rivers.json; no lusher rivers", e);
+		}
+		return groups;
 	}
 
 	/** MobEffect's constructor is protected. */

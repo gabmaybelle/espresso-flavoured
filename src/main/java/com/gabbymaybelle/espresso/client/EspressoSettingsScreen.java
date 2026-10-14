@@ -69,7 +69,7 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.coffee"));
 		list.addSmall(
 				server(toggle("coffeeBarRequired", Config.coffeeBarRequired, v -> Config.coffeeBarRequired = v)),
-				server(radius("sugarCaneHeight", Config.sugarCaneHeight, 3, 8, v -> Config.sugarCaneHeight = v)));
+				server(slider("sugarCaneHeight", Config.sugarCaneHeight, 3, 8, v -> Config.sugarCaneHeight = v)));
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.world"));
 		// The gazebo at spawn is Spawn Gazebo's (bundled), with its own settings screen.
@@ -81,7 +81,7 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.storage"));
 		list.addSmall(
-				server(radius("bundleUnstackables", Config.bundleUnstackables, 1, 8, v -> Config.bundleUnstackables = v)),
+				server(slider("bundleUnstackables", Config.bundleUnstackables, 1, 8, v -> Config.bundleUnstackables = v)),
 				server(toggle("blockMerchant", Config.blockMerchant, v -> Config.blockMerchant = v)));
 
 		if (onServer) {
@@ -128,6 +128,15 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 				value, set::accept);
 	}
 
+	/** A slider for a count. */
+	private static OptionInstance<Integer> slider(String key, int value, int min, int max, Consumer<Integer> set) {
+		return new OptionInstance<>("espresso_flavoured.options." + key,
+				OptionInstance.cachedConstantTooltip(Component.translatable("espresso_flavoured.options." + key + ".tooltip")),
+				(caption, v) -> Component.translatable("options.generic_value", caption, Component.literal(Integer.toString(v))),
+				new OptionInstance.IntRange(min, max), value, set::accept);
+	}
+
+	/** A slider for a radius, where 0 reads "Off". */
 	private static OptionInstance<Integer> radius(String key, int value, int min, int max, Consumer<Integer> set) {
 		return new OptionInstance<>("espresso_flavoured.options." + key,
 				OptionInstance.cachedConstantTooltip(Component.translatable("espresso_flavoured.options." + key + ".tooltip")),

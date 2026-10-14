@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,9 +25,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Sitting down: use a bench or chair (any upright stairs) with an empty hand to sit on it, facing
- * away from its back. You sit on an invisible seat that goes away when you stand up (crouch) or
- * the stairs are broken.
+ * Sitting down: use a bench or chair (any upright stairs) to sit on it, facing away from its back,
+ * with an empty hand or anything that isn't a block (a block in hand places as usual). You sit on
+ * an invisible seat that goes away when you stand up (crouch) or the stairs are broken.
  */
 public class Seat extends Entity {
 	public Seat(EntityType<? extends Seat> type, Level level) {
@@ -37,7 +38,7 @@ public class Seat extends Entity {
 	static void register() {
 		UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
 			if (hand != InteractionHand.MAIN_HAND || player.isShiftKeyDown() || player.isSpectator() || player.isPassenger()
-					|| !player.getMainHandItem().isEmpty() || hit.getDirection() == Direction.DOWN) {
+					|| player.getMainHandItem().getItem() instanceof BlockItem || hit.getDirection() == Direction.DOWN) {
 				return InteractionResult.PASS;
 			}
 			BlockPos pos = hit.getBlockPos();

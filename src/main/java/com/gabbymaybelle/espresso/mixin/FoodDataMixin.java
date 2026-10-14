@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.food.FoodData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
@@ -18,6 +19,10 @@ import org.spongepowered.asm.mixin.injection.At;
  */
 @Mixin(FoodData.class)
 public abstract class FoodDataMixin {
+	/** The hunger bar's maximum, at which the game won't let you eat. */
+	@Unique
+	private static final int FULL = 20;
+
 	@Shadow
 	private int foodLevel;
 	@Shadow
@@ -28,7 +33,4 @@ public abstract class FoodDataMixin {
 		boolean unfed = saturationLevel <= 0.0F && foodLevel < FULL;
 		return Config.regenNeedsSaturation && unfed ? Integer.MAX_VALUE : original;
 	}
-
-	/** The hunger bar's maximum, at which the game won't let you eat. */
-	private static final int FULL = 20;
 }

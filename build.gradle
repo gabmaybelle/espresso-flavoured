@@ -26,8 +26,8 @@ dependencies {
 	// this jar (jar-in-jar), so players don't install it separately, and the chest gets Espresso's
 	// own kit (see "custom" in fabric.mod.json). libs/ holds its release build: to update it, build
 	// spawn-gazebo and copy build/libs/spawn-gazebo-<version>.jar here.
-	implementation ":spawn-gazebo:1.1.0"
-	include ":spawn-gazebo:1.1.0"
+	implementation ":spawn-gazebo:1.1.1"
+	include ":spawn-gazebo:1.1.1"
 	// Mod Menu: only for the Config button; not bundled or required.
 	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.

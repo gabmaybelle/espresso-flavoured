@@ -20,6 +20,9 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 /** Trinkets Updated, kept in its own class so the mod loads without it. Only called when it's installed. */
 public final class TrinketsCompat {
+	/** Keys for charms set aside on death: the slot they were worn in, so they go back there. */
+	private static final String KEY = "trinket:";
+
 	private TrinketsCompat() {
 	}
 
@@ -27,9 +30,6 @@ public final class TrinketsCompat {
 		TrinketAttachment attachment = TrinketsApi.getAttachment(entity);
 		return attachment != null && attachment.isEquipped(item);
 	}
-
-	/** Keys for charms set aside on death: the slot they were worn in, so they go back there. */
-	private static final String KEY = "trinket:";
 
 	/**
 	 * Takes every worn charm out of its slot (unless it carries Curse of Vanishing), keyed by the
