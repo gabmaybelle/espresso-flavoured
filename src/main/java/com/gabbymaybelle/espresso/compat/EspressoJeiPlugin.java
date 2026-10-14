@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * JEI (only loaded when JEI is installed): a page for what the espresso machine brews, since its
- * drinks aren't crafting recipes, and a note on where water lilies come from.
+ * drinks aren't crafting recipes.
  */
 public class EspressoJeiPlugin implements IModPlugin {
 	/** One brew: what goes in the top slot, what each mug becomes, and whether it leaves grounds. */
@@ -50,7 +50,6 @@ public class EspressoJeiPlugin implements IModPlugin {
 				new Brew(new ItemStack(EspressoContent.DECAF_BEANS), Mugs.fill(mug, EspressoContent.ESPRESSO, true), true),
 				new Brew(new ItemStack(EspressoContent.BARISTAS_RESERVE), Mugs.fill(mug, EspressoContent.RISTRETTO), true),
 				new Brew(new ItemStack(EspressoContent.COCOA_MIX), Mugs.fill(mug, EspressoContent.HOT_CHOCOLATE), false)));
-		registration.addIngredientInfo(EspressoContent.WATER_LILY_ITEM, Component.translatable("jei.espresso_flavoured.water_lily.info"));
 	}
 
 	@Override

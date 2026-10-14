@@ -1,6 +1,6 @@
 package com.gabbymaybelle.espresso.client.mixin;
 
-import com.gabbymaybelle.espresso.client.EspressoClock;
+import com.gabbymaybelle.espresso.client.ShaderTime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class IrisWorldTimeMixin {
 	@Inject(method = "getWorldDayTime", at = @At("RETURN"), cancellable = true, require = 0, remap = false)
 	private static void espresso$longerDays(CallbackInfoReturnable<Integer> cir) {
-		int vanilla = EspressoClock.vanillaDayTime();
+		int vanilla = ShaderTime.vanillaDayTime();
 		if (vanilla >= 0) {
 			cir.setReturnValue(vanilla);
 		}

@@ -29,8 +29,7 @@ Minecraft 26.3. See README.md for what players get.
 ## Gotchas
 
 - **`resourcepacks/espresso_data` is generated.** `node tools/generate-data.js` deletes the
-  whole folder and writes it again, running the café, rest-spot and river generators
-  (`generate-cafe.js` and so on) as it goes. Edit the scripts, never the generated files.
+  whole folder and writes it again, running the café generator (`generate-cafe.js`) as it goes. Edit the scripts, never the generated files.
 - **The gazebo is Spawn Gazebo's.** `libs/spawn-gazebo-<version>.jar` (Gabby's own mod,
   github.com/gabmaybelle/spawn-gazebo) is bundled jar-in-jar (`include` in build.gradle) and
   required in fabric.mod.json; Espresso has no gazebo code of its own any more. fabric.mod.json's

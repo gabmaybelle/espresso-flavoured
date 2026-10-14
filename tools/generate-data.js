@@ -44,9 +44,6 @@ out('data/espresso_flavoured/recipe/espresso_machine.json', {
 	key: { C: 'minecraft:copper_ingot', L: 'minecraft:lightning_rod', B: 'minecraft:bucket', T: 'minecraft:white_terracotta', I: 'minecraft:iron_ingot' },
 	result: { id: 'espresso_flavoured:espresso_machine' },
 });
-out('data/espresso_flavoured/loot_table/blocks/water_lily.json', {
-	type: 'minecraft:block', pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'espresso_flavoured:water_lily' }], condition: { type: 'minecraft:survives_explosion' } }],
-});
 out('data/espresso_flavoured/loot_table/blocks/espresso_machine.json', {
 	type: 'minecraft:block',
 	pools: [{ rolls: 1, entries: [{ type: 'minecraft:item', name: 'espresso_flavoured:espresso_machine' }],
@@ -526,12 +523,9 @@ adv('guide/house_blend', 'guide/root', 'minecraft:terracotta', 'House Blend', 'B
 		villager: { type: 'minecraft:entity_properties', entity: 'this', predicate: { 'minecraft:entity_type': 'minecraft:wandering_trader' } },
 		item: { items: '#espresso_flavoured:block_merchant' } } } });
 
-// Café life: sitting down, rest spots out in the wild, and village cafés.
+// Café life: sitting down and village cafés.
 adv('guide/take_a_seat', 'guide/root', 'minecraft:oak_stairs', 'Take a Seat', 'Sit down on a bench or chair',
 	{ sat: { trigger: 'minecraft:impossible' } });
-adv('guide/scenic_route', 'guide/take_a_seat', 'minecraft:lantern', 'Scenic Route', 'Stop at a rest spot out in the wild',
-	{ visited: { trigger: 'minecraft:location', conditions: {
-		player: { type: 'minecraft:entity_properties', entity: 'this', predicate: { location: { structures: 'espresso_flavoured:rest_spot' } } } } } });
 adv('guide/local_favourite', 'guide/take_a_seat', 'minecraft:chest', 'Local Favourite', 'Find a village café and open its supply chest',
 	{ found: { trigger: 'minecraft:player_generates_container_loot', conditions: { loot_tables: ['espresso_flavoured:chests/village_cafe'] } } });
 
@@ -610,9 +604,5 @@ fs.writeFileSync(path.join(__dirname, '..', 'src', 'main', 'resources', 'espress
 
 // The village café buildings.
 require('./generate-cafe.js');
-// Rest spots in the wild, and waterside plants.
-require('./generate-rest-spots.js');
-// Lusher rivers.
-require('./generate-rivers.js');
 
 console.log('espresso_data written to', ROOT);

@@ -1,33 +1,18 @@
 package com.gabbymaybelle.espresso.content;
 
-import com.gabbymaybelle.espresso.Config;
 import com.gabbymaybelle.espresso.Espresso;
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -58,21 +43,18 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.trading.TradeSet;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
@@ -80,10 +62,6 @@ import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntPr
 /** Espresso Flavoured's blocks, items and effects. */
 public final class EspressoContent {
 	private EspressoContent() {
-	}
-
-	private static ResourceKey<PlacedFeature> placed(String path) {
-		return ResourceKey.create(Registries.PLACED_FEATURE, id(path));
 	}
 
 	private static Identifier id(String path) {
@@ -168,8 +146,6 @@ public final class EspressoContent {
 	/** Every coffee bar's cupboard. */
 	public static final BlockEntityType<CoffeeBarBlockEntity> COFFEE_BAR_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
 			id("coffee_bar"), new BlockEntityType<>(CoffeeBarBlockEntity::new, Set.copyOf(COFFEE_BARS)));
-	/** A lily pad with a cactus flower blooming on it (see WaterLilyBlock). */
-	public static final Block WATER_LILY = registerBlock("water_lily", WaterLilyBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.LILY_PAD));
 	/** A mug set down on a surface (placed by crouch-using a mug; see {@link Mugs}). */
 	public static final Block PLACED_MUG = registerBlock("placed_mug", PlacedMugBlock::new,
 			BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.3F)
@@ -178,8 +154,6 @@ public final class EspressoContent {
 			BuiltInRegistries.BLOCK_ENTITY_TYPE, id("placed_mug"), new BlockEntityType<>(PlacedMugBlockEntity::new, Set.of(PLACED_MUG)));
 
 	// ---------------------------------------------------------------- items
-	public static final Item WATER_LILY_ITEM = registerItem("water_lily", props -> new PlaceOnWaterBlockItem(WATER_LILY, props),
-			new Item.Properties().useBlockDescriptionPrefix());
 	public static final Item COFFEE_CHERRIES = registerItem("coffee_cherries",
 			props -> new BlockItem(COFFEE_BUSH, props), new Item.Properties().useItemDescriptionPrefix());
 	public static final Item ESPRESSO_MACHINE_ITEM = registerItem("espresso_machine",
@@ -299,19 +273,17 @@ public final class EspressoContent {
 		return Registry.register(BuiltInRegistries.ITEM, key, factory.apply(props.setId(key)));
 	}
 
-	/** Loads the class (registering everything above) and hooks up creative tabs and worldgen. */
+	/** Loads the class (registering everything above) and hooks up creative tabs and the wild coffee bushes. */
 	public static void register() {
 		Mugs.register();
 		BeanCoin.register();
 		CharmItem.register();
 		Seat.register();
-		WaterLilyBlock.register();
 		CoffeeLoot.register();
 		VillageCafe.register();
 		ItemStorage.SIDED.registerForBlockEntity((canister, side) -> canister.storage, CANISTER_ENTITY);
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> {
 			output.accept(COFFEE_CHERRIES);
-			output.accept(WATER_LILY_ITEM);
 		});
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> {
 			output.accept(ESPRESSO_MACHINE_ITEM);
@@ -357,68 +329,6 @@ public final class EspressoContent {
 		BiomeModifications.addFeature(BiomeSelectors.tag(BiomeTags.IS_JUNGLE).or(BiomeSelectors.tag(BiomeTags.IS_SAVANNA)),
 				GenerationStep.Decoration.VEGETAL_DECORATION,
 				ResourceKey.create(Registries.PLACED_FEATURE, id("patch_coffee_bush")));
-		// Lusher rivers and ponds, unless turned off (they are by default alongside Terralith).
-		if (Config.lusherRivers) {
-			// By the water: a few more firefly bushes in temperate biomes, and lily pads on rivers and ponds.
-			Predicate<BiomeSelectionContext> temperate = BiomeSelectors.tag(BiomeTags.IS_FOREST).or(BiomeSelectors.tag(BiomeTags.IS_TAIGA))
-					.or(BiomeSelectors.tag(BiomeTags.IS_RIVER)).or(BiomeSelectors.tag(ConventionalBiomeTags.IS_PLAINS))
-					.or(BiomeSelectors.includeByKey(Biomes.MEADOW, Biomes.CHERRY_GROVE))
-					.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate());
-			// Lusher rivers (not frozen ones): seagrass, kelp and clay in the water; plants, flowers, moss, mud
-			// and the odd mossy boulder at the waterline. A river's banks are usually in the neighbouring biome,
-			// so the bank features also go to the temperate land around (they only grow right by water).
-			// See tools/generate-rivers.js.
-			Predicate<BiomeSelectionContext> rivers = BiomeSelectors.tag(BiomeTags.IS_RIVER)
-					.and(BiomeSelectors.tag(ConventionalBiomeTags.IS_SNOWY).negate())
-					.and(context -> !context.getBiomeKey().equals(Biomes.FROZEN_RIVER));
-			// All in ONE modification, so they run in this order. Fabric applies separate modifications
-			// in the order of their ids (alphabetical), which put the muddy banks after the moss patches
-			// and the bank plants before the clay, and the ground shifted under things already planted.
-			// Which features go where, in order, from the generator that writes them (so the two can't
-			// drift apart): "temperate" by any water, "rivers" in the water, "waterline" first and "banks" last.
-			Map<String, List<String>> features = lusherRiverFeatures();
-			BiomeModifications.create(id("lusher_rivers")).add(ModificationPhase.ADDITIONS, rivers.or(temperate), (selection, context) -> {
-				BiomeModificationContext.GenerationSettingsContext generation = context.getGenerationSettings();
-				BiConsumer<GenerationStep.Decoration, String> add = (step, feature) -> generation.addFeature(step, placed(feature));
-				if (temperate.test(selection)) {
-					features.get("temperate").forEach(feature -> add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature));
-				}
-				if (rivers.test(selection)) {
-					features.get("rivers").forEach(feature -> add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature));
-				}
-				features.get("waterline").forEach(feature -> add.accept(GenerationStep.Decoration.LOCAL_MODIFICATIONS, feature));
-				features.get("banks").forEach(feature -> add.accept(GenerationStep.Decoration.VEGETAL_DECORATION, feature));
-			});
-		}
-	}
-
-	/**
-	 * The lusher-rivers placed features by group, read from espresso_flavoured/lusher_rivers.json
-	 * (written by tools/generate-rivers.js alongside the features themselves). Empty groups if the
-	 * file is missing, so the rest of the mod still loads.
-	 */
-	private static Map<String, List<String>> lusherRiverFeatures() {
-		Map<String, List<String>> groups = new HashMap<>();
-		for (String group : List.of("temperate", "rivers", "waterline", "banks")) {
-			groups.put(group, List.of());
-		}
-		try (InputStream in = EspressoContent.class.getResourceAsStream("/espresso_flavoured/lusher_rivers.json")) {
-			if (in == null) {
-				Espresso.LOGGER.warn("espresso_flavoured/lusher_rivers.json is missing; no lusher rivers");
-				return groups;
-			}
-			JsonObject root = JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject();
-			for (String group : groups.keySet()) {
-				List<String> names = new ArrayList<>();
-				for (JsonElement name : root.getAsJsonArray(group)) {
-					names.add(name.getAsString());
-				}
-				groups.put(group, List.copyOf(names));
-			}
-		} catch (Exception e) {
-			Espresso.LOGGER.warn("Couldn't read espresso_flavoured/lusher_rivers.json; no lusher rivers", e);
-		}
-		return groups;
 	}
 
 	/** MobEffect's constructor is protected. */

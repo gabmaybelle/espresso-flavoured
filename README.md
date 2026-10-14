@@ -12,7 +12,7 @@ Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival k
 
 **Builds stay built.** Creeper explosions no longer break blocks, endermen leave blocks alone, and phantoms never visit.
 
-**Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher. A clock in the corner of your choice keeps the time, and at 6 PM, an hour before dark, "The sun's getting real low" appears above your hotbar.
+**Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher.
 
 **Looking after yourself.** Natural healing needs you to have eaten recently. Spend three days without sleeping in your own bed and you become Drowsy: too tired to sprint, and slower to mine and walk. A bed in the mine won't fix it; only a night at home will, so long trips end with the walk back. Coffee holds it off while it lasts. For more of a challenge, the Caffeine Crash setting makes coffee only buy a day before you crash, and makes you Hungry too if you also go those three days without eating.
 
@@ -34,7 +34,7 @@ Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival k
 
 **A warm welcome.** New players get a bed, a bundle of essentials and a short field guide, and an advancement tab walks through the rest. The title screen says Espresso Flavoured under the Minecraft logo, with its own splash texts.
 
-Every rule can be switched off or adjusted in `config/espresso_flavoured.properties`, or in game through Mod Menu. On a server, the server's file decides the gameplay settings; players keep only the clock and the dusk warning.
+Every rule can be switched off or adjusted in `config/espresso_flavoured.properties`, or in game through Mod Menu. On a server, the server's file decides.
 
 ## Playing with other mods
 
@@ -42,13 +42,13 @@ Espresso Flavoured Core needs only Fabric API. It notices a few other mods when 
 
 - **Trinkets Updated:** the café charms go in trinket slots (right-click to wear one) and stay with you on death. Without it, a charm works in your off-hand, so you choose one at a time.
 - **Jade:** placed mugs show their drink, coffee bushes how ripe they are, and the espresso machine how its brew is going.
-- **JEI:** a page for what the espresso machine brews, and a note on where water lilies come from.
+- **JEI:** a page for what the espresso machine brews.
 - **Iris:** shaders keep time with the longer days (and with any other mod's or datapack's day length).
 - **Graves mods** (Universal Graves and others that take over death drops): your hotbar, armour, off-hand and worn charms are set aside first; the grave gets the rest.
 - **Towns and Towers:** its villages get cafés too, in the closest of Espresso's styles, and coffee turns up in its chests.
 - **Lootr:** the starter kit chest in the spawn gazebo is shared out per player.
 - **Spawn Gazebo** is included: Espresso comes with Gabby's own Spawn Gazebo mod inside it, so there's nothing extra to install. Its settings (whether the gazebo is built, its starter chest, how far its protection reaches) are in Spawn Gazebo's own screen, reached from Espresso's settings with the Gazebo Settings button, or in `config/spawn_gazebo.properties`.
-- **Nightfall Clock:** hides its own clock and dusk message, since Espresso draws them.
+- **Nightfall Clock** (in the pack) is the clock: it reads the sun, so it stays right on the longer days.
 
 A few things are data, so a pack can change them without code:
 
@@ -60,7 +60,7 @@ A few things are data, so a pack can change them without code:
 | `espresso_flavoured:block_merchant` (items) | What counts as a building block for the House Blend advancement. |
 | `espresso_flavoured:coffee` (items) | Every coffee drink, for recipes and advancements. |
 
-The day length, village cafés, rest spots and the lusher shores are ordinary worldgen data too. Changes that touch the same vanilla code as other mods (mob spawning, bundles, food, sugar cane and so on) are written to step aside rather than fail: if another mod has changed that code first, the Espresso rule for it quietly does nothing and the game carries on.
+The day length and the village cafés are ordinary worldgen data too. Changes that touch the same vanilla code as other mods (mob spawning, bundles, food, sugar cane and so on) are written to step aside rather than fail: if another mod has changed that code first, the Espresso rule for it quietly does nothing and the game carries on.
 
 ## Building
 

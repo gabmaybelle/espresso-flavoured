@@ -1,10 +1,14 @@
 # Changelog
 
-## 0.3.0: Bean Coins, Café Charms and Lush Shores
+## 0.3.0: Bean Coins and Café Charms
 
 ### New mod ID
 - The mod ID is now `espresso_flavoured` (it was `espresso`, which another mod could easily share). Every block, item, recipe and advancement moves with it, and the settings file is now `config/espresso_flavoured.properties`.
 - Worlds from 0.2.0 or earlier don't carry over: their Espresso blocks and items are dropped when the world opens, and homes and settings start fresh. Start a new world for 0.3.0.
+
+### Gone
+- **The clock and dusk warning.** Nightfall Clock, which is in the Espresso Flavoured pack, does that job: it reads the sun, so it stays right on the longer days, and it no longer hides itself when Espresso is installed.
+- **Lusher rivers, rest spots and water lilies.** Espresso keeps to the café and the survival rules. Worlds from 0.2.0 don't carry over anyway (see above), so nothing already built is lost.
 
 ### Bean Coins
 - **Bean Coins** replace the loyalty card. Every Espresso advancement pays you one, straight into your inventory. A master barista takes them: eight for the **Golden Mug**, one for three Barista's Reserve, two for sixteen bottles o' enchanting. A master always offers these three.
@@ -22,7 +26,7 @@
 - A master barista sells a music disc for the café's corner: Creator (Music Box).
 
 ### Advancements
-- Seven new ones, so there are now 21 Bean Coins to earn: **All Dressed Up** (see above), **Take a Seat** (sit on a bench or chair), **Scenic Route** (stop at a rest spot in the wild), **Local Favourite** (find a village café and open its supply chest), **Counter Culture** (place a coffee bar), **Stocked Up** (put something in a canister or jar) and **Your Usual** (trade with a barista).
+- Six new ones, so there are now 20 Bean Coins to earn: **All Dressed Up** (see above), **Take a Seat** (sit on a bench or chair), **Local Favourite** (find a village café and open its supply chest), **Counter Culture** (place a coffee bar), **Stocked Up** (put something in a canister or jar) and **Your Usual** (trade with a barista).
 - **House Blend** now needs a building block or decoration from the wandering trader, not just any trade.
 - **Fair Trade** now needs you to actually sell roasted beans; selling the trader a water bottle no longer counts.
 - **Pocket Shot** was free (the starter kit gives a bundle). Now it asks you to tuck a pickaxe and an axe into the same bundle, which only Espresso's roomier bundles allow.
@@ -33,11 +37,8 @@
 
 ### The café and the world
 - **Coffee bars have a cupboard:** right-click one for two rows of storage, like a small chest. A hopper under a bar no longer collects drinks from the espresso machine on top; take them out by hand.
-- **Lusher water, like a lush cave come up to the light:** moss patches spread along the banks, sprouting moss carpet, grass and azaleas (some flowering); little clay pools of big and small dripleaf sit at the water's edge; there's more moss at the waterline, and the odd small cluster of lily pads (not so many that they get in the way of boats). Where there's clay in the water, the bank turns to mud and fades out through patchy mud, packed mud and rooted dirt to coarse dirt among the grass.
-- **Lusher Rivers is on with Terralith too** (it used to switch itself off). Like all of it, this only changes land you haven't explored yet.
-- **Water lilies:** a lily pad with a cactus flower blooming on it, right on the water. Bone meal a lily pad to make one bloom, and look for the odd one among the lily pads by rivers and ponds in new land.
 - **A gazebo at spawn:** new worlds start in a little round stone gazebo, built from whatever wood grows nearby, with the starter kit waiting in its chest. It's [Spawn Gazebo](https://github.com/gabmaybelle/spawn-gazebo), Gabby's own mod, included inside Espresso so there's nothing extra to install: what it builds, what it protects and its settings are described there. Its settings are one button away from Espresso's (or in `config/spawn_gazebo.properties`).
-- Rest spots no longer have a dirt path, and they keep to dry land (one could end up standing in a lake). Village cafés keep a little potted cactus on their chest.
+- Village cafés keep a little potted cactus on their chest.
 - You can sit on a bench with a tool or anything else that isn't a block in your hand, not only with an empty hand.
 - **The espresso machine looks busy while it brews:** wisps of steam rise under the brew head, it hisses softly now and then, and it gives off a little light, so a café at night has a glow behind the counter.
 
@@ -45,9 +46,8 @@
 - The title screen keeps the Minecraft logo, with "Espresso Flavoured" underneath where "Java Edition" usually sits.
 - Coffee turns up in Towns and Towers' own village chests too (jungle, swamp, badlands, mushroom and Mediterranean houses).
 - The field guide has a Bean Coins page, and says your hotbar and armour stay with you when you fall.
-- Lusher Rivers is switched on once for everyone on this update (older settings files had it off alongside Terralith by default, not by choice); turn it off again any time.
 - With shaders (Iris), the sky now keeps time with any day length, not just Espresso's: another mod's or datapack's timeline is scaled to a normal day for the shader too.
-- With **JEI**: a page for what the espresso machine brews (beans, decaf beans, the Barista's Reserve and cocoa mix, with the grounds they leave), and a note on where water lilies come from.
+- With **JEI**: a page for what the espresso machine brews (beans, decaf beans, the Barista's Reserve and cocoa mix, with the grounds they leave).
 - The espresso machine's recipe now also shows up in the recipe book when you pick up a lightning rod.
 - Canisters and glass jars have their own sounds: a soft rustle as things go in and out, with a ceramic tink (or a glass clink) of the lid.
 
@@ -55,8 +55,6 @@
 - Drowsy is simpler: three days away from home makes you Drowsy, and coffee holds it off for as long as it lasts. The caffeine crash, and Hungry from not eating, now only happen with the **Caffeine Crash** setting, which is off by default (and switched off once in existing settings files).
 
 ### Fixes
-- The moss along rivers is scaled back: only about every third chunk gets the moss carpet, azaleas and moss patches, in smaller clumps, so rivers are mostly grass and flowers with the odd lush green stretch. (Fixing the litter below also meant every planted carpet now survives, which had made the banks mossier than they'd looked.)
-- Lusher rivers no longer litter their banks: the moss carpets and azaleas were sometimes planted in a river cell itself, and the water took the cell back as soon as the chunk went live, leaving the plant floating as an item. Nothing is planted in water now, and moss carpet keeps a block back from the water's lip, where the river could creep into it. The river features also run in the order they were written in (clay, then mud, then the plants on top), which Fabric was sorting alphabetically.
 - A full hunger bar with no saturation left no longer locks you out of both eating and healing (the game refuses food at a full bar, and the "regen needs saturation" rule refused to heal). A full bar now counts as fed: you heal slowly, that costs hunger as in vanilla, and a notch soon frees up to eat.
 - Safer settings: the settings file can't be left half-written or empty if the game crashes while saving it; a typo in a setting ("ture") keeps its default instead of quietly switching it off, with a note in the log saying which setting; and settings the mod doesn't know about, or notes you've added, are no longer wiped each time the game starts.
 - Breaking a ripe coffee bush no longer drops its cherries twice.
@@ -66,10 +64,9 @@
 - The espresso machine waits until its knock box has room for all of a brew's grounds instead of losing some, and cocoa (which leaves no grounds) brews even when the box is full.
 - Turning Longer Days on or off no longer changes the Drowsy timer until the restart that changes the days.
 - Without Iris, the log no longer shows an "Error loading class" line for the shader time fix: the mod only applies it when Iris is there.
-- A "Clock Position" setting: the clock can sit in any corner (bottom corners step up on narrow screens and hide while chat is open).
 - Drowsy and Hungry count days by the world's actual day length, read from the overworld's day timeline, so another mod's or datapack's longer days count too.
 - Cinnamon no longer replaces vanilla's axe data to drop from jungle and acacia logs; it watches the stripping instead. Other mods' logs now strip as they should alongside Espresso, and a new block tag, `espresso_flavoured:cinnamon_bark`, says which logs give cinnamon.
-- On someone else's server, the settings screen greys out the settings that are the server's to decide and says so; only the clock and the dusk warning (which are yours) can be changed there.
+- On someone else's server, the settings screen greys out the settings that are the server's to decide and says so.
 - Mod Menu's Website button now works (it opens the GitHub page).
 - With Trinkets, the charms you're wearing now stay with you on death, like your hotbar and armour (Curse of Vanishing still vanishes them). They go back into their slots when you respawn.
 - Bean Coin payouts check only Espresso's own advancements each second, picked out once when the server starts or reloads, instead of scanning every advancement for every player.

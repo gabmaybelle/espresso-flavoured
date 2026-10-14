@@ -25,9 +25,8 @@ public final class Config {
 	private static final int CONFIG_VERSION = 2;
 	/** Every setting the file should have; the file is written when one is missing. */
 	private static final List<String> KEYS = List.of("creeperGriefing", "endermanGriefing", "phantoms", "safeHomeRadius",
-			"blockMerchant", "bundleUnstackables", "longerDays", "clock", "clockPosition", "duskWarning", "keepHotbarOnDeath",
-			"regenNeedsSaturation", "toughNights", "drowsiness", "caffeineCrash", "coffeeBarRequired", "sugarCaneHeight",
-			"lusherRivers", "configVersion");
+			"blockMerchant", "bundleUnstackables", "longerDays", "keepHotbarOnDeath",
+			"regenNeedsSaturation", "toughNights", "drowsiness", "caffeineCrash", "coffeeBarRequired", "sugarCaneHeight", "configVersion");
 	/** The file as it was read, so settings from a newer version (or added by hand) survive a save. */
 	private static Properties loaded = new Properties();
 
@@ -47,12 +46,6 @@ public final class Config {
 	public static int serverBundleUnstackables = 0;
 	/** 20-minute days and 10-minute nights (vanilla: 10 and 10). */
 	public static boolean longerDays = true;
-	/** A day counter and clock in a corner of the screen (client side). */
-	public static boolean clock = true;
-	/** Which corner the clock sits in (client side). */
-	public static ClockPosition clockPosition = ClockPosition.TOP_RIGHT;
-	/** "The sun's getting real low" above the hotbar at 6:00 PM, an hour before night (client side). */
-	public static boolean duskWarning = true;
 	/** Keep the hotbar, armour, off-hand and (with Trinkets) worn charms on death; everything else drops. */
 	public static boolean keepHotbarOnDeath = true;
 	/** Slow natural healing only happens while you have saturation (you've eaten recently). */
@@ -67,26 +60,7 @@ public final class Config {
 	public static boolean coffeeBarRequired = true;
 	/** How tall sugar cane grows (vanilla: 3). */
 	public static int sugarCaneHeight = 5;
-	/**
-	 * Lusher rivers and ponds in new land: seagrass and kelp, plants and flowers on the banks, moss and mud
-	 * at the waterline, moss carpet and azaleas, muddy banks where there's clay, and more firefly bushes and
-	 * lily pads. Read at startup.
-	 */
-	public static boolean lusherRivers = true;
 	// The gazebo at spawn and its protection are Spawn Gazebo's (bundled): its settings are in config/spawn_gazebo.properties.
-
-	/** The corner of the screen the clock sits in. */
-	public enum ClockPosition {
-		TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT;
-
-		public boolean top() {
-			return this == TOP_RIGHT || this == TOP_LEFT;
-		}
-
-		public boolean right() {
-			return this == TOP_RIGHT || this == BOTTOM_RIGHT;
-		}
-	}
 
 	private Config() {
 	}
@@ -112,9 +86,6 @@ public final class Config {
 		blockMerchant = bool(props, "blockMerchant", blockMerchant);
 		bundleUnstackables = Math.max(1, integer(props, "bundleUnstackables", bundleUnstackables));
 		longerDays = bool(props, "longerDays", longerDays);
-		clock = bool(props, "clock", clock);
-		clockPosition = choice(props, "clockPosition", clockPosition);
-		duskWarning = bool(props, "duskWarning", duskWarning);
 		keepHotbarOnDeath = bool(props, "keepHotbarOnDeath", keepHotbarOnDeath);
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
 		toughNights = bool(props, "toughNights", toughNights);
@@ -123,7 +94,6 @@ public final class Config {
 		caffeineCrash = integer(props, "configVersion", CONFIG_VERSION) < 2 ? false : bool(props, "caffeineCrash", caffeineCrash);
 		coffeeBarRequired = bool(props, "coffeeBarRequired", coffeeBarRequired);
 		sugarCaneHeight = Math.max(1, Math.min(16, integer(props, "sugarCaneHeight", sugarCaneHeight)));
-		lusherRivers = bool(props, "lusherRivers", lusherRivers);
 		loaded = props;
 		// Only write when there's something to add: a new file, a new setting, or an older version.
 		if (!KEYS.stream().allMatch(props::containsKey) || integer(props, "configVersion", CONFIG_VERSION) < CONFIG_VERSION) {
@@ -142,9 +112,6 @@ public final class Config {
 		props.setProperty("blockMerchant", Boolean.toString(blockMerchant));
 		props.setProperty("bundleUnstackables", Integer.toString(bundleUnstackables));
 		props.setProperty("longerDays", Boolean.toString(longerDays));
-		props.setProperty("clock", Boolean.toString(clock));
-		props.setProperty("clockPosition", clockPosition.name().toLowerCase(Locale.ROOT));
-		props.setProperty("duskWarning", Boolean.toString(duskWarning));
 		props.setProperty("keepHotbarOnDeath", Boolean.toString(keepHotbarOnDeath));
 		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
 		props.setProperty("toughNights", Boolean.toString(toughNights));
@@ -152,7 +119,6 @@ public final class Config {
 		props.setProperty("caffeineCrash", Boolean.toString(caffeineCrash));
 		props.setProperty("coffeeBarRequired", Boolean.toString(coffeeBarRequired));
 		props.setProperty("sugarCaneHeight", Integer.toString(sugarCaneHeight));
-		props.setProperty("lusherRivers", Boolean.toString(lusherRivers));
 		props.setProperty("configVersion", Integer.toString(CONFIG_VERSION));
 		// Written to a temporary file first and then swapped in, so a crash part-way through never
 		// leaves a half-written or empty settings file.
@@ -166,10 +132,6 @@ public final class Config {
 					+ "blockMerchant: the wandering trader also sells building blocks\n"
 					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
-					+ "clock: a day counter and clock in a corner of the screen\n"
-					+ "clockPosition: top_right, top_left, bottom_right or bottom_left\n"
-					+ "duskWarning: \"The sun's getting real low\" above the hotbar at 6:00 PM, an hour before night\n"
-					+ "lusherRivers: seagrass, bank plants, flowers, moss and mud along rivers and ponds in new land\n"
 					+ "(the gazebo at spawn is Spawn Gazebo's, bundled with Espresso: its settings are in spawn_gazebo.properties)\n"
 					+ "keepHotbarOnDeath: keep your hotbar, armour, off-hand and worn charms when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
@@ -211,19 +173,6 @@ public final class Config {
 		// A typo shouldn't quietly switch a setting off: keep the default and say so.
 		Espresso.LOGGER.warn("Espresso Flavoured: {} should be true or false, not \"{}\"; using {}", key, value.trim(), fallback);
 		return fallback;
-	}
-
-	private static <E extends Enum<E>> E choice(Properties props, String key, E fallback) {
-		String value = props.getProperty(key);
-		if (value == null) {
-			return fallback;
-		}
-		try {
-			return Enum.valueOf(fallback.getDeclaringClass(), value.trim().toUpperCase(Locale.ROOT));
-		} catch (IllegalArgumentException e) {
-			Espresso.LOGGER.warn("Espresso Flavoured: unknown {} \"{}\", using {}", key, value.trim(), fallback.name().toLowerCase(Locale.ROOT));
-			return fallback;
-		}
 	}
 
 	private static int integer(Properties props, String key, int fallback) {

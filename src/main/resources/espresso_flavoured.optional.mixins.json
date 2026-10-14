@@ -12,7 +12,6 @@
 		"MobNightMixin",
 		"NightNaturalSpawnerMixin",
 		"PowderSnowMixin",
-		"RestSpotMixin",
 		"SpawnStateMixin",
 		"SugarCaneBlockMixin",
 		"TamperMixin",

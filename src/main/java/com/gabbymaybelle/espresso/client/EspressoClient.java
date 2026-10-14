@@ -29,22 +29,9 @@ public class EspressoClient implements ClientModInitializer {
 		MenuScreens.register(EspressoContent.ESPRESSO_MACHINE_MENU, EspressoMachineScreen::new);
 		BlockEntityRenderers.register(EspressoContent.CANISTER_ENTITY, CanisterRenderer::new);
 		EntityRenderers.register(EspressoContent.SEAT, NoopRenderer::new);
-		EspressoClock.register();
 		EspressoTooltips.register();
 		tintByColor(EspressoContent.PLACED_MUG, PlacedMugBlock.COLOR);
 		tintByColor(EspressoContent.CANISTER_BLOCK, CanisterBlock.COLOR);
-		// The water lily's pad: the same green as a lily pad in the world.
-		BlockColorRegistry.register(List.of(new BlockTintSource() {
-			@Override
-			public int color(BlockState state) {
-				return 0xFF208030;
-			}
-
-			@Override
-			public Set<Property<?>> relevantProperties() {
-				return Set.of();
-			}
-		}), EspressoContent.WATER_LILY);
 		// On someone else's server, use their bundle setting so bundles match for everyone.
 		ClientPlayNetworking.registerGlobalReceiver(ServerSettings.TYPE, (settings, context) -> {
 			if (!context.client().hasSingleplayerServer()) {
