@@ -4,6 +4,8 @@
 
 Espresso Flavoured Core is a Fabric mod for Minecraft 26.3. It needs only Fabric API. For builds that stay built (no creeper holes, no phantoms, a lantern that keeps monsters away), add [Cozy Core](https://github.com/gabmaybelle/cozy-core) alongside it; the two are made to go together.
 
+Download the jar from the [Releases page](https://github.com/gabmaybelle/espresso-flavoured/releases).
+
 ## What's in it
 
 **Coffee, from bush to mug.** Coffee bushes grow wild in jungles and savannas. Roast the cherries into beans. Put an espresso machine on a coffee bar (a counter, in every wood), beans on top and mugs below, like a brewing stand. Coffee gives you Speed and Haste.
