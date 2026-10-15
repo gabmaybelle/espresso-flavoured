@@ -1,38 +1,32 @@
 # Espresso Flavoured Core
 
-*Survival that's kind to builders: a safe home, builds that stay built, and coffee you grow and brew.*
+*A little café for your survival world: coffee you grow and brew, mugs, baristas and charms.*
 
-It works on its own, with just Fabric API. It was the heart of the [Espresso Flavoured modpack](https://github.com/gabmaybelle/espresso-flavoured-pack) up to 0.3.0; the pack now builds on [Cozy Core](https://github.com/gabmaybelle/cozy-core) instead, and Espresso Flavoured Core is the café mod: the builder rules the two shared now live in Cozy Core, which goes nicely alongside this one.
+Espresso Flavoured Core is a Fabric mod for Minecraft 26.3. It needs only Fabric API. For builds that stay built (no creeper holes, no phantoms, a lantern that keeps monsters away), add [Cozy Core](https://github.com/gabmaybelle/cozy-core) alongside it; the two are made to go together.
 
-Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival kinder to builders without making it toothless. Your home is a refuge and your builds are safe, while nights, hunger and the wider world keep their bite. It also adds coffee, grown and brewed by you, to help you through a long day of building.
+## What's in it
 
-## What it changes
+**Coffee, from bush to mug.** Coffee bushes grow wild in jungles and savannas. Roast the cherries into beans. Put an espresso machine on a coffee bar (a counter, in every wood), beans on top and mugs below, like a brewing stand. Coffee gives you Speed and Haste.
 
-**Your home bed.** Crouch and use a bed with an empty hand to make it your home. Sleeping somewhere else doesn't move it. Home is where rest counts: only a night there clears Drowsy, and Cozy heals you near it. (For a monster-free build site, Cozy Core's Hearth Lantern does that job.)
+**Mugs.** Shape them from clay, fire them and dye them any colour. Your coffee stays in the mug you chose, and you get it back when you drink. Crouch to set one down on a table or shelf.
 
-**Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher.
+**Drinks.** Espresso, Latte (add milk), Mocha (add cocoa), Vanilla Latte (add vanilla syrup) and more, plus decaf versions of all of them. Pastries go with them.
 
-**Looking after yourself.** Natural healing needs you to have eaten recently. Spend three days without sleeping in your own bed and you become Drowsy: too tired to sprint, and slower to mine and walk. A bed in the mine won't fix it; only a night at home will, so long trips end with the walk back. Coffee holds it off while it lasts. For more of a challenge, the Caffeine Crash setting makes coffee only buy a day before you crash, and makes you Hungry too if you also go those three days without eating.
+**Baristas.** A villager who takes an espresso machine as their workstation becomes a barista, trading beans, mugs, drinks, bakes and café decor. Cafés also turn up in villages.
 
-**Coffee.** Coffee bushes grow wild in jungles and savannas. Roast the cherries, then set an espresso machine on a coffee bar (a stone-topped cabinet counter, in every wood) and brew Espresso in it: beans on top, mugs below, just like a brewing stand (hoppers work too). Mugs are shaped from clay, fired in a furnace, and dyed any colour; your coffee stays in the mug you chose, from Espresso to Latte (add milk) to Mocha (add cocoa), and you get the mug back when you drink. Crouch to set a mug down on a table or shelf, empty or full. Sweeten things up with Vanilla Syrup (honey and sugar) for the house special, a Vanilla Latte.
+**Bean Coins.** Every Espresso advancement pays you a Bean Coin. Spend them with a master barista: eight buy the Golden Mug, which makes coffee last longer, and a coin or two buys a treat, a charm or rare beans for a Ristretto, the strongest coffee there is.
 
-**The café.** Every Espresso advancement pays you a Bean Coin, and a master barista takes them: eight buy the Golden Mug (coffee lasts longer from it), and a coin or two buys a treat. Clay canisters, dyeable like mugs, hold four stacks of anything that stacks, show what is inside on a little label, and work with hoppers. Glass jars do the same, and you can see what is inside; fill one with honey bottles for a honey jar.
+**Café charms.** Eight small charms, each with one gentle perk, like a Thermos that makes coffee last longer or Reading Socks that step up full blocks. Wear them in Trinkets Updated slots, or hold one in your off-hand without it. Charms you're wearing stay with you when you die.
 
-**Decaf.** Wash roasted beans in water for decaf beans, and any coffee you brew from them is decaf all the way to a vanilla latte. Decaf makes you Cozy: you heal slowly near your home bed, sleeping while Cozy wakes you Well Rested with two golden hearts, and with Caffeine Crash on, a decaf softens a crash.
+**Canisters and jars.** Clay canisters and glass jars hold four stacks each, show what's inside, and work with hoppers.
 
-**Café charms.** Eight small charms, each with one gentle perk: a Lucky Bean, a Thermos that makes coffee last longer, a Pocket Hearth against the cold, Reading Socks that step up full blocks, a Café Parasol that softens falls, a Knit Beanie that keeps Cozy healing you away from home, an Ember Glove that smelts what you mine, and a Copper Tamper that hits monsters harder. A master barista sells a couple for Bean Coins, and they turn up in café and village chests. With Trinkets Updated they go in trinket slots; without it, a charm works in your off-hand, one at a time.
+**Rest.** Crouch and use a bed with an empty hand to make it your home. Go three days without sleeping there and you get Drowsy: no sprinting, slower mining. Coffee holds Drowsy off; a night at home clears it. Decaf makes you Cozy instead, which heals you slowly near home.
 
-**The barista.** Villagers can take an espresso machine as their workstation and become baristas. They trade in beans, mugs, drinks, bakes and café decor, and a master barista sells the Barista's Reserve for Bean Coins: rare beans that brew a Ristretto, the only coffee strong enough for Speed II and Haste II. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
+**Longer days.** Daylight lasts 20 minutes and night 10, and nights are a little tougher. You only heal naturally when you've eaten recently.
 
-**Death.** The charms you're wearing stay with you. Everything else drops where you fell (into a grave, if you also use a graves mod). To keep your hotbar and armour too, add [Cozy Core](https://github.com/gabmaybelle/cozy-core): its `keep_hotbar_on_death` rule does that for every mod.
+**Little extras.** Bundles hold four tools, shulker boxes can be crafted in the Overworld, the wandering trader sells building blocks and buys your roasted beans, and new players start in a gazebo at spawn with a bed, a few essentials and a short field guide.
 
-**Room for more.** Shulker boxes can be crafted in the Overworld (a chest, iron, ender pearls and amethyst), bundles also take wool or rabbit hide, and a bundle holds four tools or pieces of armour.
-
-**The block merchant.** The wandering trader also sells building blocks and decorations from far-off biomes, like terracotta, calcite, cherry saplings and spore blossoms. It always carries coffee cherries to plant, and pays a fair price for your roasted beans: fair trade, of course.
-
-**A warm welcome.** New players get a bed, a bundle of essentials and a short field guide, and an advancement tab walks through the rest. The title screen says Espresso Flavoured under the Minecraft logo, with its own splash texts.
-
-Every rule can be switched off or adjusted in `config/espresso_flavoured.properties`, or in game through Mod Menu. On a server, the server's file decides.
+Everything can be switched off or adjusted in game through Mod Menu, or in `config/espresso_flavoured.properties`. On a server, the server's settings decide. For more of a challenge, switch on Caffeine Crash: coffee then only buys you a day before you crash.
 
 ## Playing with other mods
 
@@ -46,7 +40,7 @@ Espresso Flavoured Core needs only Fabric API. It notices a few other mods when 
 - **Graves mods** (Universal Graves and others that take over death drops): your worn charms are set aside first (and, with Cozy Core, your hotbar and armour); the grave gets the rest.
 - **Towns and Towers:** its villages get cafés too, in the closest of Espresso's styles, and coffee turns up in its chests.
 - **Lootr:** the starter kit chest in the spawn gazebo is shared out per player.
-- **Spawn Gazebo** is included: Espresso comes with Gabby's own Spawn Gazebo mod inside it, so there's nothing extra to install. Its settings (whether the gazebo is built, its starter chest, how far its protection reaches) are in Spawn Gazebo's own screen, reached from Espresso's settings with the Gazebo Settings button, or in `config/spawn_gazebo.properties`.
+- **Spawn Gazebo** (Gabby's own mod) is included inside Espresso, so there's nothing extra to install. Its settings are behind the Gazebo Settings button in Espresso's settings.
 - **Nightfall Clock:** a clock that reads the sun, so it stays right on the longer days.
 
 A few things are data, so a pack can change them without code:
