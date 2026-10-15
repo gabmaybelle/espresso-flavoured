@@ -62,8 +62,8 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Plays through Espresso Flavoured Core's main rules in a real game: the spawn gazebo and its
- * starter chest, brewing in the espresso machine, the Ristretto's effects, keeping the hotbar on
- * death, creepers sparing builds, roomier bundles and the settings screen. Run with
+ * starter chest, brewing in the espresso machine, the Ristretto's effects, worn charms staying
+ * with you on death, roomier bundles and the settings screen. Run with
  * `./gradlew runClientGameTest`; screenshots land in build/run/clientGameTest/screenshots.
  */
 public class EspressoClientTest implements FabricClientGameTest {
@@ -74,24 +74,43 @@ public class EspressoClientTest implements FabricClientGameTest {
 		try (TestSingleplayerContext world = ctx.worldBuilder().create()) {
 			world.getConnection().waitForChunksRender();
 			TestServerContext server = world.getServer();
-			server.runCommand("gamerule advance_time false");
-			gazebo(ctx, server);
-			BlockPos work = server.computeOnServer(s -> s.overworld().getRespawnData().pos().offset(24, -3, 0));
-			brewing(ctx, server, work);
-			ristretto(server);
-			bundles(server);
-			creepers(ctx, server, work.offset(0, 0, 12));
-			BlockPos home = work.offset(12, 0, 0);
-			safeHome(server, home);
-			drowsiness(ctx, server, home);
-			toughNights(ctx, server, work);
-			blockMerchant(server, work);
-			villageCafe(server);
-			charms(ctx, server, work.offset(-12, 0, 0));
-			// Clear of the gazebo's protected area (12 blocks from spawn), since this part places blocks as a player.
-			cafeLife(ctx, server, work.offset(-6, 0, 12), home);
-			keepOnDeath(ctx, server, work.offset(0, 0, -12));
+			try {
+				playThrough(ctx, server);
+			} catch (Throwable failed) {
+				// Closing the world while the player is dead hangs Fabric's test harness (the client halts the
+				// server while the server waits on the harness), so a failure after a death would never be
+				// reported. Respawn first, then let the failure through.
+				if (ctx.computeOnClient(mc -> mc.player != null && mc.player.isDeadOrDying())) {
+					ctx.runOnClient(mc -> mc.player.respawn());
+					ctx.waitForScreen(null);
+				}
+				throw failed;
+			}
 		}
+	}
+
+	/** Everything that happens in the test world, in order. */
+	private static void playThrough(ClientGameTestContext ctx, TestServerContext server) {
+		server.runCommand("gamerule advance_time false");
+		gazebo(ctx, server);
+		BlockPos work = server.computeOnServer(s -> s.overworld().getRespawnData().pos().offset(24, -3, 0));
+		brewing(ctx, server, work);
+		ristretto(server);
+		bundles(server);
+		BlockPos home = work.offset(12, 0, 0);
+		safeHome(server, home);
+		drowsiness(ctx, server, home);
+		toughNights(ctx, server, work);
+		blockMerchant(server, work);
+		villageCafe(server);
+		charms(ctx, server, work.offset(-12, 0, 0));
+		// Clear of the gazebo's protected area (12 blocks from spawn), since this part places blocks as a player.
+		cafeLife(ctx, server, work.offset(-6, 0, 12), home);
+		charmsOnDeath(ctx, server, work.offset(0, 0, -12));
+		// Let the server settle after the respawn before the world closes: closing while the server is
+		// mid-task has deadlocked the test harness (client halting the server, server waiting on the
+		// harness's phase lock) once on this PC.
+		ctx.waitTicks(40);
 	}
 
 	/**
@@ -103,13 +122,13 @@ public class EspressoClientTest implements FabricClientGameTest {
 	private static void settingsFile() {
 		Path file = FabricLoader.getInstance().getConfigDir().resolve(Espresso.MOD_ID + ".properties");
 		try {
-			Files.writeString(file, "keepHotbarOnDeath=ture\ncreeperGriefing= TRUE \nfutureSetting=hello\n");
+			Files.writeString(file, "drowsiness=ture\nblockMerchant= FALSE \nfutureSetting=hello\n");
 			Config.load();
-			check(Config.keepHotbarOnDeath, "a typo (\"ture\") leaves Keep Hotbar on Death on, its default");
-			check(Config.creeperGriefing, "\" TRUE \" reads as true");
+			check(Config.drowsiness, "a typo (\"ture\") leaves Drowsiness on, its default");
+			check(!Config.blockMerchant, "\" FALSE \" reads as false");
 			String written = Files.readString(file);
 			check(written.contains("futureSetting=hello"), "a setting this version doesn't know is kept");
-			check(written.contains("keepHotbarOnDeath=true"), "missing settings are written with their defaults");
+			check(written.contains("coffeeBarRequired=true"), "missing settings are written with their defaults");
 			check(!Files.exists(file.resolveSibling(file.getFileName() + ".tmp")), "no temporary file is left behind");
 
 			String complete = "# a note added by hand\n" + written;
@@ -117,11 +136,10 @@ public class EspressoClientTest implements FabricClientGameTest {
 			Config.load();
 			check(Files.readString(file).equals(complete), "loading a complete file leaves it exactly as it was");
 
-			Files.writeString(file, "sugarCaneHeight=40\nbundleUnstackables=99\nsafeHomeRadius=500\n");
+			Files.writeString(file, "sugarCaneHeight=40\nbundleUnstackables=99\n");
 			Config.load();
-			check(Config.sugarCaneHeight == 8 && Config.bundleUnstackables == 8 && Config.safeHomeRadius == 64,
-					"numbers past the sliders' limits are brought back to them (got " + Config.sugarCaneHeight + ", "
-							+ Config.bundleUnstackables + ", " + Config.safeHomeRadius + ")");
+			check(Config.sugarCaneHeight == 8 && Config.bundleUnstackables == 8,
+					"numbers past the sliders' limits are brought back to them (got " + Config.sugarCaneHeight + ", " + Config.bundleUnstackables + ")");
 			Files.writeString(file, "sugarCaneHeight=1\nbundleUnstackables=0\n");
 			Config.load();
 			check(Config.sugarCaneHeight == 3 && Config.bundleUnstackables == 1,
@@ -129,11 +147,10 @@ public class EspressoClientTest implements FabricClientGameTest {
 		} catch (IOException e) {
 			throw new AssertionError("couldn't use the settings file", e);
 		} finally {
-			Config.creeperGriefing = false;
-			Config.keepHotbarOnDeath = true;
+			Config.blockMerchant = true;
+			Config.drowsiness = true;
 			Config.sugarCaneHeight = 5;
 			Config.bundleUnstackables = 4;
-			Config.safeHomeRadius = 32;
 			Config.save();
 		}
 	}
@@ -244,34 +261,9 @@ public class EspressoClientTest implements FabricClientGameTest {
 		});
 	}
 
-	/** A creeper's explosion still happens, but the blocks round it stay. */
-	private static void creepers(ClientGameTestContext ctx, TestServerContext server, BlockPos at) {
-		server.runOnServer(s -> {
-			ServerLevel level = s.overworld();
-			for (BlockPos pos : BlockPos.betweenClosed(at.offset(-2, 0, -2), at.offset(2, 2, 2))) {
-				boolean wall = Math.abs(pos.getX() - at.getX()) == 2 || Math.abs(pos.getZ() - at.getZ()) == 2;
-				level.setBlockAndUpdate(pos, wall ? Blocks.OAK_PLANKS.defaultBlockState() : Blocks.AIR.defaultBlockState());
-			}
-		});
-		server.runCommand("summon minecraft:creeper " + at.getX() + " " + at.getY() + " " + at.getZ() + " {Fuse:1s,ignited:1b,NoAI:1b}");
-		ctx.waitTicks(20);
-		server.runOnServer(s -> {
-			ServerLevel level = s.overworld();
-			int planks = 0;
-			for (BlockPos pos : BlockPos.betweenClosed(at.offset(-2, 0, -2), at.offset(2, 2, 2))) {
-				if (level.getBlockState(pos).is(Blocks.OAK_PLANKS)) {
-					planks++;
-				}
-			}
-			check(planks == 48, "the creeper's walls are all still there (" + planks + " of 48 planks)");
-			check(level.getEntitiesOfClass(Creeper.class, new AABB(at).inflate(4)).isEmpty(), "the creeper exploded");
-		});
-	}
-
 	/**
-	 * Crouching and using a bed with an empty hand makes it home: hostile mobs then can't spawn
-	 * naturally inside the safe home radius (32 by default) but can outside it, and a broken bed
-	 * protects nothing.
+	 * Crouching and using a bed with an empty hand makes it home: that bed (and any within 32
+	 * blocks) counts as sleeping at home, a bed 40 blocks away doesn't, and the player is near home.
 	 */
 	private static void safeHome(TestServerContext server, BlockPos floor) {
 		server.runOnServer(s -> {
@@ -287,16 +279,17 @@ public class EspressoClientTest implements FabricClientGameTest {
 					new BlockHitResult(Vec3.atCenterOf(floor).add(0, 0.5, 0), Direction.UP, floor, false));
 			BlockPos bedPos = floor.above();
 			check(level.getBlockState(bedPos).getBlock() instanceof BedBlock, "the bed was placed (got " + level.getBlockState(bedPos) + ")");
-			check(!HomeBeds.isProtected(level, bedPos.east(10)), "nothing is protected before a home is chosen");
+			check(HomeBeds.isAtHome(player, level, bedPos.east(40)), "before a home is chosen, any bed is home");
 
 			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 			player.setShiftKeyDown(true);
 			player.gameMode.useItemOn(player, level, ItemStack.EMPTY, InteractionHand.MAIN_HAND,
 					new BlockHitResult(Vec3.atCenterOf(bedPos), Direction.UP, bedPos, false));
 			player.setShiftKeyDown(false);
-			check(HomeBeds.isProtected(level, bedPos.east(20)), "crouch-using the bed makes it home: 20 blocks away is protected");
-			check(!HomeBeds.isProtected(level, bedPos.east(40)), "40 blocks away is outside the safe home radius");
-			check(HomeBeds.isAtHome(player, level, bedPos), "sleeping in that bed counts as sleeping at home");
+			check(HomeBeds.isAtHome(player, level, bedPos), "crouch-using the bed makes it home: sleeping in it counts as sleeping at home");
+			check(HomeBeds.isAtHome(player, level, bedPos.east(20)), "a bed 20 blocks from home still counts as home");
+			check(!HomeBeds.isAtHome(player, level, bedPos.east(40)), "a bed 40 blocks from home doesn't");
+			check(HomeBeds.isNearHome(player), "standing by the bed is near home");
 		});
 	}
 
@@ -678,62 +671,67 @@ public class EspressoClientTest implements FabricClientGameTest {
 				new BlockHitResult(Vec3.atCenterOf(pos).add(0, 0.5, 0), Direction.UP, pos, false));
 	}
 
-	/** The hotbar, armour and off-hand stay with you; the rest of the inventory drops where you fell. */
-	private static void keepOnDeath(ClientGameTestContext ctx, TestServerContext server, BlockPos at) {
+	/**
+	 * Dying: the hotbar's pickaxe drops like everything else now (keeping it is Cozy Core's rule),
+	 * and with Trinkets a worn Lucky Bean stays with you and is back in its slot after respawning.
+	 */
+	private static void charmsOnDeath(ClientGameTestContext ctx, TestServerContext server, BlockPos at) {
 		server.runCommand("gamemode survival @a");
 		server.runOnServer(s -> {
 			ServerPlayer player = player(s);
 			player.getInventory().clearContent();
 			player.teleportTo(at.getX() + 0.5, at.getY() + 1, at.getZ() + 0.5);
-			player.getInventory().setItem(0, new ItemStack(Items.DIAMOND_PICKAXE));
 			player.getInventory().setItem(20, new ItemStack(Items.COBBLESTONE, 10));
-			player.getInventory().setItem(40, new ItemStack(Items.SHIELD));
 			if (CharmItem.TRINKETS) {
-				// A charm worn in its Trinkets slot goes back into that slot after respawning.
 				ItemStack bean = new ItemStack(EspressoContent.LUCKY_BEAN);
 				player.setItemInHand(InteractionHand.MAIN_HAND, bean);
 				player.gameMode.useItem(player, player.level(), bean, InteractionHand.MAIN_HAND);
-				player.getInventory().setItem(0, new ItemStack(Items.DIAMOND_PICKAXE));
 				check(TrinketsCompat.isEquipped(player, EspressoContent.LUCKY_BEAN), "the Lucky Bean is worn before dying");
 			}
+			player.getInventory().setItem(0, new ItemStack(Items.DIAMOND_PICKAXE));
 		});
 		ctx.waitTicks(5);
 		server.runCommand("kill @a");
 		ctx.waitForScreen(DeathScreen.class);
-		AssertionError whileDead = null;
+		Throwable whileDead = null;
 		try {
 			server.runOnServer(s -> {
-			boolean dropped = !s.overworld().getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(4),
-					item -> item.getItem().is(Items.COBBLESTONE)).isEmpty();
-			check(dropped, "the cobblestone from the inventory dropped where the player fell");
-			check(s.overworld().getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(4),
-					item -> item.getItem().is(Items.DIAMOND_PICKAXE)).isEmpty(), "the hotbar's pickaxe didn't drop");
+				check(dropped(s, at, Items.COBBLESTONE), "the cobblestone from the inventory dropped where the player fell");
+				check(dropped(s, at, Items.DIAMOND_PICKAXE), "the hotbar's pickaxe dropped too: keeping it is Cozy Core's job now");
+				if (CharmItem.TRINKETS) {
+					check(!dropped(s, at, EspressoContent.LUCKY_BEAN), "the worn Lucky Bean didn't drop");
+				}
 			});
-		} catch (AssertionError e) {
-			// Respawn first either way: a test world can't close while its player is dead.
+		} catch (Throwable e) {
+			// Respawn first either way: a test world can't close while its player is dead (a failed check
+			// on the server can come back wrapped, so anything is caught here, not only AssertionError).
 			whileDead = e;
 		}
 		ctx.runOnClient(mc -> mc.player.respawn());
 		if (whileDead != null) {
 			ctx.waitForScreen(null);
-			throw whileDead;
+			throw whileDead instanceof AssertionError failed ? failed : new AssertionError("a check failed while the player was dead", whileDead);
 		}
-		waitForServer(ctx, server, s -> player(s).isAlive() && player(s).getInventory().getItem(0).is(Items.DIAMOND_PICKAXE), 200,
-				"the player respawns with the hotbar's pickaxe");
+		waitForServer(ctx, server, s -> player(s).isAlive(), 200, "the player respawns");
+		// Kept charms are handed back on the server's next tenth tick.
+		ctx.waitTicks(20);
 		server.runOnServer(s -> {
 			ServerPlayer player = player(s);
-			check(player.getInventory().getItem(40).is(Items.SHIELD), "the off-hand shield came back too");
+			check(!player.getInventory().contains(new ItemStack(Items.DIAMOND_PICKAXE)), "the pickaxe didn't come back (slot 0 holds " + player.getInventory().getItem(0) + ")");
 			if (CharmItem.TRINKETS) {
 				check(TrinketsCompat.isEquipped(player, EspressoContent.LUCKY_BEAN), "the worn Lucky Bean is back in its slot after respawning");
 			}
 			check(!player.getInventory().contains(new ItemStack(Items.COBBLESTONE)), "the rest of the inventory didn't come back");
 		});
 		ctx.waitForScreen(null);
-		// The player's own game sees the kept items too, not just the server.
-		ctx.waitFor(mc -> mc.player != null && mc.player.getInventory().getItem(0).is(Items.DIAMOND_PICKAXE)
-				&& mc.player.getInventory().getItem(40).is(Items.SHIELD), 100);
+		server.runCommand("kill @e[type=minecraft:item]");
 		ctx.waitTicks(5);
 		ctx.takeScreenshot("espresso_respawned");
+	}
+
+	/** Whether an item of that kind is lying within 4 blocks of {@code at}. */
+	private static boolean dropped(MinecraftServer server, BlockPos at, Item item) {
+		return !server.overworld().getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(4), e -> e.getItem().is(item)).isEmpty();
 	}
 
 	private static void fill(ServerLevel level, BlockPos pos, ItemStack beans) {

@@ -3,7 +3,8 @@
 Gabby decided on 2026-10-15 that Core becomes the café mod. The builder rules that Cozy Core now
 does as game rules leave Core, so a player with both mods isn't protected twice in two different
 ways, and each mod has one job (the map in CLAUDE.md). This file is the cut list for Gabby to
-approve; nothing in it is started. Gabby answered the questions at the bottom on 2026-10-15: all four
+approve. **Done on 2026-10-15** (the cut, the texts and the test changes; see PROGRESS.md), kept here
+as the record of what left and why. Gabby answered the questions at the bottom that day: all four
 removals, none of the five toggles, and the charm-only keep-on-death stays.
 
 ## What leaves

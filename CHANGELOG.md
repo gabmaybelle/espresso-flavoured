@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0: The Café Mod
+
+Espresso Flavoured Core is the café mod now. The builder rules it shared with [Cozy Core](https://github.com/gabmaybelle/cozy-core) live there alone, as game rules you can set per world, so a player with both mods isn't protected twice in two different ways.
+
+### Gone, to Cozy Core
+- **Creeper-proof and enderman-proof builds, no phantoms**, and the **monster-free radius around your home bed**. Cozy Core's Hearth Lantern does the quiet zone now, as a block you place where you want it.
+- **Keeping your hotbar, armour and off-hand on death**: Cozy Core's `keep_hotbar_on_death` rule. Worn café charms still stay with you.
+- Install Cozy Core alongside Espresso Flavoured Core for these; the Espresso Flavoured pack already does.
+
+### Still here
+- **Your home bed** is still your home: crouch and use a bed with an empty hand. It's where Drowsy clears and Cozy heals.
+- Longer days, tougher nights, healing only when fed, roomier bundles, the block merchant, and all of the café.
+- Old settings for the removed rules (`creeperGriefing`, `endermanGriefing`, `phantoms`, `safeHomeRadius`, `keepHotbarOnDeath`) are ignored and can be deleted from `config/espresso_flavoured.properties`; the settings screen no longer shows them.
+- Worlds from 0.3.0 carry over: no blocks, items or saved data change. A player who died in 0.3.0 and updates before respawning still gets their things back.
+
 ## 0.3.0: Bean Coins and Café Charms
 
 ### New mod ID

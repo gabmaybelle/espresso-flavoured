@@ -117,9 +117,6 @@ for (const [name, input, material] of [['pumpkin_spice_latte', 'espresso_flavour
 out('data/espresso_flavoured/tags/item/coffee.json', { values: ['espresso_flavoured:espresso', 'espresso_flavoured:latte', 'espresso_flavoured:mocha_latte', 'espresso_flavoured:vanilla_latte',
 	'espresso_flavoured:pumpkin_spice_latte', 'espresso_flavoured:iced_coffee', 'espresso_flavoured:night_shift', 'espresso_flavoured:honey_latte', 'espresso_flavoured:caramel_macchiato',
 	'espresso_flavoured:cold_brew'] });
-// Mobs whose explosions never break blocks (with creeper griefing off). Every creeper built on the
-// vanilla one is already covered in code; a pack can add creeper-like mobs from other mods here.
-out('data/espresso_flavoured/tags/entity_type/spares_blocks.json', { values: ['minecraft:creeper'] });
 // Logs that sometimes give cinnamon when an axe strips them (see CinnamonMixin, which rolls
 // loot_table/strip/cinnamon). A pack can add other mods' spicy-looking woods here.
 out('data/espresso_flavoured/tags/block/cinnamon_bark.json', {
@@ -435,13 +432,12 @@ out('data/espresso_flavoured/recipe/glass_jar.json', {
 // ---------------------------------------------------------------- field guide
 const PAGES = [
 	'Espresso Flavoured\nField Notes\n\nWelcome! This world is a little kinder to builders, so you can spend less time worrying and more time making something you love.\n\n- Gabby',
-	'Your Safe Haven\n\nCrouch and use a bed with an empty hand to make it your home. Monsters won\'t spawn within 32 blocks of it, even in caves below, so build mob farms further out.\n\nBreak the bed and the protection goes.',
-	'Builds Stay Built\n\nCreepers still bite, but their blasts no longer break blocks.\n\nEndermen leave your walls alone, and phantoms never visit, so rest whenever you like.',
+	'Your Home Bed\n\nCrouch and use a bed with an empty hand to make it your home. Sleeping somewhere else doesn\'t move it.\n\nHome is where rest counts: only a night here clears Drowsy, and Cozy heals you nearby.',
 	'Looking After Yourself\n\nYou only heal while you\'ve eaten recently, so keep a snack handy.\n\nThree days without a night at home and you turn Drowsy: no sprinting, slower mining. Coffee holds it off while it lasts.',
 	'Coffee Corner\n\nRoast coffee cherries, then brew them in an espresso machine on a coffee bar. Mugs are fired clay.\n\nAway three days? Only your own bed leaves you rested. Decaf helps you sleep well.',
 	'Bean Coins\n\nEvery advancement in the Espresso Flavoured tab pays you a Bean Coin.\n\nA master barista (a villager with an espresso machine) takes them: eight buy the Golden Mug, and one or two buy a treat.',
 	'Café Charms\n\nA master barista sells a charm or two for Bean Coins, and they turn up in café and village chests.\n\nWear them in trinket slots, or hold one in your off-hand. Each has a small perk, from a Lucky Bean to a Thermos.',
-	'If You Fall\n\nYour hotbar, armour and off-hand stay with you. In the Espresso Flavoured pack, the rest waits in a grave where you fell. Head back, open it, and carry on.\n\nHappy building!',
+	'If You Fall\n\nThe charms you\'re wearing stay with you. With Cozy Core, so do your hotbar and armour, and in the Espresso Flavoured pack the rest waits in a grave where you fell.\n\nHappy building!',
 ];
 out('data/espresso_flavoured/loot_table/field_guide.json', {
 	type: 'minecraft:command',

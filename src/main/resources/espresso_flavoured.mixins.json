@@ -4,10 +4,6 @@
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
 		"DeathLootMixin",
-		"EndermanTakeBlockGoalMixin",
-		"NaturalSpawnerMixin",
-		"PhantomSpawnerMixin",
-		"ServerExplosionMixin",
 		"StructureTemplatePoolAccessor"
 	],
 	"injectors": {

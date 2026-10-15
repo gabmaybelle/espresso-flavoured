@@ -3,8 +3,9 @@
 The café mod (mod ID `espresso_flavoured`), on its own since the Espresso Flavoured modpack moved
 to Cozy Core on 2026-10-14: coffee you grow and brew, mugs, a barista, Bean Coins and charms, with
 Drowsy, longer days, roomier bundles, a block merchant and the gazebo at spawn (Spawn Gazebo,
-bundled). At 0.3.0 it still carries the safe home radius, creeper-proof builds and keep-your-hotbar
-deaths; those leave in 0.4.0 (`PLAN-0.4.0.md`) because Cozy Core does them now. Fabric, Minecraft 26.3.
+bundled). The safe home radius, creeper-proof builds, phantoms and keep-your-hotbar deaths left in
+0.4.0 (`PLAN-0.4.0.md`) because Cozy Core does them now; only worn charms stay with you on death.
+Fabric, Minecraft 26.3.
 See README.md for what players get.
 
 `PROGRESS.md` says what's done, what's broken and what's next, with a row per session: read
@@ -13,8 +14,8 @@ it first, and add this session's row before ending.
 ## Layout
 
 - `src/main/java/com/gabbymaybelle/espresso/`: `Espresso.java` (entrypoint, built-in packs),
-  `Config.java` (`config/espresso_flavoured.properties`), the rules (`HomeBeds`, `KeepOnDeath`,
-  `Wellbeing`, `Nights`), `content/` (blocks, items, the espresso machine),
+  `Config.java` (`config/espresso_flavoured.properties`), the rules (`HomeBeds` for the home bed,
+  `KeepOnDeath` for worn charms, `Wellbeing`, `Nights`), `content/` (blocks, items, the espresso machine),
   `mixin/`, `client/` and `compat/` (Jade, JEI, Trinkets: all optional, compile-only).
 - `src/main/resources/resourcepacks/`: the built-in packs. `espresso_data` (recipes,
   advancements, the starter kit, trades) is always on.
@@ -25,9 +26,9 @@ it first, and add this session's row before ending.
 
 - `./gradlew build`: jar in `build/libs/`.
 - `./gradlew runClientGameTest`: plays through the main rules in a real game (about 1.5 minutes): settings file,
-  gazebo, brewing, Ristretto, safe home, Drowsy, tough nights, block merchant, village café,
+  gazebo, brewing, Ristretto, home bed, Drowsy, tough nights, block merchant, village café,
   café charms, sitting, coffee bushes, placed mugs, canisters, Well Rested, Bean Coins, barista
-  trades, keep-on-death, creepers, bundles, settings screen.
+  trades, charms on death, bundles, settings screen.
   Add `-PtestTrinkets` to run it with Trinkets Updated (charms in slots, not the off-hand); CI
   runs both. Screenshots go to `build/run/clientGameTest/screenshots/`.
 

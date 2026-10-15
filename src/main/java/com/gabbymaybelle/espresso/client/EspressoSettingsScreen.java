@@ -19,7 +19,8 @@ import net.minecraft.network.chat.Component;
 /**
  * Espresso Flavoured's settings, opened from Mod Menu. Built from vanilla option widgets
  * so it looks like the game's own options. Settings apply to worlds you host; on someone
- * else's server, the server's config file decides, so they're greyed out there.
+ * else's server, the server's config file decides, so they're greyed out there. (Builds that stay
+ * built, phantoms, a monster-free home and keeping your hotbar on death are Cozy Core's game rules.)
  */
 public class EspressoSettingsScreen extends OptionsSubScreen {
 	/** Settings the server decides, greyed out while playing on one. */
@@ -41,18 +42,10 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 		if (onServer) {
 			list.addHeader(Component.translatable("espresso_flavoured.options.on_server"));
 		}
-		list.addHeader(Component.translatable("espresso_flavoured.options.section.home"));
-		list.addSmall(
-				server(radius("safeHomeRadius", Config.safeHomeRadius, 0, Config.MAX_SAFE_HOME_RADIUS, v -> Config.safeHomeRadius = v)),
-				server(toggle("keepHotbarOnDeath", Config.keepHotbarOnDeath, v -> Config.keepHotbarOnDeath = v)),
-				server(toggle("creeperGriefing", Config.creeperGriefing, v -> Config.creeperGriefing = v)),
-				server(toggle("endermanGriefing", Config.endermanGriefing, v -> Config.endermanGriefing = v)));
-
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.days"));
 		list.addSmall(
 				server(toggle("longerDays", Config.longerDays, v -> Config.longerDays = v)),
-				server(toggle("toughNights", Config.toughNights, v -> Config.toughNights = v)),
-				server(toggle("phantoms", Config.phantoms, v -> Config.phantoms = v)));
+				server(toggle("toughNights", Config.toughNights, v -> Config.toughNights = v)));
 
 		list.addHeader(Component.translatable("espresso_flavoured.options.section.wellbeing"));
 		list.addSmall(
@@ -118,12 +111,4 @@ public class EspressoSettingsScreen extends OptionsSubScreen {
 				new OptionInstance.IntRange(min, max), value, set::accept);
 	}
 
-	/** A slider for a radius, where 0 reads "Off". */
-	private static OptionInstance<Integer> radius(String key, int value, int min, int max, Consumer<Integer> set) {
-		return new OptionInstance<>("espresso_flavoured.options." + key,
-				OptionInstance.cachedConstantTooltip(Component.translatable("espresso_flavoured.options." + key + ".tooltip")),
-				(caption, v) -> Component.translatable("options.generic_value", caption,
-						v == 0 ? Component.translatable("options.off") : Component.literal(Integer.toString(v))),
-				new OptionInstance.IntRange(min, max), value, set::accept);
-	}
 }

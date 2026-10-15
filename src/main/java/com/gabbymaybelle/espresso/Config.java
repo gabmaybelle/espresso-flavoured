@@ -24,25 +24,15 @@ public final class Config {
 	/** Written to the file, so a later version can tell an older file apart if it ever needs to change one. */
 	private static final int CONFIG_VERSION = 2;
 	/** Every setting the file should have; the file is written when one is missing. */
-	private static final List<String> KEYS = List.of("creeperGriefing", "endermanGriefing", "phantoms", "safeHomeRadius",
-			"blockMerchant", "bundleUnstackables", "longerDays", "keepHotbarOnDeath",
+	private static final List<String> KEYS = List.of("blockMerchant", "bundleUnstackables", "longerDays",
 			"regenNeedsSaturation", "toughNights", "drowsiness", "caffeineCrash", "coffeeBarRequired", "sugarCaneHeight", "configVersion");
 	/** The sliders' limits on the settings screen; the file is held to the same ones. */
-	public static final int MAX_SAFE_HOME_RADIUS = 64;
 	public static final int MAX_BUNDLE_UNSTACKABLES = 8;
 	public static final int MIN_SUGAR_CANE_HEIGHT = 3;
 	public static final int MAX_SUGAR_CANE_HEIGHT = 8;
 	/** The file as it was read, so settings from a newer version (or added by hand) survive a save. */
 	private static Properties loaded = new Properties();
 
-	/** Creeper explosions break blocks (vanilla). Off: they still hurt, but spare builds. */
-	public static boolean creeperGriefing = false;
-	/** Endermen pick up and move blocks (vanilla). */
-	public static boolean endermanGriefing = false;
-	/** Phantoms spawn for players who haven't slept (vanilla). */
-	public static boolean phantoms = false;
-	/** Hostile mobs don't spawn naturally within this many blocks of a player's home bed. 0 turns it off. */
-	public static int safeHomeRadius = 32;
 	/** The wandering trader also offers building blocks from far-off biomes. */
 	public static boolean blockMerchant = true;
 	/** How many tools, armour pieces and other non-stacking items fit in one bundle. 1 is vanilla. */
@@ -51,13 +41,11 @@ public final class Config {
 	public static int serverBundleUnstackables = 0;
 	/** 20-minute days and 10-minute nights (vanilla: 10 and 10). */
 	public static boolean longerDays = true;
-	/** Keep the hotbar, armour, off-hand and (with Trinkets) worn charms on death; everything else drops. */
-	public static boolean keepHotbarOnDeath = true;
 	/** Slow natural healing only happens while you have saturation (you've eaten recently). */
 	public static boolean regenNeedsSaturation = true;
 	/** Nights bring a few more hostile mobs, with 20% more health and damage. */
 	public static boolean toughNights = true;
-	/** Drowsy after three days without sleeping at home; Hungry too if you haven't eaten in that time. */
+	/** Drowsy after three days without sleeping at home (any bed within 32 blocks of your home bed); Hungry too if you haven't eaten in that time. */
 	public static boolean drowsiness = true;
 	/** After three days away, coffee only holds Drowsy off for a while, then you crash. Off: coffee holds it off for as long as you keep drinking. */
 	public static boolean caffeineCrash = false;
@@ -66,6 +54,8 @@ public final class Config {
 	/** How tall sugar cane grows (vanilla: 3). */
 	public static int sugarCaneHeight = 5;
 	// The gazebo at spawn and its protection are Spawn Gazebo's (bundled): its settings are in config/spawn_gazebo.properties.
+	// Builds that stay built, phantoms, a monster-free radius and keeping your hotbar on death were settings until 0.3.0;
+	// they are Cozy Core's game rules now. Their old keys in the file are ignored (and kept, like any unknown key).
 
 	private Config() {
 	}
@@ -84,14 +74,9 @@ public final class Config {
 				Espresso.LOGGER.warn("Espresso Flavoured: couldn't read {}, using defaults", FILE, e);
 			}
 		}
-		creeperGriefing = bool(props, "creeperGriefing", creeperGriefing);
-		endermanGriefing = bool(props, "endermanGriefing", endermanGriefing);
-		phantoms = bool(props, "phantoms", phantoms);
-		safeHomeRadius = Math.min(MAX_SAFE_HOME_RADIUS, integer(props, "safeHomeRadius", safeHomeRadius));
 		blockMerchant = bool(props, "blockMerchant", blockMerchant);
 		bundleUnstackables = Math.max(1, Math.min(MAX_BUNDLE_UNSTACKABLES, integer(props, "bundleUnstackables", bundleUnstackables)));
 		longerDays = bool(props, "longerDays", longerDays);
-		keepHotbarOnDeath = bool(props, "keepHotbarOnDeath", keepHotbarOnDeath);
 		regenNeedsSaturation = bool(props, "regenNeedsSaturation", regenNeedsSaturation);
 		toughNights = bool(props, "toughNights", toughNights);
 		drowsiness = bool(props, "drowsiness", drowsiness);
@@ -110,14 +95,9 @@ public final class Config {
 	public static void save() {
 		Properties props = new Properties();
 		props.putAll(loaded);
-		props.setProperty("creeperGriefing", Boolean.toString(creeperGriefing));
-		props.setProperty("endermanGriefing", Boolean.toString(endermanGriefing));
-		props.setProperty("phantoms", Boolean.toString(phantoms));
-		props.setProperty("safeHomeRadius", Integer.toString(safeHomeRadius));
 		props.setProperty("blockMerchant", Boolean.toString(blockMerchant));
 		props.setProperty("bundleUnstackables", Integer.toString(bundleUnstackables));
 		props.setProperty("longerDays", Boolean.toString(longerDays));
-		props.setProperty("keepHotbarOnDeath", Boolean.toString(keepHotbarOnDeath));
 		props.setProperty("regenNeedsSaturation", Boolean.toString(regenNeedsSaturation));
 		props.setProperty("toughNights", Boolean.toString(toughNights));
 		props.setProperty("drowsiness", Boolean.toString(drowsiness));
@@ -130,22 +110,18 @@ public final class Config {
 		Path temp = FILE.resolveSibling(FILE.getFileName() + ".tmp");
 		try (Writer writer = Files.newBufferedWriter(temp)) {
 			props.store(writer, "Espresso Flavoured (also editable in game: Mod Menu > Espresso Flavoured > Config)\n"
-					+ "creeperGriefing: creeper explosions break blocks (vanilla behaviour)\n"
-					+ "endermanGriefing: endermen pick up blocks (vanilla behaviour)\n"
-					+ "phantoms: phantoms spawn for players who haven't slept (vanilla behaviour)\n"
-					+ "safeHomeRadius: no natural hostile spawns within this many blocks of your home bed (crouch + use a bed with an empty hand; 0 = off, up to 64)\n"
 					+ "blockMerchant: the wandering trader also sells building blocks\n"
 					+ "bundleUnstackables: how many tools or armour pieces fit in one bundle (1 = vanilla, up to 8)\n"
 					+ "longerDays: 20-minute days and 10-minute nights\n"
 					+ "(the gazebo at spawn is Spawn Gazebo's, bundled with Espresso: its settings are in spawn_gazebo.properties)\n"
-					+ "keepHotbarOnDeath: keep your hotbar, armour, off-hand and worn charms when you die\n"
 					+ "regenNeedsSaturation: slow healing only while you've eaten recently\n"
 					+ "toughNights: a few more, slightly tougher monsters at night\n"
-					+ "drowsiness: Drowsy after three days without sleeping at home (any bed within your safe home radius); coffee holds it off while it lasts\n"
+					+ "drowsiness: Drowsy after three days without sleeping at home (crouch + use a bed with an empty hand to set it; any bed within 32 blocks counts); coffee holds it off while it lasts\n"
 					+ "caffeineCrash: a harder Drowsy: coffee only holds it off for a day and then you crash, and three days without eating as well makes you Hungry\n"
 					+ "coffeeBarRequired: the espresso machine only brews on top of a coffee bar\n"
 					+ "sugarCaneHeight: how tall sugar cane grows (3, as in vanilla, to 8)\n"
-					+ "longerDays needs a restart; everything else applies straight away");
+					+ "longerDays needs a restart; everything else applies straight away\n"
+					+ "(builds that stay built, phantoms, a monster-free home and keeping your hotbar on death are Cozy Core's game rules now)");
 		} catch (IOException e) {
 			Espresso.LOGGER.warn("Espresso Flavoured: couldn't write {}", FILE, e);
 			return;

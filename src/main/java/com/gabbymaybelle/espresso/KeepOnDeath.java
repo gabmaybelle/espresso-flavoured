@@ -8,28 +8,26 @@ import java.util.Map;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 /**
- * On death a player keeps their hotbar, armour and off-hand. Everything else drops as
- * usual (into a grave, with a graves mod), so there's still a trip back for resources.
- * Kept items are saved with the player until they respawn, so a crash or log-out while
- * dead loses nothing.
+ * The café charms a player is wearing (in Trinkets slots) stay with them on death and go back
+ * in their slots after respawning. Kept items are saved with the player until they respawn, so
+ * a crash or log-out while dead loses nothing. Without Trinkets a charm is an ordinary item in
+ * the off-hand, and follows whatever rule the world has for those.
+ * <p>
+ * Until 0.3.0 this also kept the hotbar, armour and off-hand; that is Cozy Core's
+ * {@code keep_hotbar_on_death} game rule now. Items a 0.3.0 player left here when they died
+ * (keyed by their slot number) are still handed back.
  */
 public final class KeepOnDeath {
 	private static final AttachmentType<Map<String, ItemStack>> KEPT = AttachmentRegistry.create(
 			Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "kept_items"),
 			builder -> builder.persistent(Codec.unboundedMap(Codec.STRING, ItemStack.CODEC)).copyOnDeath());
-
-	/** Hotbar 0..8, then feet, legs, chest, head (36..39) and the off-hand (40). */
-	private static final int[] KEPT_SLOTS = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 36, 37, 38, 39, 40 };
 
 	private KeepOnDeath() {
 	}
@@ -67,6 +65,7 @@ public final class KeepOnDeath {
 				}
 				continue;
 			}
+			// A hotbar, armour or off-hand slot, from a death in 0.3.0 or earlier.
 			int slot = Integer.parseInt(key);
 			if (inventory.getItem(slot).isEmpty()) {
 				inventory.setItem(slot, stack);
@@ -76,36 +75,19 @@ public final class KeepOnDeath {
 		}
 	}
 
-	/** Called just before a player's equipment drops on death. */
+	/** Called just before a player's equipment drops on death: worn charms are set aside. */
 	public static void stashKeptItems(Player player) {
-		if (!Config.keepHotbarOnDeath || !(player instanceof ServerPlayer)) {
+		if (!CharmItem.TRINKETS || !(player instanceof ServerPlayer)) {
 			return;
 		}
-		Inventory inventory = player.getInventory();
 		// Anything still waiting from a death moments ago stays in the list.
 		Map<String, ItemStack> kept = new HashMap<>(player.getAttachedOrElse(KEPT, Map.of()));
-		for (int slot : KEPT_SLOTS) {
-			ItemStack stack = inventory.getItem(slot);
-			// Curse of Vanishing still vanishes.
-			if (stack.isEmpty() || EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
-				continue;
-			}
-			String key = Integer.toString(slot);
+		for (Map.Entry<String, ItemStack> charm : TrinketsCompat.takeCharms(player).entrySet()) {
+			String key = charm.getKey();
 			for (int n = 1; kept.containsKey(key); n++) {
-				key = slot + "#" + n;
+				key = charm.getKey() + "#" + n;
 			}
-			kept.put(key, stack.copy());
-			inventory.setItem(slot, ItemStack.EMPTY);
-		}
-		// Worn café charms stay too (with Trinkets; without it they're ordinary inventory items).
-		if (CharmItem.TRINKETS) {
-			for (Map.Entry<String, ItemStack> charm : TrinketsCompat.takeCharms(player).entrySet()) {
-				String key = charm.getKey();
-				for (int n = 1; kept.containsKey(key); n++) {
-					key = charm.getKey() + "#" + n;
-				}
-				kept.put(key, charm.getValue());
-			}
+			kept.put(key, charm.getValue());
 		}
 		if (!kept.isEmpty()) {
 			player.setAttached(KEPT, kept);

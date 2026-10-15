@@ -2,15 +2,13 @@
 
 *Survival that's kind to builders: a safe home, builds that stay built, and coffee you grow and brew.*
 
-It works on its own, with just Fabric API. It was the heart of the [Espresso Flavoured modpack](https://github.com/gabmaybelle/espresso-flavoured-pack) up to 0.3.0; the pack now builds on [Cozy Core](https://github.com/gabmaybelle/cozy-core) instead, and Espresso Flavoured Core is becoming the café mod, with the builder rules the two share leaving it in the next version.
+It works on its own, with just Fabric API. It was the heart of the [Espresso Flavoured modpack](https://github.com/gabmaybelle/espresso-flavoured-pack) up to 0.3.0; the pack now builds on [Cozy Core](https://github.com/gabmaybelle/cozy-core) instead, and Espresso Flavoured Core is the café mod: the builder rules the two shared now live in Cozy Core, which goes nicely alongside this one.
 
 Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival kinder to builders without making it toothless. Your home is a refuge and your builds are safe, while nights, hunger and the wider world keep their bite. It also adds coffee, grown and brewed by you, to help you through a long day of building.
 
 ## What it changes
 
-**A safe home.** Crouch and use a bed with an empty hand to make it your home. Monsters won't spawn naturally within 32 blocks of it. Sleeping somewhere else doesn't move it.
-
-**Builds stay built.** Creeper explosions no longer break blocks, endermen leave blocks alone, and phantoms never visit.
+**Your home bed.** Crouch and use a bed with an empty hand to make it your home. Sleeping somewhere else doesn't move it. Home is where rest counts: only a night there clears Drowsy, and Cozy heals you near it. (For a monster-free build site, Cozy Core's Hearth Lantern does that job.)
 
 **Longer days, sharper nights.** Daylight lasts 20 minutes and night 10. Nights bring a few more monsters, and the ones that spawn in the dark are a little tougher.
 
@@ -26,7 +24,7 @@ Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival k
 
 **The barista.** Villagers can take an espresso machine as their workstation and become baristas. They trade in beans, mugs, drinks, bakes and café decor, and a master barista sells the Barista's Reserve for Bean Coins: rare beans that brew a Ristretto, the only coffee strong enough for Speed II and Haste II. Coffee gives Speed and Haste, and holds off the drowsiness of staying up too late.
 
-**Death.** You keep your hotbar, armour, off-hand and the charms you're wearing. Everything else stays where you fell, so there's still a trip back for your things (into a grave, if you also use a graves mod).
+**Death.** The charms you're wearing stay with you. Everything else drops where you fell (into a grave, if you also use a graves mod). To keep your hotbar and armour too, add [Cozy Core](https://github.com/gabmaybelle/cozy-core): its `keep_hotbar_on_death` rule does that for every mod.
 
 **Room for more.** Shulker boxes can be crafted in the Overworld (a chest, iron, ender pearls and amethyst), bundles also take wool or rabbit hide, and a bundle holds four tools or pieces of armour.
 
@@ -40,11 +38,12 @@ Every rule can be switched off or adjusted in `config/espresso_flavoured.propert
 
 Espresso Flavoured Core needs only Fabric API. It notices a few other mods when they're there:
 
+- **Cozy Core:** Gabby's builder rules (builds that stay built, no phantoms, keep your hotbar on death, the Hearth Lantern). Nothing links the two in code; they're simply made to go together.
 - **Trinkets Updated:** the café charms go in trinket slots (right-click to wear one) and stay with you on death. Without it, a charm works in your off-hand, so you choose one at a time.
 - **Jade:** placed mugs show their drink, coffee bushes how ripe they are, and the espresso machine how its brew is going.
 - **JEI:** a page for what the espresso machine brews.
 - **Iris:** shaders keep time with the longer days (and with any other mod's or datapack's day length).
-- **Graves mods** (Universal Graves and others that take over death drops): your hotbar, armour, off-hand and worn charms are set aside first; the grave gets the rest.
+- **Graves mods** (Universal Graves and others that take over death drops): your worn charms are set aside first (and, with Cozy Core, your hotbar and armour); the grave gets the rest.
 - **Towns and Towers:** its villages get cafés too, in the closest of Espresso's styles, and coffee turns up in its chests.
 - **Lootr:** the starter kit chest in the spawn gazebo is shared out per player.
 - **Spawn Gazebo** is included: Espresso comes with Gabby's own Spawn Gazebo mod inside it, so there's nothing extra to install. Its settings (whether the gazebo is built, its starter chest, how far its protection reaches) are in Spawn Gazebo's own screen, reached from Espresso's settings with the Gazebo Settings button, or in `config/spawn_gazebo.properties`.
@@ -55,7 +54,6 @@ A few things are data, so a pack can change them without code:
 | Tag | What it does |
 |---|---|
 | `espresso_flavoured:cinnamon_bark` (blocks) | Logs that sometimes give cinnamon when an axe strips them (jungle and acacia). |
-| `espresso_flavoured:spares_blocks` (entity types) | Mobs whose explosions never break blocks while creeper griefing is off (every creeper built on vanilla's is covered already). |
 | `espresso_flavoured:ember_glove_smelts` (items) | What the Ember Glove smelts as you mine it. |
 | `espresso_flavoured:block_merchant` (items) | What counts as a building block for the House Blend advancement. |
 | `espresso_flavoured:coffee` (items) | Every coffee drink, for recipes and advancements. |
@@ -72,7 +70,7 @@ You need JDK 25.
 
 The jar is written to `build/libs/`. The scripts in `tools/` regenerate the data pack, the art and the longer-day timelines.
 
-`./gradlew runClientGameTest` starts the game and plays through the main rules: the settings file (typos, unknown settings, safe saving), the spawn gazebo and its starter chest, brewing in the espresso machine (and not off a coffee bar), the Ristretto's Speed II and Haste II, the safe home radius, Drowsy and how coffee and sleeping at home deal with it, tougher nights, the block merchant, the village café, every café charm's perk, sitting on stairs, growing and picking coffee bushes, setting mugs down, canisters, waking Well Rested, Bean Coins and the master barista's coin trades, keeping the hotbar and off-hand on death, creepers sparing builds, four tools to a bundle, and the settings screen. Add `-PtestTrinkets` to run it with Trinkets Updated installed, so the charms are worn in their slots rather than the off-hand. Screenshots land in `build/run/clientGameTest/screenshots`.
+`./gradlew runClientGameTest` starts the game and plays through the main rules: the settings file (typos, unknown settings, safe saving), the spawn gazebo and its starter chest, brewing in the espresso machine (and not off a coffee bar), the Ristretto's Speed II and Haste II, the home bed, Drowsy and how coffee and sleeping at home deal with it, tougher nights, the block merchant, the village café, every café charm's perk, sitting on stairs, growing and picking coffee bushes, setting mugs down, canisters, waking Well Rested, Bean Coins and the master barista's coin trades, worn charms staying with you on death while the rest drops, four tools to a bundle, and the settings screen. Add `-PtestTrinkets` to run it with Trinkets Updated installed, so the charms are worn in their slots rather than the off-hand. Screenshots land in `build/run/clientGameTest/screenshots`.
 
 ## Licences
 

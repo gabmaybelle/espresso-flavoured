@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Set aside the hotbar, armour and off-hand at the very start of a player's death drops,
- * before anything else handles the inventory (graves mods such as Universal Graves take
- * over the equipment drop later in this method).
+ * Set aside the worn café charms at the very start of a player's death drops, before anything
+ * else handles the inventory (Trinkets and graves mods such as Universal Graves take over the
+ * equipment drop later in this method).
  */
 @Mixin(LivingEntity.class)
 public abstract class DeathLootMixin {

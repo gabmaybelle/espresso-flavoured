@@ -36,7 +36,6 @@ public class Espresso implements ModInitializer {
 			ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "espresso_long_days"), mod,
 					Component.translatable("pack.espresso_flavoured.long_days"), PackActivationType.ALWAYS_ENABLED);
 		}
-		LOGGER.info("Espresso Flavoured: ready (safe home radius {}, creeper griefing {}, enderman griefing {}, phantoms {})",
-				Config.safeHomeRadius, Config.creeperGriefing, Config.endermanGriefing, Config.phantoms);
+		LOGGER.info("Espresso Flavoured: ready (longer days {}, drowsiness {}, caffeine crash {})", Config.longerDays, Config.drowsiness, Config.caffeineCrash);
 	}
 }

@@ -22,13 +22,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 
 /**
- * The safe home radius. A player chooses their home by crouching and using a bed with an
- * empty hand; sleeping on its own doesn't change it, so a night in a travel bed leaves
- * the base protected. Each player has one home, saved with the world. Hostile mobs don't
- * spawn naturally within {@link Config#safeHomeRadius} blocks (measured across, at any
- * height) of any player's home.
+ * Home beds. A player chooses their home by crouching and using a bed with an empty hand;
+ * sleeping on its own doesn't change it, so a night in a travel bed doesn't move home. Each
+ * player has one home, saved with the world. Home is where rest counts: only a night within
+ * {@link #HOME_RADIUS} blocks of it clears Drowsy ({@link Wellbeing}), and Cozy heals you near
+ * it. (Until 0.3.0 home also kept monsters from spawning nearby; Cozy Core's Hearth Lantern does
+ * that now.)
  */
 public final class HomeBeds {
+	/** How far from the home bed still counts as home: any bed within it is sleeping at home, and Cozy heals within it. */
+	public static final int HOME_RADIUS = 32;
+
 	private static final AttachmentType<Map<UUID, GlobalPos>> HOMES = AttachmentRegistry.create(
 			Identifier.fromNamespaceAndPath(Espresso.MOD_ID, "home_beds"),
 			builder -> builder
@@ -40,7 +44,7 @@ public final class HomeBeds {
 
 	static void register() {
 		UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
-			if (Config.safeHomeRadius <= 0 || hand != InteractionHand.MAIN_HAND || !player.isShiftKeyDown()
+			if (hand != InteractionHand.MAIN_HAND || !player.isShiftKeyDown()
 					|| !player.getMainHandItem().isEmpty()
 					|| !(world.getBlockState(hit.getBlockPos()).getBlock() instanceof AbstractBedBlock)) {
 				return InteractionResult.PASS;
@@ -94,7 +98,7 @@ public final class HomeBeds {
 		Map<UUID, GlobalPos> homes = new HashMap<>(store(level));
 		homes.put(player.getUUID(), GlobalPos.of(level.dimension(), bed.immutable()));
 		level.getServer().overworld().setAttached(HOMES, homes);
-		player.sendOverlayMessage(Component.translatable("message.espresso_flavoured.home_set", Config.safeHomeRadius));
+		player.sendOverlayMessage(Component.translatable("message.espresso_flavoured.home_set"));
 		EspressoAdvancements.award(player, "guide/safe_haven", "home");
 	}
 
@@ -104,56 +108,28 @@ public final class HomeBeds {
 	}
 
 	/**
-	 * True when a bed at {@code bed} counts as sleeping at home for this player: inside the
-	 * safe home radius of their home bed. Players without a home (or with the radius off)
-	 * are at home in any bed.
+	 * True when a bed at {@code bed} counts as sleeping at home for this player: within
+	 * {@link #HOME_RADIUS} of their home bed. Players without a home are at home in any bed.
 	 */
 	public static boolean isAtHome(ServerPlayer player, ServerLevel level, BlockPos bed) {
 		GlobalPos home = store(level).get(player.getUUID());
-		int radius = Config.safeHomeRadius;
-		if (home == null || radius <= 0) {
+		if (home == null) {
 			return true;
 		}
 		long dx = home.pos().getX() - bed.getX(), dz = home.pos().getZ() - bed.getZ();
-		return home.dimension() == level.dimension() && dx * dx + dz * dz <= (long) radius * radius;
+		return home.dimension() == level.dimension() && dx * dx + dz * dz <= (long) HOME_RADIUS * HOME_RADIUS;
 	}
 
-	/** True when the player is within the safe home radius of their own home bed (false with no home). */
+	/** True when the player is within {@link #HOME_RADIUS} of their own home bed (false with no home). */
 	public static boolean isNearHome(ServerPlayer player) {
 		if (!(player.level() instanceof ServerLevel level)) {
 			return false;
 		}
 		GlobalPos home = store(level).get(player.getUUID());
-		int radius = Math.max(Config.safeHomeRadius, 8);
 		if (home == null || home.dimension() != level.dimension()) {
 			return false;
 		}
 		double dx = home.pos().getX() + 0.5 - player.getX(), dz = home.pos().getZ() + 0.5 - player.getZ();
-		return dx * dx + dz * dz <= (double) radius * radius;
-	}
-
-	/** True when a hostile spawn at {@code pos} would be inside someone's safe home radius. */
-	public static boolean isProtected(ServerLevel level, BlockPos pos) {
-		int radius = Config.safeHomeRadius;
-		if (radius <= 0) {
-			return false;
-		}
-		long limit = (long) radius * radius;
-		for (GlobalPos home : store(level).values()) {
-			if (home.dimension() != level.dimension()) {
-				continue;
-			}
-			BlockPos bed = home.pos();
-			long dx = bed.getX() - pos.getX(), dz = bed.getZ() - pos.getZ();
-			if (dx * dx + dz * dz > limit) {
-				continue;
-			}
-			// A bed that has been broken no longer protects anything.
-			if (level.isLoaded(bed) && !(level.getBlockState(bed).getBlock() instanceof AbstractBedBlock)) {
-				continue;
-			}
-			return true;
-		}
-		return false;
+		return dx * dx + dz * dz <= (double) HOME_RADIUS * HOME_RADIUS;
 	}
 }
