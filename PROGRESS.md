@@ -8,12 +8,13 @@ which checks fail, code put back), what was learned, and what was deliberately n
 
 - **Done:** Espresso Flavoured Core 0.3.0 (mod ID `espresso_flavoured`): the safe home, builds that stay built, coffee to grow and brew, Bean Coins and café charms, with Spawn Gazebo bundled and the clock handed to Nightfall Clock. Client game test covers the main rules, the café and the charms, with and without Trinkets; CI runs it on every push.
 - **Broken:** Nothing known as of this writing (not re-verified).
-- **Next:** Cozy Core has taken over from Core in the pack (2026-10-14); what Core still carries on its own is a question for Gabby. Keep the settings file and log lines as they are.
+- **Next:** Become the café mod (Gabby's decision, 2026-10-15): 0.4.0 drops the rules Cozy Core now has (safe home, creeper and enderman protection, phantoms, keep-on-death) and keeps coffee, the café, charms, Bean Coins, Drowsy and longer days. The cut list is `PLAN-0.4.0.md`; nothing in it is started. Keep the settings file and log lines as they are.
 
 ## Log
 
 | Date | Session | What happened |
 | --- | --- | --- |
+| 2026-10-15 | Café mod | Gabby decided Core becomes the café mod and the builder rules go to Cozy Core (the one-job-per-mod map, now in every repo's CLAUDE.md). `PLAN-0.4.0.md` is the cut list (what leaves, what stays, the home bed and charm-only keep-on-death that change shape, the test and CHANGELOG changes, three questions for Gabby); the stale "heart of the pack" lines in README and CLAUDE.md are fixed; the Modrinth listing draft (branch `listing-draft`) is rebased onto main and rewritten for 0.4.0. No code change; nothing in the plan is started. |
 | 2026-10-15 | Notes | `PROGRESS.md` added, with the rows below reconstructed from the commit history (one row per day, the commits' own words); the two shared rules (commits one at a time by hand, proof runs for data changes) added to `CLAUDE.md`. No code change. |
 | 2026-10-14 | (from history) | Settings file held to the sliders' ranges, and every log line named; Espresso keeps to the café and the survival rules; Sit down with a tool in hand, and a tidier core. |
 | 2026-10-13 | (from history) | The gazebo at spawn comes from Spawn Gazebo, bundled inside Espresso; Game test covers the everyday café, and builds against JEI 31.12; Game test covers the café charms, with and without Trinkets; Safer settings, and the game test covers every main rule; CI runs the game test on every push; Notes for Claude: how this repo works and the rules every session follows; Client game test for Core's main rules; Set lava near the spawn gazebo to stone; Scale the river moss back, and keep carpets off the water's lip; Keep the river plants out of the water, so they stop dropping as items. |

@@ -1,9 +1,11 @@
 # Espresso Flavoured Core
 
-The mod at the heart of the Espresso Flavoured modpack (mod ID `espresso_flavoured`): a safe home
-radius, builds creepers can't wreck, longer days, keep-your-hotbar deaths, roomier bundles, a block
-merchant, the gazebo at spawn (Spawn Gazebo, bundled), and a café (coffee you grow and brew, mugs, a barista). Fabric,
-Minecraft 26.3. See README.md for what players get.
+The café mod (mod ID `espresso_flavoured`), on its own since the Espresso Flavoured modpack moved
+to Cozy Core on 2026-10-14: coffee you grow and brew, mugs, a barista, Bean Coins and charms, with
+Drowsy, longer days, roomier bundles, a block merchant and the gazebo at spawn (Spawn Gazebo,
+bundled). At 0.3.0 it still carries the safe home radius, creeper-proof builds and keep-your-hotbar
+deaths; those leave in 0.4.0 (`PLAN-0.4.0.md`) because Cozy Core does them now. Fabric, Minecraft 26.3.
+See README.md for what players get.
 
 `PROGRESS.md` says what's done, what's broken and what's next, with a row per session: read
 it first, and add this session's row before ending.
@@ -40,11 +42,32 @@ it first, and add this session's row before ending.
   function reads storage `spawn_gazebo:spawn`. To take a new Spawn Gazebo: build it, copy the jar
   into libs/, update the version in build.gradle and fabric.mod.json. (Until 2026-10-13 the two
   carried duplicate copies of the builder, which had drifted.)
-- **The modpack carries a copy of this jar** (espresso-flavoured-pack, `overrides/mods/`).
-  After a change players should get, the pack needs a jar built from a clean, committed `main`.
+- **The modpack no longer carries this jar.** Cozy Core took Core's place in espresso-flavoured-pack
+  on 2026-10-14, and the pack's `retired` list moves old Core jars out of players' `mods/`. Don't
+  put a Core build back into the pack without asking Gabby.
 - Keep the mod ID `espresso_flavoured`: worlds and configs depend on it.
 - **Longer days:** a day is 36000 ticks (24000 of daylight, then night; midnight is 30000), so
   vanilla tick numbers for times of day are wrong here. Tests that need night use 30000.
+
+## Gabby's mods: who does what (the same in every repo)
+
+One job per mod, decided 2026-10-15, so nothing is done twice and each repo tells the same story:
+
+- **Cozy Core** (cozy-core): the builder rules, each an ordinary game rule: builds stay built (mob
+  explosions, endermen, fire), no phantoms, keep your hotbar on death, the Hearth Lantern, cheap
+  wood in the stonecutter, re-dyeing and builder trades. Fabric and NeoForge jars, plus a plain
+  data pack of the recipes.
+- **Espresso Flavoured Core** (espresso-flavoured): the café: coffee you grow and brew, mugs,
+  baristas, Bean Coins, the café charms, and Drowsy (coffee's reason to exist). Longer days stay a
+  Core setting for now. The survival rules Cozy Core now covers leave Core in 0.4.0 (its PLAN-0.4.0.md).
+- **Spawn Gazebo** (spawn-gazebo): the gazebo at the world spawn and its starter chest.
+- **Nightfall Clock** (nightfall-clock): the clock above the hotbar and the dusk warning.
+- **Pocket List** (pocket-list): the gathering checklist.
+- **Espresso Flavoured** (espresso-flavoured-pack): the modpack that puts them together. Since
+  2026-10-14 it carries Cozy Core, Spawn Gazebo, Nightfall Clock and Pocket List, not Espresso
+  Flavoured Core.
+
+A new feature goes in the mod whose job it is. If none fits, ask Gabby before adding it anywhere.
 
 ## Working on Gabby's mods (the same in every repo)
 

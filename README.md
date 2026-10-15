@@ -2,7 +2,7 @@
 
 *Survival that's kind to builders: a safe home, builds that stay built, and coffee you grow and brew.*
 
-This is the mod at the heart of the [Espresso Flavoured modpack](https://github.com/gabmaybelle/espresso-flavoured-pack). It works on its own too.
+It works on its own, with just Fabric API. It was the heart of the [Espresso Flavoured modpack](https://github.com/gabmaybelle/espresso-flavoured-pack) up to 0.3.0; the pack now builds on [Cozy Core](https://github.com/gabmaybelle/cozy-core) instead, and Espresso Flavoured Core is becoming the café mod, with the builder rules the two share leaving it in the next version.
 
 Espresso Flavoured Core is a Fabric mod for Minecraft 26.3 that makes survival kinder to builders without making it toothless. Your home is a refuge and your builds are safe, while nights, hunger and the wider world keep their bite. It also adds coffee, grown and brewed by you, to help you through a long day of building.
 
@@ -48,7 +48,7 @@ Espresso Flavoured Core needs only Fabric API. It notices a few other mods when 
 - **Towns and Towers:** its villages get cafés too, in the closest of Espresso's styles, and coffee turns up in its chests.
 - **Lootr:** the starter kit chest in the spawn gazebo is shared out per player.
 - **Spawn Gazebo** is included: Espresso comes with Gabby's own Spawn Gazebo mod inside it, so there's nothing extra to install. Its settings (whether the gazebo is built, its starter chest, how far its protection reaches) are in Spawn Gazebo's own screen, reached from Espresso's settings with the Gazebo Settings button, or in `config/spawn_gazebo.properties`.
-- **Nightfall Clock** (in the pack) is the clock: it reads the sun, so it stays right on the longer days.
+- **Nightfall Clock:** a clock that reads the sun, so it stays right on the longer days.
 
 A few things are data, so a pack can change them without code:
 
