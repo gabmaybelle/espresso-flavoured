@@ -3,7 +3,8 @@
 Gabby decided on 2026-10-15 that Core becomes the café mod. The builder rules that Cozy Core now
 does as game rules leave Core, so a player with both mods isn't protected twice in two different
 ways, and each mod has one job (the map in CLAUDE.md). This file is the cut list for Gabby to
-approve; nothing in it is started. Tick the questions at the bottom first.
+approve; nothing in it is started. Gabby answered the questions at the bottom on 2026-10-15: all four
+removals, none of the five toggles, and the charm-only keep-on-death stays.
 
 ## What leaves
 
@@ -86,8 +87,8 @@ is still read, so a player who died in 0.3.0 and updates before respawning still
 4. Game test changes and the proof run; CI green with and without Trinkets.
 5. Version 0.4.0 in `gradle.properties` and `fabric.mod.json`; the Modrinth listing draft follows.
 
-## Questions for Gabby
+## Questions for Gabby (answered 2026-10-15)
 
-- [ ] Agree the four removals above?
-- [ ] Any of the "not decided" five to remove as well in 0.4.0?
-- [ ] Keep the charm-only keep-on-death in Core (recommended), or let charms drop like anything else?
+- [x] Agree the four removals above? **Yes, all four.**
+- [x] Any of the "not decided" five to remove as well in 0.4.0? **No, all five stay.**
+- [x] Keep the charm-only keep-on-death in Core? **Yes, worn charms stay with you.**
