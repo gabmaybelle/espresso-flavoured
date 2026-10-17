@@ -1,7 +1,7 @@
 // Draws Espresso Flavoured's title subtitle and mod icon, and writes the splash texts.
 //   node tools/generate-art.js
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
-const RES = path.join(__dirname, '..', 'src', 'main', 'resources');
+const RES = path.join(__dirname, '..', 'common', 'src', 'main', 'resources');
 const LOOK = path.join(RES, 'resourcepacks', 'espresso_look');
 
 // ---------------------------------------------------------------- PNG helpers

@@ -1,0 +1,29 @@
+// Loader-neutral code and data: the café, its rules, the settings and their screen, the mixins and
+// the built-in data packs. This project is compiled on its own so a Fabric or NeoForge import
+// can't sneak in: only Minecraft, Mixin and the JDK (plus the optional mods' APIs) are on the
+// classpath. Nothing here ships as a jar; `fabric` and `neoforge` compile these sources into theirs.
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	// Only for the Mixin annotations and the launch-side classes they need. No Fabric API here.
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	// Spawn Gazebo: for the Gazebo Settings button (the jars bundle it).
+	compileOnly ":spawn-gazebo-fabric:${project.spawn_gazebo_version}"
+	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
+	compileOnly "maven.modrinth:jade:26.3.5+fabric"
+	// JEI: only for the espresso machine's page; not bundled or required.
+	// (Modrinth version id of JEI 31.12.0.65 for Fabric 26.3.)
+	compileOnly "maven.modrinth:jei:csqmrfNS"
+}
+
+loom {
+	accessWidenerPath = file("compile.accesswidener")
+	mods {
+		"espresso_flavoured" {
+			sourceSet sourceSets.main
+		}
+	}
+}

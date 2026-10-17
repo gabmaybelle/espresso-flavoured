@@ -5,7 +5,7 @@ Cozy Core since pack 0.5.0): coffee you grow and brew, mugs, a barista, Bean Coi
 Drowsy, longer days, roomier bundles, a block merchant and the gazebo at spawn (Spawn Gazebo,
 bundled). The safe home radius, creeper-proof builds, phantoms and keep-your-hotbar deaths left in
 0.4.0 (`PLAN-0.4.0.md`) because Cozy Core does them now; only worn charms stay with you on death.
-Fabric, Minecraft 26.3.
+Fabric and NeoForge, Minecraft 26.3.
 See README.md for what players get.
 
 `PROGRESS.md` says what's done, what's broken and what's next, with a row per session: read
@@ -13,36 +13,56 @@ it first, and add this session's row before ending.
 
 ## Layout
 
-- `src/main/java/com/gabbymaybelle/espresso/`: `Espresso.java` (entrypoint, built-in packs),
-  `Config.java` (`config/espresso_flavoured.properties`), the rules (`HomeBeds` for the home bed,
-  `KeepOnDeath` for worn charms, `Wellbeing`, `Nights`), `content/` (blocks, items, the espresso machine),
-  `mixin/`, `client/` and `compat/` (Jade, JEI, Trinkets: all optional, compile-only).
-- `src/main/resources/resourcepacks/`: the built-in packs. `espresso_data` (recipes,
-  advancements, the starter kit, trades) is always on.
-- `src/gametest/`: the client game test (`EspressoClientTest`).
-- `tools/`: Node scripts that generate data, structures and art.
+- `common/`: everything that doesn't care about the loader, compiled on its own (no Fabric or NeoForge
+  import can sneak in). `src/main/java/com/gabbymaybelle/espresso/`: `Espresso.java` (shared startup,
+  the built-in pack list), `Platform.java` (what the mod asks of the loader: config folder, saved data,
+  server events, creative tabs, loot tables, networking, job sites), `Config.java`
+  (`config/espresso_flavoured.properties`), the rules (`HomeBeds` for the home bed, `KeepOnDeath` for
+  worn charms, `Wellbeing`, `Nights`), `content/` (blocks, items, the espresso machine; `EspressoContent`
+  registers by being loaded), `mixin/`, `client/` and `compat/` (Jade, JEI: optional, compile-only).
+  `src/main/resources/` holds the assets and the built-in packs (`resourcepacks/`: `espresso_data` is
+  always on). `compile.accesswidener` is only so `:common` compiles alone.
+- `fabric/`: `EspressoFabric` (sets `Platform`, then `Espresso.init()` and `EspressoContent.load()`),
+  `EspressoFabricClient`, `CanisterStorage` (Fabric item storage), `TrinketsCompat` (Trinkets Updated),
+  Mod Menu, `fabric.mod.json`, and `src/gametest/`: the client game test (`EspressoClientTest`).
+- `neoforge/`: `EspressoNeoForge` (sets `Platform`; loads `EspressoContent` inside the first registry
+  event, because NeoForge only allows registering then), `EspressoNeoForgeClient`, `CanisterHandler`,
+  `neoforge.mods.toml`, and `src/clienttest/`: the in-game test (`EspressoClientTest`, `ClientTest`).
+- `libs/`: Spawn Gazebo's two release jars, bundled jar-in-jar in each loader's jar.
+- `tools/`: Node scripts that generate data, structures and art (into `common/`).
 
 ## Build and test
 
-- `./gradlew build`: jar in `build/libs/`.
-- `./gradlew runClientGameTest`: plays through the main rules in a real game (about 1.5 minutes): settings file,
+- `./gradlew build`: `fabric/build/libs/espresso-flavoured-core-fabric-<v>.jar` and `neoforge/build/libs/...-neoforge-<v>.jar`.
+- `./gradlew :neoforge:runClientTest`: the NeoForge in-game test (content, packs, wild coffee bushes, loot, canister
+  handler, mugs, Ember Glove, home bed, Drowsy, the machine's brewing); a failed check crashes the game.
+- `./gradlew :fabric:runClientGameTest`: plays through the main rules in a real game (about 1.5 minutes): settings file,
   gazebo, brewing, Ristretto, home bed, Drowsy, tough nights, block merchant, village café,
   café charms, sitting, coffee bushes, placed mugs, canisters, Well Rested, Bean Coins, barista
   trades, charms on death, bundles, settings screen.
   Add `-PtestTrinkets` to run it with Trinkets Updated (charms in slots, not the off-hand); CI
-  runs both. Screenshots go to `build/run/clientGameTest/screenshots/`.
+  runs both. Screenshots go to `fabric/build/run/clientGameTest/screenshots/`.
 
 ## Gotchas
 
 - **`resourcepacks/espresso_data` is generated.** `node tools/generate-data.js` deletes the
   whole folder and writes it again, running the café generator (`generate-cafe.js`) as it goes. Edit the scripts, never the generated files.
-- **The gazebo is Spawn Gazebo's.** `libs/spawn-gazebo-<version>.jar` (Gabby's own mod,
-  github.com/gabmaybelle/spawn-gazebo) is bundled jar-in-jar (`include` in build.gradle) and
-  required in fabric.mod.json; Espresso has no gazebo code of its own any more. fabric.mod.json's
-  `custom.spawn_gazebo.starter_kit` makes its chest hold Espresso's kit, and the starter kit
-  function reads storage `spawn_gazebo:spawn`. To take a new Spawn Gazebo: build it, copy the jar
-  into libs/, update the version in build.gradle and fabric.mod.json. (Until 2026-10-13 the two
-  carried duplicate copies of the builder, which had drifted.)
+- **The gazebo is Spawn Gazebo's.** `libs/spawn-gazebo-fabric-<version>.jar` and
+  `libs/spawn-gazebo-neoforge-<version>.jar` (Gabby's own mod, github.com/gabmaybelle/spawn-gazebo;
+  the release assets) are bundled jar-in-jar (`include` / `jarJar`) and required in the loader's mod
+  file; Espresso has no gazebo code of its own any more. fabric.mod.json's `custom.spawn_gazebo.starter_kit`
+  (NeoForge: `[modproperties.espresso_flavoured]` in neoforge.mods.toml) makes its chest hold Espresso's
+  kit, and the starter kit function reads storage `spawn_gazebo:spawn`. To take a new Spawn Gazebo:
+  copy both release jars into libs/, update `spawn_gazebo_version` in gradle.properties and the
+  minimum in both mod files.
+- **Registering differs by loader.** Fabric loads `EspressoContent` at startup; NeoForge loads it
+  inside its first registry event. So nothing run at startup (`Espresso.init()`, every `register()`) may
+  touch an `EspressoContent` field: read them inside handlers, or lazily (see `CharmItem.perks`).
+- **Saved data goes through `Platform.data`.** Fabric keeps the same attachment ids as before (worlds
+  made with the Fabric-only mod keep theirs); NeoForge uses its own attachments. The wild coffee bushes
+  are `BiomeModifications` on Fabric and `data/espresso_flavoured/neoforge/biome_modifier/*` (generated by
+  tools/generate-data.js) on NeoForge. Sleeping and the Ember Glove's smelting use mixins (`SleepMixin`,
+  `EmberGloveLootMixin`), so neither needs a loader event.
 - **The modpack carries a copy of this jar** (espresso-flavoured-pack, `overrides/mods/`), again since
   pack 0.5.0 (2026-10-15; it was out for 0.4.0 while Core still did Cozy Core's jobs). After a change
   players should get, the pack needs a jar built from a clean, committed `main`. Core bundles Spawn
@@ -112,7 +132,7 @@ not a wait loop.
 or test names. Check the diff for these before every push.
 
 **Tests.**
-- `./gradlew build` and `./gradlew runClientGameTest` (where the repo has one) must pass before
+- `./gradlew build`, `./gradlew :fabric:runClientGameTest` and `./gradlew :neoforge:runClientTest` (where the repo has them) must pass before
   a commit. The game test opens a real game window for a minute or two.
 - A new or changed check should fail with the feature switched off: run it that way once, then
   put the code back. A check that compares against the setting it tests proves nothing.
@@ -127,6 +147,6 @@ or test names. Check the diff for these before every push.
 - Keep the credit line: "made by Gabby with help from Claude, an AI assistant".
 - Gabby publishes on Modrinth herself. Don't upload anything there.
 
-**Minecraft.** Fabric on Minecraft 26.3 (Mojang names; Loom 1.18.4, Java 25). Vanilla names
+**Minecraft.** Fabric and NeoForge on Minecraft 26.3 (Mojang names; Loom 1.18.4, Java 25). Vanilla names
 changed a lot in 26.x: check the merged jar rather than older docs (for example `iron_chain`,
 `pink_petals[flower_amount=N]`, timelines instead of `time query daytime`).

@@ -2,7 +2,7 @@
 // field guide and block-merchant trades). Edit the lists below and re-run:
 //   node tools/generate-data.js
 const fs = require('fs'), path = require('path');
-const ROOT = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data');
+const ROOT = path.join(__dirname, '..', 'common', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data');
 const out = (rel, obj) => {
 	const f = path.join(ROOT, ...rel.split('/'));
 	fs.mkdirSync(path.dirname(f), { recursive: true });
@@ -191,6 +191,17 @@ out('data/espresso_flavoured/worldgen/placed_feature/patch_coffee_bush.json', {
 		] } },
 	],
 });
+
+// NeoForge adds the bushes to biomes with these data-driven modifiers (Fabric's mod code does it
+// with BiomeModifications); a Fabric game ignores them.
+for (const biomes of ['jungle', 'savanna']) {
+	out(`data/espresso_flavoured/neoforge/biome_modifier/coffee_bushes_${biomes}.json`, {
+		type: 'neoforge:add_features',
+		biomes: `#minecraft:is_${biomes}`,
+		features: 'espresso_flavoured:patch_coffee_bush',
+		step: 'vegetal_decoration',
+	});
+}
 
 // The wandering trader always carries coffee cherries (see fair trade below), so anyone can
 // start a coffee patch, however far they are from a jungle.
@@ -596,7 +607,7 @@ const inject = {
 		loot('espresso_flavoured:baristas_reserve', 1), nothing(3)] }],
 	'minecraft:chests/shipwreck_supply': [{ rolls: 1, entries: [loot('espresso_flavoured:roasted_coffee_beans', 2, 2, 6), loot('espresso_flavoured:coffee_cherries', 1, 2, 5), nothing(4)] }],
 };
-fs.writeFileSync(path.join(__dirname, '..', 'src', 'main', 'resources', 'espresso_flavoured', 'loot_inject.json'), JSON.stringify(inject, null, 2) + '\n');
+fs.writeFileSync(path.join(__dirname, '..', 'common', 'src', 'main', 'resources', 'espresso_flavoured', 'loot_inject.json'), JSON.stringify(inject, null, 2) + '\n');
 
 // The village café buildings.
 require('./generate-cafe.js');

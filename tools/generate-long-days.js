@@ -9,7 +9,7 @@
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
 const JAR = process.argv[2];
 if (!JAR) { console.error('usage: node tools/generate-long-days.js <minecraft 26.3 jar>'); process.exit(1); }
-const ROOT = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_long_days');
+const ROOT = path.join(__dirname, '..', 'common', 'src', 'main', 'resources', 'resourcepacks', 'espresso_long_days');
 
 const VANILLA_DAY = 24000, DAYLIGHT = 12000, STRETCH = 2;
 const NEW_DAY = DAYLIGHT * STRETCH + (VANILLA_DAY - DAYLIGHT);   // 36000

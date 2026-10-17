@@ -1,0 +1,61 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT AND CC-BY-NC-SA-4.0"
+issueTrackerURL = "https://github.com/gabmaybelle/espresso-flavoured/issues"
+
+[[mods]]
+modId = "espresso_flavoured"
+version = "${version}"
+displayName = "Espresso Flavoured Core"
+authors = "Gabby"
+displayURL = "https://github.com/gabmaybelle/espresso-flavoured"
+logoFile = "assets/espresso_flavoured/icon.png"
+description = '''A little café for your survival world: coffee you grow and brew, mugs you shape and dye, baristas, Bean Coins and charms, with longer days and a home bed worth walking back to.'''
+
+# Spawn Gazebo (bundled inside this jar) puts this mod's starter kit in the chest at spawn.
+[modproperties.espresso_flavoured]
+"spawn_gazebo:starter_kit" = "espresso_flavoured:chests/spawn_kit"
+
+[[mixins]]
+config = "espresso_flavoured.mixins.json"
+
+[[mixins]]
+config = "espresso_flavoured.optional.mixins.json"
+
+[[mixins]]
+config = "espresso_flavoured.client.mixins.json"
+
+[[dependencies.espresso_flavoured]]
+modId = "neoforge"
+type = "required"
+versionRange = "[26.3,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.espresso_flavoured]]
+modId = "minecraft"
+type = "required"
+versionRange = "[26.3,26.4)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.espresso_flavoured]]
+modId = "spawn_gazebo"
+type = "required"
+versionRange = "[1.2.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.espresso_flavoured]]
+modId = "jei"
+type = "optional"
+versionRange = "*"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.espresso_flavoured]]
+modId = "jade"
+type = "optional"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
