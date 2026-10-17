@@ -1,0 +1,72 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+// The common sources and the built-in data packs are compiled straight into this jar (no common
+// jar to bundle), so the Fabric mod is one file.
+sourceSets.main {
+	java.srcDir project(':common').file('src/main/java')
+	resources.srcDir project(':common').file('src/main/resources')
+}
+
+loom {
+	mods {
+		"espresso_flavoured" {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+dependencies {
+	// Versions are in gradle.properties.
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	// Spawn Gazebo (Gabby's own mod) builds and protects the gazebo at spawn. It's bundled inside
+	// this jar (jar-in-jar), so players don't install it separately, and the chest gets Espresso's
+	// own kit (see "custom" in fabric.mod.json). libs/ holds its release builds: to update it,
+	// copy spawn-gazebo-fabric-<version>.jar and spawn-gazebo-neoforge-<version>.jar there.
+	implementation ":spawn-gazebo-fabric:${project.spawn_gazebo_version}"
+	include ":spawn-gazebo-fabric:${project.spawn_gazebo_version}"
+	// Mod Menu: only for the Config button; not bundled or required.
+	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
+	compileOnly "maven.modrinth:jade:26.3.5+fabric"
+	// JEI: only for the espresso machine's page; not bundled or required.
+	// (Modrinth version id of JEI 31.12.0.65 for Fabric 26.3.)
+	compileOnly "maven.modrinth:jei:csqmrfNS"
+	// Trinkets Updated: charms go in its slots when it's installed; not bundled or required.
+	// (Modrinth version id of Trinkets Updated 4.2.1+26.3.)
+	compileOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
+	// `./gradlew :fabric:runClientGameTest -PtestTrinkets` runs the game test with Trinkets Updated
+	// installed, so the charms are worn in their slots instead of the off-hand.
+	if (project.hasProperty("testTrinkets")) {
+		runtimeOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
+	}
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}
+
+// Client game tests: `./gradlew :fabric:runClientGameTest` starts a real game and plays through the
+// main rules (the gazebo, brewing, keeping charms on death, bundles, the settings screen).
+// The tests live in src/gametest; nothing there ships in the jar.
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "espresso_flavoured_gametest"
+		enableGameTests = false
+		enableClientGameTests = true
+		eula = true
+	}
+}
+
+// espresso-flavoured-core-fabric-<version>.jar, the name players download.
+tasks.named('jar') { archiveBaseName = "${rootProject.name}-fabric" }
+tasks.named('sourcesJar') { archiveBaseName = "${rootProject.name}-fabric" }

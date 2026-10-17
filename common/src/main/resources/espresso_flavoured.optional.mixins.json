@@ -1,0 +1,26 @@
+{
+	"required": false,
+	"package": "com.gabbymaybelle.espresso.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"BundleContentsMixin",
+		"CakeBlockMixin",
+		"CinnamonMixin",
+		"EmberGloveLootMixin",
+		"FoodDataMixin",
+		"FoodPropertiesMixin",
+		"MerchantTradeMixin",
+		"MobNightMixin",
+		"NightNaturalSpawnerMixin",
+		"PowderSnowMixin",
+		"SleepMixin",
+		"SpawnStateMixin",
+		"SugarCaneBlockMixin",
+		"TamperMixin",
+		"WanderingTraderMixin",
+		"WarmMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

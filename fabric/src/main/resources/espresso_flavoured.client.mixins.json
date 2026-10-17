@@ -1,0 +1,12 @@
+{
+	"required": false,
+	"package": "com.gabbymaybelle.espresso.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"plugin": "com.gabbymaybelle.espresso.client.mixin.FabricClientMixinPlugin",
+	"client": [
+		"LocalPlayerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

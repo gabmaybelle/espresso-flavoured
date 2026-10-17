@@ -14,7 +14,7 @@
 const fs = require('fs'), path = require('path');
 const { T } = require('./nbt.js');
 const { Structure, stairs, fence } = require('./structure.js');
-const ROOT = path.join(__dirname, '..', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data', 'data', 'espresso_flavoured', 'structure', 'village');
+const ROOT = path.join(__dirname, '..', 'common', 'src', 'main', 'resources', 'resourcepacks', 'espresso_data', 'data', 'espresso_flavoured', 'structure', 'village');
 
 // Each village's materials: plinth, walls, posts and beams (logs), floor and porch deck, roof
 // (stairs, full block and slab), the stone wall for the porch footings and railing, the

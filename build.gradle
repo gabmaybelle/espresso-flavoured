@@ -1,92 +1,47 @@
-plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
-}
+// Shared settings for the three subprojects. Each subproject's own build.gradle says how it
+// compiles; versions live in gradle.properties.
+subprojects {
+	apply plugin: 'java'
 
-repositories {
-	// Spawn Gazebo, bundled from libs/ (see dependencies).
-	flatDir { dirs 'libs' }
-	maven { url = 'https://maven.terraformersmc.com/releases/' }
-	maven { url = 'https://api.modrinth.com/maven' }
-}
+	group = rootProject.group
+	version = rootProject.version
 
-loom {
-	mods {
-		"espresso_flavoured" {
-			sourceSet sourceSets.main
+	repositories {
+		// Spawn Gazebo, bundled from libs/ (see the fabric and neoforge projects).
+		flatDir { dirs rootProject.file('libs') }
+		mavenCentral()
+		maven { url = 'https://maven.terraformersmc.com/releases/' }
+		// Optional mods (JEI, Jade, Trinkets Updated), from Modrinth; compile only, never bundled.
+		exclusiveContent {
+			forRepository {
+				maven { url = 'https://api.modrinth.com/maven' }
+			}
+			filter {
+				includeGroup 'maven.modrinth'
+			}
 		}
 	}
-}
 
-dependencies {
-	// Versions are in gradle.properties.
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	// Spawn Gazebo (Gabby's own mod) builds and protects the gazebo at spawn. It's bundled inside
-	// this jar (jar-in-jar), so players don't install it separately, and the chest gets Espresso's
-	// own kit (see "custom" in fabric.mod.json). libs/ holds its release build: to update it, build
-	// spawn-gazebo and copy build/libs/spawn-gazebo-<version>.jar here.
-	implementation ":spawn-gazebo:1.1.1"
-	include ":spawn-gazebo:1.1.1"
-	// Mod Menu: only for the Config button; not bundled or required.
-	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
-	compileOnly "maven.modrinth:jade:26.3.5+fabric"
-	// JEI: only for the espresso machine's page and the water lily note; not bundled or required.
-	// (Modrinth version id of JEI 31.12.0.65 for Fabric 26.3.)
-	compileOnly "maven.modrinth:jei:csqmrfNS"
-	// Trinkets Updated: charms go in its slots when it's installed; not bundled or required.
-	// (Modrinth version id of Trinkets Updated 4.2.1+26.3.)
-	compileOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
-	// `./gradlew runClientGameTest -PtestTrinkets` runs the game test with Trinkets Updated installed,
-	// so the charms are worn in their slots instead of the off-hand.
-	if (project.hasProperty("testTrinkets")) {
-		runtimeOnly "maven.modrinth:trinkets-updated:lVR1OKgV"
+	tasks.withType(JavaCompile).configureEach {
+		it.options.release = 25
+		it.options.encoding = 'UTF-8'
 	}
-}
 
-processResources {
-	def version = project.version
-	inputs.property "version", version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": version
+	java {
+		withSourcesJar()
+		sourceCompatibility = JavaVersion.VERSION_25
+		targetCompatibility = JavaVersion.VERSION_25
 	}
-}
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
-}
-
-java {
-	// Also builds a -sources jar alongside the mod.
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
-}
-
-jar {
-	def projectName = project.name
-	inputs.property "projectName", projectName
-
-	from("LICENSE") {
-		rename { "${it}_$projectName"}
-	}
-	from("LICENSE-ASSETS") {
-		rename { "${it}_$projectName"}
-	}
-}
-
-// Client game tests: `./gradlew runClientGameTest` starts a real game and plays through the main
-// rules (the gazebo, brewing, keeping the hotbar on death, creepers, bundles, the settings screen).
-// The tests live in src/gametest; nothing there ships in the jar.
-fabricApi {
-	configureTests {
-		createSourceSet = true
-		modId = "espresso_flavoured_gametest"
-		enableGameTests = false
-		enableClientGameTests = true
-		eula = true
+	// Captured outside the closure: the configuration cache can't serialise `rootProject` itself.
+	def licenseDir = rootProject.projectDir
+	def licenseSuffix = "_" + rootProject.name
+	jar {
+		from(new File(licenseDir, 'LICENSE')) {
+			rename { it + licenseSuffix }
+		}
+		from(new File(licenseDir, 'LICENSE-ASSETS')) {
+			rename { it + licenseSuffix }
+		}
 	}
 }
