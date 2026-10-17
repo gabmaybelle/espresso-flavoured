@@ -391,6 +391,16 @@ const CHARM_SLOTS = {
 for (const [slot, items] of Object.entries(CHARM_SLOTS)) out(`data/trinkets/tags/item/${slot}.json`, { values: items });
 out('data/trinkets/slots/legs/pocket.json', { icon: 'espresso_flavoured:container/slots/pocket', order: -900, amount: 2, validator_predicates: ['trinkets:default'] });
 out('data/trinkets/entities/espresso_flavoured.json', { entities: ['player'], slots: Object.keys(CHARM_SLOTS) });
+// Curios slots (NeoForge; ignored without it): the same charms in Curios' own slot types. The pocket
+// charms go in our own two-deep pocket slot, like the Trinkets one.
+const CURIOS_SLOTS = {
+	necklace: ['espresso_flavoured:lucky_bean'], belt: ['espresso_flavoured:thermos'], back: ['espresso_flavoured:cafe_parasol'],
+	feet: ['espresso_flavoured:reading_socks'], hands: ['espresso_flavoured:ember_glove'], head: ['espresso_flavoured:knit_beanie'],
+	pocket: ['espresso_flavoured:pocket_hearth', 'espresso_flavoured:copper_tamper'],
+};
+for (const [slot, items] of Object.entries(CURIOS_SLOTS)) out(`data/curios/tags/item/${slot}.json`, { values: items });
+out('data/espresso_flavoured/curios/slots/pocket.json', { order: 210, icon: 'espresso_flavoured:container/slots/pocket', size: 2, entities: ['minecraft:player'], validators: ['curios:tag'] });
+out('data/espresso_flavoured/curios/entities/espresso_flavoured.json', { entities: ['minecraft:player'], slots: ['necklace', 'belt', 'back', 'feet', 'hands', 'head'] });
 // What the Ember Glove smelts as it drops: raw ores, sand, cobblestone and logs.
 out('data/espresso_flavoured/tags/item/ember_glove_smelts.json', { values: [
 	'minecraft:raw_iron', 'minecraft:raw_copper', 'minecraft:raw_gold', { id: '#c:raw_materials', required: false },

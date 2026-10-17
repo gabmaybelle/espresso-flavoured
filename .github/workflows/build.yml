@@ -21,8 +21,10 @@ jobs:
         include:
           - variant: 'on its own'
             test_args: ''
+            neoforge_args: ''
           - variant: 'with Trinkets'
             test_args: '-PtestTrinkets'
+            neoforge_args: '-PtestCurios'
     name: build (${{ matrix.variant }})
     steps:
       - name: checkout repository
@@ -51,13 +53,13 @@ jobs:
         run: xvfb-run -a ./gradlew :fabric:runClientGameTest ${{ matrix.test_args }}
       - name: run NeoForge game test
         # The NeoForge jar's checks (neoforge/src/clienttest). A failed check crashes the game, which
-        # fails this step; the crash report is uploaded with the screenshots. It has no Trinkets
-        # variant: Trinkets Updated is Fabric only.
-        if: always() && matrix.variant == 'on its own'
+        # fails this step; the crash report is uploaded with the screenshots. The "with Trinkets" run
+        # uses Curios here, the NeoForge counterpart (charms in its slots).
+        if: always()
         env:
           SDL_VIDEO_FORCE_EGL: '1'
         timeout-minutes: 12
-        run: xvfb-run -a ./gradlew :neoforge:runClientTest
+        run: xvfb-run -a ./gradlew :neoforge:runClientTest ${{ matrix.neoforge_args }}
       - name: capture game test screenshots
         if: always()
         uses: actions/upload-artifact@v7

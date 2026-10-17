@@ -59,3 +59,10 @@ type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.espresso_flavoured]]
+modId = "curios"
+type = "optional"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"

@@ -4,7 +4,7 @@
 
 - **Espresso Flavoured Core comes in two files now, one for Fabric and one for NeoForge**, with the same café in both: coffee, mugs, baristas, Bean Coins, charms, Drowsy and the home bed. Spawn Gazebo 1.2.0 is built into both.
 - **Fabric worlds carry over untouched.** Nothing about blocks, items or saved data changes, and the settings file is the same.
-- **On NeoForge**, charms are held in the off-hand (Trinkets Updated only exists for Fabric), and the title-screen look and splash texts are always on (they can't be switched off in the Resource Packs screen).
+- **On NeoForge**, charms go in Curios' slots when you have Curios (the NeoForge version of Trinkets Updated), and are held in the off-hand when you don't. And the title-screen look and splash texts are always on (they can't be switched off in the Resource Packs screen).
 - Ember Glove smelting and the Drowsy "sleep at home" rule no longer depend on Fabric API, so they work the same on both loaders.
 
 ## 0.4.0: The Café Mod

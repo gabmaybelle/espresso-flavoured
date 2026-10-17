@@ -35,7 +35,7 @@ Everything can be switched off or adjusted in game through Mod Menu, or in `conf
 Espresso Flavoured Core needs only Fabric API (on Fabric) or nothing else (on NeoForge). It notices a few other mods when they're there:
 
 - **Cozy Core:** Gabby's builder rules (builds that stay built, no phantoms, keep your hotbar on death, the Hearth Lantern). Nothing links the two in code; they're simply made to go together.
-- **Trinkets Updated** (Fabric only): the café charms go in trinket slots (right-click to wear one) and stay with you on death. Without it, and always on NeoForge, a charm works in your off-hand, so you choose one at a time.
+- **Trinkets Updated** (Fabric) and **Curios** (NeoForge): the café charms go in their slots (right-click to wear one) and stay with you on death. Without one of them, a charm works in your off-hand, so you choose one at a time.
 - **Jade:** placed mugs show their drink, coffee bushes how ripe they are, and the espresso machine how its brew is going.
 - **JEI:** a page for what the espresso machine brews.
 - **Iris:** shaders keep time with the longer days (and with any other mod's or datapack's day length).

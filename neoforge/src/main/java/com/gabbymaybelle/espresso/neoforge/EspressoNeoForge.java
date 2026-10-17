@@ -4,6 +4,7 @@ import com.gabbymaybelle.espresso.Espresso;
 import com.gabbymaybelle.espresso.Platform;
 import com.gabbymaybelle.espresso.ServerSettings;
 import com.gabbymaybelle.espresso.client.EspressoClient;
+import com.gabbymaybelle.espresso.content.CharmItem;
 import com.gabbymaybelle.espresso.content.EspressoContent;
 import com.mojang.serialization.Codec;
 import java.nio.file.Path;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -210,6 +212,13 @@ public class EspressoNeoForge {
 		modBus.addListener(EspressoNeoForge::packs);
 		modBus.addListener(EspressoNeoForge::creativeTabs);
 		modBus.addListener(EspressoNeoForge::capabilities);
+		// Charms go in Curios' slots when it's installed (and on with a right-click).
+		if (ModList.get().isLoaded("curios")) {
+			modBus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(() -> {
+				CharmItem.useSlots(new CuriosCompat());
+				CuriosCompat.equipOnUse();
+			}));
+		}
 	}
 
 	/**

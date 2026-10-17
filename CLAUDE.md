@@ -27,14 +27,14 @@ it first, and add this session's row before ending.
   Mod Menu, `fabric.mod.json`, and `src/gametest/`: the client game test (`EspressoClientTest`).
 - `neoforge/`: `EspressoNeoForge` (sets `Platform`; loads `EspressoContent` inside the first registry
   event, because NeoForge only allows registering then), `EspressoNeoForgeClient`, `CanisterHandler`,
-  `neoforge.mods.toml`, and `src/clienttest/`: the in-game test (`EspressoClientTest`, `ClientTest`).
+  `CuriosCompat` (Curios slots; tags in `data/curios`), `neoforge.mods.toml`, and `src/clienttest/`: the in-game test (`EspressoClientTest`, `ClientTest`).
 - `libs/`: Spawn Gazebo's two release jars, bundled jar-in-jar in each loader's jar.
 - `tools/`: Node scripts that generate data, structures and art (into `common/`).
 
 ## Build and test
 
 - `./gradlew build`: `fabric/build/libs/espresso-flavoured-core-fabric-<v>.jar` and `neoforge/build/libs/...-neoforge-<v>.jar`.
-- `./gradlew :neoforge:runClientTest`: the NeoForge in-game test (content, packs, wild coffee bushes, loot, canister
+- `./gradlew :neoforge:runClientTest` (add `-PtestCurios` to wear charms in Curios slots): the NeoForge in-game test (content, packs, wild coffee bushes, loot, canister
   handler, mugs, Ember Glove, home bed, Drowsy, the machine's brewing); a failed check crashes the game.
 - `./gradlew :fabric:runClientGameTest`: plays through the main rules in a real game (about 1.5 minutes): settings file,
   gazebo, brewing, Ristretto, home bed, Drowsy, tough nights, block merchant, village café,

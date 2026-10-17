@@ -40,6 +40,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -203,16 +204,27 @@ final class EspressoClientTest {
 				}
 			}
 
-			// The Ember Glove, worn in the off-hand, smelts what a log drops; crouching keeps the log.
+			// The Ember Glove, worn (in Curios' hands slot with Curios installed, otherwise the off-hand), smelts
+			// what a log drops; crouching keeps the log.
 			BlockPos log = at.offset(-4, 1, 0);
 			level.setBlockAndUpdate(log.below(), Blocks.STONE.defaultBlockState());
-			player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(EspressoContent.EMBER_GLOVE));
-			expect(out, CharmItem.slots() == null, "NeoForge charms are worn in the off-hand");
+			boolean curios = ModList.get().isLoaded("curios");
+			if (curios) {
+				out.append(CuriosChecks.slots(player));
+				CuriosChecks.wearGlove(player);
+			} else {
+				player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(EspressoContent.EMBER_GLOVE));
+				expect(out, CharmItem.slots() == null, "without Curios, NeoForge charms are worn in the off-hand");
+			}
 			ItemStack smelted = dropsFromLog(level, player, log, false);
 			expect(out, smelted.is(Items.CHARCOAL), "the Ember Glove smelts a log's drop into charcoal (got " + smelted + ")");
 			ItemStack kept = dropsFromLog(level, player, log, true);
 			expect(out, kept.is(Items.OAK_LOG), "crouching keeps the log (got " + kept + ")");
-			player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+			if (curios) {
+				CuriosChecks.clear(player);
+			} else {
+				player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+			}
 			ItemStack plain = dropsFromLog(level, player, log, false);
 			expect(out, plain.is(Items.OAK_LOG), "without the glove the log drops as a log (got " + plain + ")");
 
@@ -239,6 +251,21 @@ final class EspressoClientTest {
 			player.setGameMode(GameType.CREATIVE);
 			return out.toString();
 		});
+
+		if (ModList.get().isLoaded("curios")) {
+			// The Lucky Bean was left worn in its necklace slot: its perk is on a few ticks later.
+			onServer("setting up the Lucky Bean", server -> {
+				ServerPlayer player = server.getPlayerList().getPlayers().getFirst();
+				return CuriosChecks.slots(player);
+			});
+			waitTicks(25);
+			onServer("a charm worn in a Curios slot gives its perk", server -> {
+				ServerPlayer player = server.getPlayerList().getPlayers().getFirst();
+				String result = CuriosChecks.luck(player);
+				CuriosChecks.clear(player);
+				return result;
+			});
+		}
 
 		// Three days away from home makes you Drowsy, and coffee holds it off.
 		onServer("setting up Drowsy", server -> {

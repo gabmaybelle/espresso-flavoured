@@ -53,6 +53,15 @@ dependencies {
 	jarJar(":spawn-gazebo-neoforge:[${project.spawn_gazebo_version},)") {
 		version { prefer project.spawn_gazebo_version }
 	}
+	// Curios (the NeoForge Trinkets): charms go in its slots when it's installed; not bundled or required.
+	// (Modrinth version id of Curios 17.0.0-beta.3 for NeoForge 26.3.)
+	compileOnly "maven.modrinth:curios:W912LxOl"
+	clienttestCompileOnly "maven.modrinth:curios:W912LxOl"
+	// `./gradlew :neoforge:runClientTest -PtestCurios` runs the test with Curios installed, so the charms are
+	// worn in its slots instead of the off-hand.
+	if (project.hasProperty("testCurios")) {
+		runtimeOnly "maven.modrinth:curios:W912LxOl"
+	}
 	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
 	compileOnly "maven.modrinth:jade:26.3.5+fabric"
 	// JEI: only for the espresso machine's page; not bundled or required.
