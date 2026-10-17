@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- **Spawn Gazebo 1.3.0 is built in.** An operator can now give a world you already have its gazebo: stand where you want it, type `/spawngazebo build`, then `/spawngazebo build confirm` within 30 seconds. The world spawn and the protection move to it, and the chest holds the café starter kit as usual.
+
 ## 0.5.0: Now on NeoForge too
 
 - **Espresso Flavoured Core comes in two files now, one for Fabric and one for NeoForge**, with the same café in both: coffee, mugs, baristas, Bean Coins, charms, Drowsy and the home bed. Spawn Gazebo 1.2.0 is built into both.
