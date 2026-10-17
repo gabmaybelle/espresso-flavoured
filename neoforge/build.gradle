@@ -62,6 +62,19 @@ dependencies {
 	if (project.hasProperty("testCurios")) {
 		runtimeOnly "maven.modrinth:curios:W912LxOl"
 	}
+	// `-PtestLootr`, `-PtestJade` and `-PtestJei` run the test with those optional mods installed
+	// (Modrinth version ids for NeoForge 26.3: Lootr 1.25.42.124, Jade 26.3.5, JEI 31.14.0.72 and the
+	// MezzConfig it needs). Not bundled or required.
+	if (project.hasProperty("testLootr")) {
+		runtimeOnly "maven.modrinth:lootr:PdFGq3vT"
+	}
+	if (project.hasProperty("testJade")) {
+		runtimeOnly "maven.modrinth:jade:dVB8U7Td"
+	}
+	if (project.hasProperty("testJei")) {
+		runtimeOnly "maven.modrinth:jei:kLsKOFxv"
+		runtimeOnly "maven.modrinth:mezzconfig:WFeT02Wv"
+	}
 	// Jade: only for the coffee bush and espresso machine tooltips; not bundled or required.
 	compileOnly "maven.modrinth:jade:26.3.5+fabric"
 	// JEI: only for the espresso machine's page; not bundled or required.

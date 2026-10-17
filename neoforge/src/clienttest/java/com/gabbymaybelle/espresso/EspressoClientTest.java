@@ -87,7 +87,12 @@ final class EspressoClientTest {
 			expect(out, spawn.getBooleanOr("chest", false), "a new world gets the gazebo with its starter chest");
 			expect(out, (Espresso.MOD_ID + ":chests/spawn_kit").equals(spawn.getStringOr("table", "")),
 					"the chest holds Espresso's starter kit (got " + spawn.getStringOr("table", "nothing") + ")");
-			expect(out, spawn.getBooleanOr("claimed", false), "the first player to join claims the chest's kit");
+			if (ModList.get().isLoaded("lootr")) {
+				// Lootr gives everyone their own copy of the chest, so the kit isn't handed out on joining.
+				expect(out, spawn.getBooleanOr("lootr", false), "the gazebo noted that Lootr is installed");
+			} else {
+				expect(out, spawn.getBooleanOr("claimed", false), "the first player to join claims the chest's kit");
+			}
 			int radius = level.getGameRules().get(GameRules.RESPAWN_RADIUS);
 			expect(out, radius == 0, "the spawn radius is 0 (got " + radius + ")");
 			at = level.getRespawnData().pos().offset(40, 0, 40);
@@ -134,8 +139,11 @@ final class EspressoClientTest {
 			fill(level, bare, new ItemStack(EspressoContent.ROASTED_COFFEE_BEANS, 3));
 			return "";
 		});
-		waitTicks(30);
-		onServer("the machine on a coffee bar starts brewing", server -> machine(server, at.above()).brewTime() > 0 ? "" : "\n  not brewing");
+		// Waits for it (a slow start, with other mods loading, can hold the server back).
+		waitUntil("the machine on a coffee bar starts brewing", 400, mc -> {
+			MinecraftServer server = mc.getSingleplayerServer();
+			return server.submit(() -> machine(server, at.above()).brewTime() > 0).join();
+		});
 		screenshot();
 		waitUntil("three Espressos", EspressoMachineBlockEntity.BREW_TIME + 200, mc -> {
 			MinecraftServer server = mc.getSingleplayerServer();
